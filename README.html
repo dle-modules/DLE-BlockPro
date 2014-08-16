@@ -1,0 +1,1050 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>body
+{
+  font-size:15px;
+  line-height:1.7;
+  overflow-x:hidden;
+
+    background-color: white;
+    border-radius: 3px;
+    border: 3px solid #EEE;
+    box-shadow: inset 0 0 0 1px #CECECE;
+    font-family: Helvetica, arial, freesans, clean, sans-serif;
+    max-width: 912px;
+    padding: 30px;
+    margin: 2em auto;
+
+    color:#333333;
+}
+
+
+.body-classic{
+  color:#444;
+  font-family:Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', "Hiragino Sans GB", "STXihei", "微软雅黑", serif;
+  font-size:16px;
+  line-height:1.5em;
+  background:#fefefe;
+  width: 45em;
+  margin: 10px auto;
+  padding: 1em;
+  outline: 1300px solid #FAFAFA;
+}
+
+body>:first-child
+{
+  margin-top:0!important;
+}
+
+body>:last-child
+{
+  margin-bottom:0!important;
+}
+
+blockquote,dl,ol,p,pre,table,ul {
+  border: 0;
+  margin: 15px 0;
+  padding: 0;
+}
+
+body a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+body a:hover {
+  text-decoration: underline;
+}
+
+body a.absent
+{
+  color:#c00;
+}
+
+body a.anchor
+{
+  display:block;
+  padding-left:30px;
+  margin-left:-30px;
+  cursor:pointer;
+  position:absolute;
+  top:0;
+  left:0;
+  bottom:0
+}
+
+/*h4,h5,h6{ font-weight: bold; }*/
+
+.octicon{
+  font:normal normal 16px sans-serif;
+  width: 1em;
+  height: 1em;
+  line-height:1;
+  display:inline-block;
+  text-decoration:none;
+  -webkit-font-smoothing:antialiased
+}
+
+.octicon-link {
+  background: url("data:image/svg+xml;utf8,<?xml version='1.0' standalone='no'?> <!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'> <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 832'> <metadata>Copyright (C) 2013 by GitHub</metadata> <!-- scale(0.01565557729941) --> <path transform='' d='M768 64h-192s-254 0-256 256c0 22 3 43 8 64h137c-11-19-18-41-18-64 0-128 128-128 128-128h192s128 0 128 128-128 128-128 128 0 64-64 128h64s256 0 256-256-256-256-256-256z m-72 192h-137c11 19 18 41 18 64 0 128-128 128-128 128h-192s-128 0-128-128 128-128 128-128-4-65 66-128h-66s-256 0-256 256 256 256 256 256h192s256 0 256-256c0-22-4-44-8-64z'/> </svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+
+.octicon-link:before{
+  content:'\a0';
+}
+
+body h1,body h2,body h3,body h4,body h5,body h6{
+  margin:1em 0 15px;
+  padding:0;
+  font-weight:bold;
+  line-height:1.7;
+  cursor:text;
+  position:relative
+}
+
+body h1 .octicon-link,body h2 .octicon-link,body h3 .octicon-link,body h4 .octicon-link,body h5 .octicon-link,body h6 .octicon-link{
+  display:none;
+  color:#000
+}
+
+body h1:hover a.anchor,body h2:hover a.anchor,body h3:hover a.anchor,body h4:hover a.anchor,body h5:hover a.anchor,body h6:hover a.anchor{
+  text-decoration:none;
+  line-height:1;
+  padding-left:0;
+  margin-left:-22px;
+  top:15%
+}
+
+body h1:hover a.anchor .octicon-link,body h2:hover a.anchor .octicon-link,body h3:hover a.anchor .octicon-link,body h4:hover a.anchor .octicon-link,body h5:hover a.anchor .octicon-link,body h6:hover a.anchor .octicon-link{
+  display:inline-block
+}
+
+body h1 tt,body h1 code,body h2 tt,body h2 code,body h3 tt,body h3 code,body h4 tt,body h4 code,body h5 tt,body h5 code,body h6 tt,body h6 code{
+  font-size:inherit
+}
+
+body h1{
+  font-size:2.5em;
+  border-bottom:1px solid #ddd
+}
+
+body h2{
+  font-size:2em;
+  border-bottom:1px solid #eee
+}
+
+body h3{
+  font-size:1.5em
+}
+
+body h4{
+  font-size:1.2em
+}
+
+body h5{
+  font-size:1em
+}
+
+body h6{
+  color:#777;
+  font-size:1em
+}
+
+body p,body blockquote,body ul,body ol,body dl,body table,body pre{
+  margin:15px 0
+}
+
+body h1 tt,body h1 code,body h2 tt,body h2 code,body h3 tt,body h3 code,body h4 tt,body h4 code,body h5 tt,body h5 code,body h6 tt,body h6 code
+{
+  font-size:inherit;
+}
+
+
+body hr
+{
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC);
+  background-repeat: repeat-x;
+  /*background:transparent url(http://overblown.net/files/markdown/dirty-shade.png) repeat-x 0 0;*/
+  background-color: transparent;
+  background-position: 0;
+  border:0 none;
+  color:#ccc;
+  height:4px;
+  margin:15px 0;
+  padding:0;
+}
+
+body li p.first
+{
+  display:inline-block;
+}
+
+body ul,body ol
+{
+  padding-left:30px;
+}
+
+body ul.no-list,body ol.no-list
+{
+  list-style-type:none;
+  padding:0;
+}
+
+body ul ul,body ul ol,body ol ol,body ol ul
+{
+  margin-bottom:0;
+  margin-top:0;
+}
+
+body dl
+{
+  padding:0;
+}
+
+body dl dt
+{
+  font-size:14px;
+  font-style:italic;
+  font-weight:700;
+  margin-top:15px;
+  padding:0;
+}
+
+body dl dd
+{
+  margin-bottom:15px;
+  padding:0 15px;
+}
+
+body blockquote
+{
+  border-left:4px solid #DDD;
+  color:#777;
+  padding:0 15px;
+}
+
+body blockquote>:first-child
+{
+  margin-top:0;
+}
+
+body blockquote>:last-child
+{
+  margin-bottom:0;
+}
+
+body table
+{
+  display:block;
+  overflow:auto;
+  width:100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  padding: 0;
+}
+
+body table th
+{
+  font-weight:700;
+}
+
+body table th,body table td
+{
+  border:1px solid #ddd;
+  padding:6px 13px;
+}
+
+body table tr
+{
+  background-color:#fff;
+  border-top:1px solid #ccc;
+}
+
+body table tr:nth-child(2n)
+{
+  background-color:#f8f8f8;
+}
+
+body img
+{
+  -moz-box-sizing:border-box;
+  box-sizing:border-box;
+  max-width:100%;
+}
+
+body span.frame
+{
+  display:block;
+  overflow:hidden;
+}
+
+body span.frame>span
+{
+  border:1px solid #ddd;
+  display:block;
+  float:left;
+  margin:13px 0 0;
+  overflow:hidden;
+  padding:7px;
+  width:auto;
+}
+
+body span.frame span img
+{
+  display:block;
+  float:left;
+}
+
+body span.frame span span
+{
+  clear:both;
+  color:#333;
+  display:block;
+  padding:5px 0 0;
+}
+
+body span.align-center
+{
+  clear:both;
+  display:block;
+  overflow:hidden;
+}
+
+body span.align-center>span
+{
+  display:block;
+  margin:13px auto 0;
+  overflow:hidden;
+  text-align:center;
+}
+
+body span.align-center span img
+{
+  margin:0 auto;
+  text-align:center;
+}
+
+body span.align-right
+{
+  clear:both;
+  display:block;
+  overflow:hidden;
+}
+
+body span.align-right>span
+{
+  display:block;
+  margin:13px 0 0;
+  overflow:hidden;
+  text-align:right;
+}
+
+body span.align-right span img
+{
+  margin:0;
+  text-align:right;
+}
+
+body span.float-left
+{
+  display:block;
+  float:left;
+  margin-right:13px;
+  overflow:hidden;
+}
+
+body span.float-left span
+{
+  margin:13px 0 0;
+}
+
+body span.float-right
+{
+  display:block;
+  float:right;
+  margin-left:13px;
+  overflow:hidden;
+}
+
+body span.float-right>span
+{
+  display:block;
+  margin:13px auto 0;
+  overflow:hidden;
+  text-align:right;
+}
+
+body code,body tt
+{
+  background-color:#f8f8f8;
+  border:1px solid #ddd;
+  border-radius:3px;
+  margin:0 2px;
+  padding:0 5px;
+}
+
+body code
+{
+  white-space:nowrap;
+}
+
+
+code,pre{
+  font-family:Consolas, "Liberation Mono", Courier, monospace;
+  font-size:12px
+}
+
+body pre>code
+{
+  background:transparent;
+  border:none;
+  margin:0;
+  padding:0;
+  white-space:pre;
+}
+
+body .highlight pre,body pre
+{
+  background-color:#f8f8f8;
+  border:1px solid #ddd;
+  font-size:13px;
+  line-height:19px;
+  overflow:auto;
+  padding:6px 10px;
+  border-radius:3px
+}
+
+body pre code,body pre tt
+{
+  background-color:transparent;
+  border:none;
+  margin:0;
+  padding:0;
+}
+
+body .task-list{
+  list-style-type:none;
+  padding-left:10px
+}
+
+.task-list-item{
+  padding-left:20px
+}
+
+.task-list-item label{
+  font-weight:normal
+}
+
+.task-list-item.enabled label{
+  cursor:pointer
+}
+
+.task-list-item+.task-list-item{
+  margin-top:5px
+}
+
+.task-list-item-checkbox{
+  float:left;
+  margin-left:-20px;
+  margin-top:7px
+}
+
+
+.highlight{
+  background:#ffffff
+}
+
+.highlight .c{
+  color:#999988;
+  font-style:italic
+}
+
+.highlight .err{
+  color:#a61717;
+  background-color:#e3d2d2
+}
+
+.highlight .k{
+  font-weight:bold
+}
+
+.highlight .o{
+  font-weight:bold
+}
+
+.highlight .cm{
+  color:#999988;
+  font-style:italic
+}
+
+.highlight .cp{
+  color:#999999;
+  font-weight:bold
+}
+
+.highlight .c1{
+  color:#999988;
+  font-style:italic
+}
+
+.highlight .cs{
+  color:#999999;
+  font-weight:bold;
+  font-style:italic
+}
+
+.highlight .gd{
+  color:#000000;
+  background-color:#ffdddd
+}
+
+.highlight .gd .x{
+  color:#000000;
+  background-color:#ffaaaa
+}
+
+.highlight .ge{
+  font-style:italic
+}
+
+.highlight .gr{
+  color:#aa0000
+}
+
+.highlight .gh{
+  color:#999999
+}
+
+.highlight .gi{
+  color:#000000;
+  background-color:#ddffdd
+}
+
+.highlight .gi .x{
+  color:#000000;
+  background-color:#aaffaa
+}
+
+.highlight .go{
+  color:#888888
+}
+
+.highlight .gp{
+  color:#555555
+}
+
+.highlight .gs{
+  font-weight:bold
+}
+
+.highlight .gu{
+  color:#800080;
+  font-weight:bold
+}
+
+.highlight .gt{
+  color:#aa0000
+}
+
+.highlight .kc{
+  font-weight:bold
+}
+
+.highlight .kd{
+  font-weight:bold
+}
+
+.highlight .kn{
+  font-weight:bold
+}
+
+.highlight .kp{
+  font-weight:bold
+}
+
+.highlight .kr{
+  font-weight:bold
+}
+
+.highlight .kt{
+  color:#445588;
+  font-weight:bold
+}
+
+.highlight .m{
+  color:#009999
+}
+
+.highlight .s{
+  color:#d14
+}
+
+.highlight .n{
+  color:#333333
+}
+
+.highlight .na{
+  color:#008080
+}
+
+.highlight .nb{
+  color:#0086B3
+}
+
+.highlight .nc{
+  color:#445588;
+  font-weight:bold
+}
+
+.highlight .no{
+  color:#008080
+}
+
+.highlight .ni{
+  color:#800080
+}
+
+.highlight .ne{
+  color:#990000;
+  font-weight:bold
+}
+
+.highlight .nf{
+  color:#990000;
+  font-weight:bold
+}
+
+.highlight .nn{
+  color:#555555
+}
+
+.highlight .nt{
+  color:#000080
+}
+
+.highlight .nv{
+  color:#008080
+}
+
+.highlight .ow{
+  font-weight:bold
+}
+
+.highlight .w{
+  color:#bbbbbb
+}
+
+.highlight .mf{
+  color:#009999
+}
+
+.highlight .mh{
+  color:#009999
+}
+
+.highlight .mi{
+  color:#009999
+}
+
+.highlight .mo{
+  color:#009999
+}
+
+.highlight .sb{
+  color:#d14
+}
+
+.highlight .sc{
+  color:#d14
+}
+
+.highlight .sd{
+  color:#d14
+}
+
+.highlight .s2{
+  color:#d14
+}
+
+.highlight .se{
+  color:#d14
+}
+
+.highlight .sh{
+  color:#d14
+}
+
+.highlight .si{
+  color:#d14
+}
+
+.highlight .sx{
+  color:#d14
+}
+
+.highlight .sr{
+  color:#009926
+}
+
+.highlight .s1{
+  color:#d14
+}
+
+.highlight .ss{
+  color:#990073
+}
+
+.highlight .bp{
+  color:#999999
+}
+
+.highlight .vc{
+  color:#008080
+}
+
+.highlight .vg{
+  color:#008080
+}
+
+.highlight .vi{
+  color:#008080
+}
+
+.highlight .il{
+  color:#009999
+}
+
+.highlight .gc{
+  color:#999;
+  background-color:#EAF2F5
+}
+
+.type-csharp .highlight .k{
+  color:#0000FF
+}
+
+.type-csharp .highlight .kt{
+  color:#0000FF
+}
+
+.type-csharp .highlight .nf{
+  color:#000000;
+  font-weight:normal
+}
+
+.type-csharp .highlight .nc{
+  color:#2B91AF
+}
+
+.type-csharp .highlight .nn{
+  color:#000000
+}
+
+.type-csharp .highlight .s{
+  color:#A31515
+}
+
+.type-csharp .highlight .sc{
+  color:#A31515
+}
+</style><title>README</title></head><body><h1>
+<a name="user-content-%D0%9A%D1%80%D0%B0%D1%82%D0%BA%D0%B0%D1%8F-%D0%B8%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D0%B8%D1%8F-%D0%BE-%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D0%B5" class="anchor" href="#%D0%9A%D1%80%D0%B0%D1%82%D0%BA%D0%B0%D1%8F-%D0%B8%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D0%B8%D1%8F-%D0%BE-%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D0%B5" aria-hidden="true"><span class="octicon octicon-link"></span></a>Краткая информация о модуле</h1>
+
+<ul>
+<li>
+<strong>ВНИМАНИЕ!</strong> Работа модуля в кодировке windows-1251 не гарантируется, не проверялась и проверяться когда-либо автором модуля не будет. Техническая поддержка кодировки windows-1251 оказывается с наименьшим приоритетом и только при наличии желания и времени. Это принципиальная позиция и меняться не будет. В общем рекомендую переходить на нормальную кодировку сайта <img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f604.png" height="20" width="20" align="absmiddle">
+</li>
+<li>На данный момент модуль находится в стадии бета тестирования.</li>
+<li>Краткая информация о шаблонных тега прописана в шаблоне <strong>{THEME}/blockpro/blockpro.tpl</strong>
+</li>
+<li>Более детальная информация по используемому шаблонизатору модуля находится в <a href="https://github.com/bzick/fenom/blob/master/docs/ru/readme.md">документации по шаблонизатору</a>
+</li>
+<li>Все вопросы, баги и проблемы прошу писать в <a href="http://pafnuty.name/main/154-blockpro4-beta.html">посте о бетатестировании</a>, а если требуется предоставить доступ к закрытым данным (сайт, если он закрыт или нт желания светить, ftp и пр.), то пишем на <a href="pafnuty10@gmail.com">email</a> или <a href="http://pafnuty.name/index.php?do=pm&amp;doaction=newpm&amp;username=%CF%E0%F4%CD%F3%F2%E8%C9">в личку на сайте</a>.</li>
+<li>Сообщаем о багах в следующем формате: 
+
+<ul>
+<li>Строка подключения.</li>
+<li>Содержимое шаблона блока.</li>
+<li>Наблюдаемый текст ошибки.</li>
+<li>Данные о статистике блока (прописываем в строке подключения <code>&amp;showstat=y</code>)</li>
+</ul>
+</li>
+</ul><h1>
+<a name="user-content-%D0%97%D0%B0%D1%80%D0%B5%D0%B7%D0%B5%D1%80%D0%B2%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5-%D1%88%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5-%D1%82%D0%B5%D0%B3%D0%B8" class="anchor" href="#%D0%97%D0%B0%D1%80%D0%B5%D0%B7%D0%B5%D1%80%D0%B2%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5-%D1%88%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5-%D1%82%D0%B5%D0%B3%D0%B8" aria-hidden="true"><span class="octicon octicon-link"></span></a>Зарезервированные шаблонные теги:</h1>
+
+<ul>
+<li>
+<code>{$block_id}</code> - уникальный идентификатор блока, формируется из текущего конфига блока (не включая номер текущей страницы).</li>
+<li>
+<code>{$theme}</code> - аналог {THEME}</li>
+<li>
+<code>{$list}</code> - массив, с отобранными по параетрам строки подключения, новостями.</li>
+<li>
+<code>{$member_group_id}</code> - выводит id групы текущего пользователя.</li>
+<li>
+<code>{$pages}</code> - выводит постраничную навигацию.</li>
+<li>Теги, зарезервированные внутри цикла, где <code>$el</code> - элемент внутри цикла (можно менять на свой, по усмотреню):
+
+<ul>
+<li>
+<code>{$el.favorites}</code> - выводит favorites новости.</li>
+<li>
+<code>{$el.url}</code> - сформированный url в соответствии с настройками ЧПУ.</li>
+<li>
+<code>{$el.showRating}</code> - показывает рейтинг новости.</li>
+<li>
+<code>{$el.showRatingCount}</code> - показывает счётчик рейтинга (обновляется при выставлении рейтинга), если нужно просто вывести счётчик - можно использовать <code>{$el.rating_count}</code>.</li>
+<li>
+<code>{$el.editOnclick}</code> - выводит атрибут onclick для фомирования "кнопки" редактирования. </li>
+<li>
+<code>{$el.avatar}</code> - выводит аватар пользователя, если в строке подключения указана переменная <code>&amp;avatar=y</code>
+</li>
+</ul>
+</li>
+<li>
+<p>Теги, которые формируются автоматически (выводят содержимое соответствующих даных из БД). </p>
+
+<ul>
+<li><code>{$el.id}</code></li>
+<li><code>{$el.autor}</code></li>
+<li><code>{$el.date}</code></li>
+<li><code>{$el.short_story}</code></li>
+<li><code>{$el.full_story}</code></li>
+<li><code>{$el.xfields}</code></li>
+<li><code>{$el.title}</code></li>
+<li><code>{$el.category}</code></li>
+<li><code>{$el.alt_name}</code></li>
+<li><code>{$el.allow_comm}</code></li>
+<li><code>{$el.comm_num}</code></li>
+<li><code>{$el.fixed}</code></li>
+<li><code>{$el.tags}</code></li>
+<li><code>{$el.news_read}</code></li>
+<li><code>{$el.allow_rate}</code></li>
+<li><code>{$el.rating}</code></li>
+<li><code>{$el.vote_num}</code></li>
+<li><code>{$el.votes}</code></li>
+<li><code>{$el.view_edit}</code></li>
+<li><code>{$el.editdate}</code></li>
+<li><code>{$el.editor}</code></li>
+<li><code>{$el.reason}</code></li>
+</ul>
+</li>
+<li>
+<p>Модификаторы, используемые в шаблонах (можно применять к любым данным, но модификаторы не проверяют входящие данные, имейте ввиду):</p>
+
+<ul>
+<li>
+<a href="https://github.com/bzick/fenom/blob/master/docs/ru/syntax.md#%D0%9C%D0%BE%D0%B4%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D0%BE%D1%80%D1%8B">Список модификаторов по умолчанию</a>, используемых шаблонизатором.</li>
+<li>
+<code>{$foo|image}</code> - выводит картинку новости, пример использования в шаблоне.</li>
+<li>
+<code>{$foo|limit:500}</code> - ограничивает символы в тексте с учётом слов.</li>
+<li>
+<code>{$foo|catinfo}</code> - выводит информацию о категориии новости.</li>
+<li>
+<code>{$foo|dateformat}</code> - выводит отформатированную дату новости.</li>
+<li>
+<code>{$foo|declination}</code> - выводит слово (без числа) с правильным склонением в зависимости от числа, к которому применяется.</li>
+</ul>
+</li>
+</ul><h1>
+<a name="user-content-%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0-blockpro4" class="anchor" href="#%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0-blockpro4" aria-hidden="true"><span class="octicon octicon-link"></span></a>Установка Block.Pro.4</h1>
+
+<ul>
+<li>Перекодировать файлы в windows-1251 при необходимости. </li>
+<li>Залить содержимое папки upload в корень сайта. <strong>ВНИМАНИЕ!</strong> Папка с шаблонами модуля содержит шаблон blockpro.tpl, имя его совпадает с уже существующим, будьте осторожны.</li>
+<li>В css-файл добавить (стилизация навигации, можно доработать под себя):</li>
+</ul><div class="highlight highlight-css"><pre><span class="c">/* ==========================================================================</span>
+<span class="c">   Навигация blockpro */</span>
+<span class="c">/* ========================================================================== */</span>
+
+    <span class="nc">.bp-pager</span><span class="nd">:before</span><span class="o">,</span>
+    <span class="nc">.bp-pager</span><span class="nd">:after</span> <span class="p">{</span>
+        <span class="k">content</span><span class="o">:</span> <span class="s2">" "</span><span class="p">;</span>
+        <span class="k">display</span><span class="o">:</span> <span class="n">table</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nc">.bp-pager</span><span class="nd">:after</span> <span class="p">{</span>
+        <span class="k">clear</span><span class="o">:</span> <span class="k">both</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nc">.bp-pager</span> <span class="o">[</span><span class="nt">data-page-num</span><span class="o">],</span>
+    <span class="nc">.bp-pager</span> <span class="nc">.current</span> <span class="p">{</span>
+        <span class="k">display</span><span class="o">:</span> <span class="k">inline</span><span class="o">-</span><span class="k">block</span><span class="p">;</span>
+        <span class="k">color</span><span class="o">:</span> <span class="m">#ffffff</span><span class="p">;</span>
+        <span class="k">margin-bottom</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+        <span class="k">font-weight</span><span class="o">:</span> <span class="k">normal</span><span class="p">;</span>
+        <span class="k">text-align</span><span class="o">:</span> <span class="k">center</span><span class="p">;</span>
+        <span class="k">vertical-align</span><span class="o">:</span> <span class="k">middle</span><span class="p">;</span>
+        <span class="k">cursor</span><span class="o">:</span> <span class="k">pointer</span><span class="p">;</span>
+        <span class="k">background-image</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+        <span class="k">background</span><span class="o">:</span> <span class="m">#4a9fc5</span><span class="p">;</span>
+        <span class="k">border</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+        <span class="k">text-decoration</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+        <span class="k">white-space</span><span class="o">:</span> <span class="k">nowrap</span><span class="p">;</span>
+        <span class="k">padding</span><span class="o">:</span> <span class="m">10px</span> <span class="m">15px</span> <span class="m">8px</span><span class="p">;</span>
+        <span class="k">font-size</span><span class="o">:</span> <span class="m">18px</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">user</span><span class="o">-</span><span class="n">select</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">user</span><span class="o">-</span><span class="n">select</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">ms</span><span class="o">-</span><span class="n">user</span><span class="o">-</span><span class="n">select</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+        <span class="n">user</span><span class="o">-</span><span class="n">select</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">transition</span><span class="o">:</span> <span class="n">all</span> <span class="n">ease</span> <span class="m">0.3s</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">transition</span><span class="o">:</span> <span class="n">all</span> <span class="n">ease</span> <span class="m">0.3s</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">o</span><span class="o">-</span><span class="n">transition</span><span class="o">:</span> <span class="n">all</span> <span class="n">ease</span> <span class="m">0.3s</span><span class="p">;</span>
+        <span class="n">transition</span><span class="o">:</span> <span class="n">all</span> <span class="n">ease</span> <span class="m">0.3s</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">2px</span> <span class="m">0</span> <span class="m">#3584a7</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">2px</span> <span class="m">0</span> <span class="m">#3584a7</span><span class="p">;</span>
+        <span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">2px</span> <span class="m">0</span> <span class="m">#3584a7</span><span class="p">;</span>
+        <span class="k">padding</span><span class="o">:</span> <span class="m">5px</span> <span class="m">8px</span> <span class="m">3px</span><span class="p">;</span>
+        <span class="k">font-size</span><span class="o">:</span> <span class="m">12px</span><span class="p">;</span>
+        <span class="k">line-height</span><span class="o">:</span> <span class="m">20px</span><span class="p">;</span>
+        <span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">3px</span><span class="p">;</span>
+        <span class="k">margin-bottom</span><span class="o">:</span> <span class="m">7px</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nc">.bp-pager</span> <span class="o">[</span><span class="nt">data-page-num</span><span class="o">]</span><span class="nd">:focus</span> <span class="p">{</span>
+        <span class="k">outline</span><span class="o">:</span> <span class="k">thin</span> <span class="k">dotted</span> <span class="m">#333</span><span class="p">;</span>
+        <span class="k">outline</span><span class="o">:</span> <span class="m">5px</span> <span class="k">auto</span> <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">focus</span><span class="o">-</span><span class="n">ring</span><span class="o">-</span><span class="k">color</span><span class="p">;</span>
+        <span class="k">outline</span><span class="o">-</span><span class="n">offset</span><span class="o">:</span> <span class="m">-2px</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nc">.bp-pager</span> <span class="o">[</span><span class="nt">data-page-num</span><span class="o">]</span><span class="nd">:hover</span><span class="o">,</span>
+    <span class="nc">.bp-pager</span> <span class="o">[</span><span class="nt">data-page-num</span><span class="o">]</span><span class="nd">:focus</span> <span class="p">{</span>
+        <span class="k">color</span><span class="o">:</span> <span class="m">#ffffff</span><span class="p">;</span>
+        <span class="k">background</span><span class="o">:</span> <span class="m">#50bd98</span><span class="p">;</span>
+        <span class="k">text-decoration</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">2px</span> <span class="m">0</span> <span class="m">#3c9e7d</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">2px</span> <span class="m">0</span> <span class="m">#3c9e7d</span><span class="p">;</span>
+        <span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">2px</span> <span class="m">0</span> <span class="m">#3c9e7d</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nc">.bp-pager</span> <span class="o">[</span><span class="nt">data-page-num</span><span class="o">]</span><span class="nd">:active</span> <span class="p">{</span>
+        <span class="k">outline</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">2px</span> <span class="m">0</span> <span class="m">#50bd98</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">2px</span> <span class="m">0</span> <span class="m">#50bd98</span><span class="p">;</span>
+        <span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">2px</span> <span class="m">0</span> <span class="m">#50bd98</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nc">.bp-pager</span> <span class="nc">.current</span> <span class="p">{</span>
+        <span class="k">cursor</span><span class="o">:</span> <span class="k">default</span><span class="p">;</span>
+        <span class="k">background</span><span class="o">:</span> <span class="m">#c70000</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">2px</span> <span class="m">0</span> <span class="m">#940000</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">2px</span> <span class="m">0</span> <span class="m">#940000</span><span class="p">;</span>
+        <span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">2px</span> <span class="m">0</span> <span class="m">#940000</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c">/**</span>
+<span class="c">    * .base-loader - класс, добавляемый к блоку при аякс-загрузке</span>
+<span class="c">    */</span>
+    <span class="nc">.base-loader</span> <span class="p">{</span>
+        <span class="k">position</span><span class="o">:</span> <span class="k">relative</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nc">.base-loader</span><span class="nd">:after</span> <span class="p">{</span>
+        <span class="k">position</span><span class="o">:</span> <span class="k">absolute</span><span class="p">;</span>
+        <span class="k">content</span><span class="o">:</span> <span class="s2">""</span><span class="p">;</span>
+        <span class="k">top</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+        <span class="k">right</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+        <span class="k">bottom</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+        <span class="k">left</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+        <span class="k">z-index</span><span class="o">:</span> <span class="m">1</span><span class="p">;</span>
+        <span class="k">background</span><span class="o">:</span> <span class="n">rgba</span><span class="p">(</span><span class="m">255</span><span class="o">,</span> <span class="m">255</span><span class="o">,</span> <span class="m">255</span><span class="o">,</span> <span class="m">0</span><span class="o">.</span><span class="m">9</span><span class="p">)</span> <span class="sx">url(../blockpro/base-loader.gif)</span> <span class="m">50%</span> <span class="m">50%</span> <span class="k">no-repeat</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">transition</span><span class="o">:</span> <span class="n">all</span> <span class="n">ease</span> <span class="m">0.3s</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">transition</span><span class="o">:</span> <span class="n">all</span> <span class="n">ease</span> <span class="m">0.3s</span><span class="p">;</span>
+        <span class="o">-</span><span class="n">o</span><span class="o">-</span><span class="n">transition</span><span class="o">:</span> <span class="n">all</span> <span class="n">ease</span> <span class="m">0.3s</span><span class="p">;</span>
+        <span class="n">transition</span><span class="o">:</span> <span class="n">all</span> <span class="n">ease</span> <span class="m">0.3s</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c">/**</span>
+<span class="c">     * [data-favorite-id] - селектор favorites</span>
+<span class="c">     */</span>
+
+    <span class="o">[</span><span class="nt">data-favorite-id</span><span class="o">]</span> <span class="p">{</span>
+        <span class="k">cursor</span><span class="o">:</span> <span class="k">pointer</span><span class="p">;</span>
+    <span class="p">}</span>
+</pre></div>
+
+<ul>
+<li>В js-файл добавить (обработка навигации и favorites, можно поправить под себя):</li>
+</ul><div class="highlight highlight-js"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'click touchstart'</span><span class="p">,</span> <span class="s1">'[data-page-num]'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'ок'</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">$this</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">),</span>
+            <span class="nx">blockId</span> <span class="o">=</span> <span class="nx">$this</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">data</span><span class="p">(</span><span class="s1">'blockId'</span><span class="p">),</span>
+            <span class="nx">pageNum</span> <span class="o">=</span> <span class="nx">$this</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s1">'pageNum'</span><span class="p">),</span>
+            <span class="nx">$block</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'#'</span> <span class="o">+</span> <span class="nx">blockId</span><span class="p">);</span>
+
+        <span class="nx">base_loader</span><span class="p">(</span><span class="nx">blockId</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">);</span>
+
+        <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+            <span class="nx">url</span><span class="o">:</span> <span class="nx">dle_root</span> <span class="o">+</span> <span class="s1">'engine/ajax/blockpro.php'</span><span class="p">,</span>
+            <span class="nx">dataType</span><span class="o">:</span> <span class="s1">'html'</span><span class="p">,</span>
+            <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">pageNum</span><span class="o">:</span> <span class="nx">pageNum</span><span class="p">,</span>
+                <span class="nx">blockId</span><span class="o">:</span> <span class="nx">blockId</span>
+            <span class="p">},</span>
+        <span class="p">})</span>
+            <span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">$block</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">html</span><span class="p">());</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+            <span class="p">})</span>
+            <span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                <span class="nx">base_loader</span><span class="p">(</span><span class="nx">blockId</span><span class="p">,</span> <span class="s1">'stop'</span><span class="p">);</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"error"</span><span class="p">);</span>
+            <span class="p">})</span>
+            <span class="p">.</span><span class="nx">always</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                <span class="nx">base_loader</span><span class="p">(</span><span class="nx">blockId</span><span class="p">,</span> <span class="s1">'stop'</span><span class="p">);</span>
+            <span class="p">});</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'click touchstart'</span><span class="p">,</span> <span class="s1">'[data-favorite-id]'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">$this</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">),</span>
+            <span class="nx">fav_id</span> <span class="o">=</span> <span class="nx">$this</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s1">'favoriteId'</span><span class="p">),</span>
+            <span class="nx">action</span> <span class="o">=</span> <span class="nx">$this</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s1">'action'</span><span class="p">);</span>
+
+        <span class="nx">ShowLoading</span><span class="p">(</span><span class="s1">''</span><span class="p">);</span>
+        <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">dle_root</span> <span class="o">+</span> <span class="s2">"engine/ajax/favorites.php"</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nx">fav_id</span><span class="o">:</span> <span class="nx">fav_id</span><span class="p">,</span>
+            <span class="nx">action</span><span class="o">:</span> <span class="nx">action</span><span class="p">,</span>
+            <span class="nx">skin</span><span class="o">:</span> <span class="nx">dle_skin</span>
+        <span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">HideLoading</span><span class="p">(</span><span class="s1">''</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">$img</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
+                <span class="nx">src</span> <span class="o">=</span> <span class="nx">$img</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">'src'</span><span class="p">),</span>
+                <span class="nx">title</span> <span class="o">=</span> <span class="nx">$img</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">'title'</span><span class="p">),</span>
+                <span class="nx">imgAction</span> <span class="o">=</span> <span class="p">(</span><span class="nx">action</span> <span class="o">==</span> <span class="s1">'plus'</span><span class="p">)</span> <span class="o">?</span> <span class="s1">'minus'</span> <span class="o">:</span> <span class="s1">'plus'</span><span class="p">,</span>
+                <span class="nx">l</span> <span class="o">=</span> <span class="nx">src</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">imgAction</span><span class="p">).</span><span class="nx">length</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">l</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s1">'[data-favorite-id='</span> <span class="o">+</span> <span class="nx">fav_id</span> <span class="o">+</span> <span class="s1">']'</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">prop</span><span class="p">({</span>
+                        <span class="nx">alt</span><span class="o">:</span> <span class="nx">title</span><span class="p">,</span>
+                        <span class="nx">title</span><span class="o">:</span> <span class="nx">title</span><span class="p">,</span>
+                        <span class="nx">src</span><span class="o">:</span> <span class="nx">src</span>
+                    <span class="p">})</span>
+                    <span class="p">.</span><span class="nx">data</span><span class="p">({</span>
+                        <span class="nx">action</span><span class="o">:</span> <span class="nx">imgAction</span><span class="p">,</span>
+                        <span class="nx">favoriteId</span><span class="o">:</span> <span class="nx">fav_id</span>
+                    <span class="p">});</span>
+            <span class="p">};</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * Простейшая функция для реализации эффекта загрузки блока</span>
+<span class="cm"> * Добавляет/удаляет заданный класс для заданного блока</span>
+<span class="cm"> * вся работа по оформлению ложится на css</span>
+<span class="cm"> *</span>
+<span class="cm"> * @author ПафНутиЙ &lt;pafnuty10@gmail.com&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param  {str} id        ID блока</span>
+<span class="cm"> * @param  {str} method    start/stop</span>
+<span class="cm"> * @param  {str} className Имя класса, добавляемого блоку</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">base_loader</span> <span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">method</span><span class="p">,</span> <span class="nx">className</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">$block</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'#'</span> <span class="o">+</span> <span class="nx">id</span><span class="p">),</span>
+        <span class="nx">cname</span> <span class="o">=</span> <span class="p">(</span><span class="nx">className</span><span class="p">)</span> <span class="o">?</span> <span class="nx">className</span> <span class="o">:</span> <span class="s1">'base-loader'</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">method</span> <span class="o">==</span> <span class="s1">'start'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">$block</span><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="nx">cname</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">method</span> <span class="o">==</span> <span class="s1">'stop'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">$block</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="nx">cname</span><span class="p">);</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+</pre></div></body></html>
