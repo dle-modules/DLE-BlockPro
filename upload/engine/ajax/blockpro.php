@@ -73,7 +73,7 @@ if ($_cr) {
 	include ENGINE_DIR . '/modules/base/blockpro.php';
 
 } else {
-	exit;
+	die('doh');
 }
 
 ?>

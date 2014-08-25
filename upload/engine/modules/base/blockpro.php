@@ -40,35 +40,35 @@ if ($isAjaxConfig) {
 		'limit'          => !empty($limit) ? $limit : '10', // Количество новостей в блоке
 		'fixed'          => !empty($fixed) ? $fixed : 'yes', // Обработка фиксированных новостей (yes/only/witout показ всех/только фиксированных/только обычных новостей)
 
-		'postId'         => !empty($postId) ? $postId : '', // ID новостей для вывода в блоке (через запятую)
-		'notPostId'      => !empty($notPostId) ? $notPostId : '', // ID игнорируемых новостей (через запятую)
+		'postId'         => !empty($postId) ? $postId : '', // ID новостей для вывода в блоке (через запятую, или черточку)
+		'notPostId'      => !empty($notPostId) ? $notPostId : '', // ID игнорируемых новостей (через запятую, или черточку)
 
 		'author'         => !empty($author) ? $author : '', // Логины авторов, для показа их новостей в блоке (через запятую)
 		'notAuthor'      => !empty($notAuthor) ? $notAuthor : '', // Логины игнорируемых авторов (через запятую)
 
-		'xfilter'        => !empty($xfilter) ? $xfilter : '', // Имена дополнительных полей для фильтрации по ним новостей (через запятую)
-		'notXfilter'     => !empty($notXfilter) ? $notXfilter : '', // Имена дополнительных полей для игнорирования показа (через запятую)
+		'xfilter'        => !empty($xfilter) ? $xfilter : '', // Имена дополнительных полей для фильтрации новостей по ним (через запятую)
+		'notXfilter'     => !empty($notXfilter) ? $notXfilter : '', // Имена дополнительных полей для игнорирования показа новостей (через запятую)
 
 		'xfSearch'       => !empty($xfSearch) ? $xfSearch : false, // синтаксис передачи данных: &xfSearch=имя_поля|значение||имя_поля|значение
 		'notXfSearch'    => !empty($notXfSearch) ? $notXfSearch : false, // синтаксис передачи данных: &notXfSearch=имя_поля|значение||имя_поля|значение
 		'xfSearchLogic'  => !empty($xfSearchLogic) ? $xfSearchLogic : 'OR', // Принимает OR или AND (по умолчанию OR)
 
-		'catId'          => !empty($catId) ? $catId : '', // Категории для показа	(через запятую)
+		'catId'          => !empty($catId) ? $catId : '', // Категории для показа	(через запятую, или черточку)
 		'subcats'        => !empty($subcats) ? $subcats : false, // Выводить подкатегории указанных категорий (&subcats=y), работает и с диапазонами.
-		'notCatId'       => !empty($notCatId) ? $notCatId : '', // Игнорируемые категории (через запятую)
-		'notSubcats'     => !empty($notSubcats) ? $notSubcats : false, // Выводить подкатегории игнорируемых категорий (&notSubcats=y), работает и с диапазонами.
+		'notCatId'       => !empty($notCatId) ? $notCatId : '', // Игнорируемые категории (через запятую, или черточку)
+		'notSubcats'     => !empty($notSubcats) ? $notSubcats : false, // Игнорировать подкатегории игнорируемых категорий (&notSubcats=y), работает и с диапазонами.
 
-		'tags'           => !empty($tags) ? $tags : '', // Теги для показа	(через запятую)
+		'tags'           => !empty($tags) ? $tags : '', // Теги из облака тегов для показа новостей, содержащих их (через запятую)
 		'notTags'        => !empty($notTags) ? $notTags : '', // Игнорируемые теги (через запятую)
 
 		'day'            => !empty($day) ? $day : false, // Временной период для отбора новостей
 		'dayCount'       => !empty($dayCount) ? $dayCount : false, // Интервал для отбора (т.е. к примеру выбираем новости за прошлую недею так: &day=14&dayCount=7 )
 		'sort'           => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title)
-		'order'          => !empty($order) ? $order : 'new', // Направление сортировки
+		'order'          => !empty($order) ? $order : 'new', // Направление сортировки (new, old)
 
-		'avatar'         => !empty($avatar) ? $avatar : false, // Вывод аватарки пользователя (+1 запрос на новость).
+		'avatar'         => !empty($avatar) ? $avatar : false, // Вывод аватарки пользователя (немного усложнит запрос).
 
-		'showstat'       => !empty($showstat) ? $showstat : false, // Показывать время стату по блоку
+		'showstat'       => !empty($showstat) ? $showstat : false, // Показывать время и статистику по блоку
 
 		'related'        => !empty($related) ? $related : false, // Включить режим вывода похожих новостей (по умолчанию нет)
 		'showNav'        => !empty($showNav) ? $showNav : false, // Включить постраничную навигацию
@@ -239,6 +239,8 @@ if (!$output) {
 			$orderArr[] = 'e.rating ' . $ordering . ', p.comm_num ' . $ordering . ', e.news_read ' . $ordering;
 			break;
 	}
+
+
 
 	// Фильтрация КАТЕГОРИЙ по их ID
 	if ($base->cfg['catId'] == 'this') {
@@ -437,13 +439,13 @@ if (!$output) {
 		$list[$key]['showRating'] = '';
 		$list[$key]['showRatingCount'] = '';
 		if($value['allow_rate']) {
-			$list[$key]['showRatingCount'] = '<span id="vote-num-id-' . $value['id'] . '">' . $value['vote_num'] . '</span>';
+			$list[$key]['showRatingCount'] = '<span data-vote-num-id="' . $value['id'] . '">' . $value['vote_num'] . '</span>';
 
 			if( $base->dle_config['short_rating'] and $user_group[$member_id['user_group']]['allow_rating'] ) {
-				$list[$key]['showRating'] = ShowRating($value['id'], $value['rating'], $value['vote_num'], 1);
+				$list[$key]['showRating'] = baseShowRating($value['id'], $value['rating'], $value['vote_num'], 1);
 			}
 			else {
-				$list[$key]['showRating'] = ShowRating($value['id'], $value['rating'], $value['vote_num'], 0);
+				$list[$key]['showRating'] = baseShowRating($value['id'], $value['rating'], $value['vote_num'], 0);
 			}
 		}
 		// Разбираемся с избранным
@@ -524,7 +526,7 @@ if (!$output) {
 
 	} else {
 		// Устанавливаем уникальный ID для блока по умолчаниюы
-		$tplArr['block_id'] = 'bp_' . crc32(implode('_', $this->cfg));
+		$tplArr['block_id'] = 'bp_' . crc32(implode('_', $base->cfg));
 	}
 
 	// Результат обработки шаблона

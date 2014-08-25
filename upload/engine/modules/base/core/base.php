@@ -501,5 +501,43 @@ function getNormalHomeHttp() {
 	return $config['http_home_url'];
 }
 
+function baseShowRating($id, $rating, $vote_num, $allow = true) {
+	global $lang;
+
+	if( $rating AND $vote_num ) $rating = round( ($rating / $vote_num), 0 );
+	else $rating = 0;
+	$rating = $rating * 20;
+
+	if( !$allow ) {
+
+		$rated = <<<HTML
+<div class="rating">
+	<ul class="unit-rating">
+		<li class="current-rating" style="width:{$rating}%;">{$rating}</li>
+	</ul>
+</div>
+HTML;
+
+		return $rated;
+	}
+
+	$rated = <<<HTML
+<div data-rating-layer="{$id}">
+	<div class="rating">
+		<ul class="unit-rating">
+			<li class="current-rating" style="width:{$rating}%;">{$rating}</li>
+			<li><a href="#" title="{$lang['useless']}" class="r1-unit" onclick="base_rate('1', '{$id}'); return false;">1</a></li>
+			<li><a href="#" title="{$lang['poor']}" class="r2-unit" onclick="base_rate('2', '{$id}'); return false;">2</a></li>
+			<li><a href="#" title="{$lang['fair']}" class="r3-unit" onclick="base_rate('3', '{$id}'); return false;">3</a></li>
+			<li><a href="#" title="{$lang['good']}" class="r4-unit" onclick="base_rate('4', '{$id}'); return false;">4</a></li>
+			<li><a href="#" title="{$lang['excellent']}" class="r5-unit" onclick="base_rate('5', '{$id}'); return false;">5</a></li>
+		</ul>
+	</div>
+</div>
+HTML;
+
+	return $rated;
+}
+
 
 ?>
