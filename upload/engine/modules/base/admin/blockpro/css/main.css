@@ -671,6 +671,16 @@ textarea.input:focus {
   -ms-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
+.input:disabled,
+.checkbox:disabled + label span,
+.checkbox:checked + label span:before,
+.radio:disabled + label span,
+.radio:checked + label span:before,
+.checkbox:disabled + label  {
+  cursor: not-allowed;
+  opacity: .6;
+}
+
 .radio {
   display: none;
 }
@@ -2308,6 +2318,9 @@ img.ta-center {
 .text-muted,
 .text-gray {
   color: #a3aaba;
+}
+.text-red {
+  color: #c70000;
 }
 .alert {
   border: solid 1px #f1c40f;

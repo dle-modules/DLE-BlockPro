@@ -156,10 +156,10 @@ $steps = <<<HTML
 			<textarea readonly>$(document)
 	.on('click touchstart', '[data-page-num]', function (event) {
 
-		var $this = $(this),
-			blockId = $this.parent().data('blockId'),
-			pageNum = $this.data('pageNum'),
-			$block = $('#' + blockId);
+		var \$this = $(this),
+			blockId = \$this.parent().data('blockId'),
+			pageNum = \$this.data('pageNum'),
+			\$block = $('#' + blockId);
 
 		base_loader(blockId, 'start');
 
@@ -172,7 +172,7 @@ $steps = <<<HTML
 			},
 		})
 			.done(function (data) {
-				$block.html($(data).html());
+				\$block.html($(data).html());
 				console.log(data);
 			})
 			.fail(function () {
@@ -186,9 +186,9 @@ $steps = <<<HTML
 	})
 	.on('click touchstart', '[data-favorite-id]', function (event) {
 		event.preventDefault();
-		var $this = $(this),
-			fav_id = $this.data('favoriteId'),
-			action = $this.data('action');
+		var \$this = $(this),
+			fav_id = \$this.data('favoriteId'),
+			action = \$this.data('action');
 
 		ShowLoading('');
 		$.get(dle_root + "engine/ajax/favorites.php", {
@@ -197,9 +197,9 @@ $steps = <<<HTML
 			skin: dle_skin
 		}, function (data) {
 			HideLoading('');
-			var $img = $(data),
-				src = $img.prop('src'),
-				title = $img.prop('title'),
+			var \$img = $(data),
+				src = \$img.prop('src'),
+				title = \$img.prop('title'),
 				imgAction = (action == 'plus') ? 'minus' : 'plus',
 				l = src.split(imgAction).length;
 			if (l == 2) {
@@ -230,14 +230,14 @@ $steps = <<<HTML
  * @param  {str} className Имя класса, добавляемого блоку
  */
 function base_loader (id, method, className) {
-	var $block = $('#' + id),
+	var \$block = $('#' + id),
 		cname = (className) ? className : 'base-loader';
 	if (method == 'start') {
-		$block.addClass(cname);
+		\$block.addClass(cname);
 	};
 
 	if (method == 'stop') {
-		$block.removeClass(cname);
+		\$block.removeClass(cname);
 	};
 }
 
@@ -263,9 +263,9 @@ function base_rate(rate, id) {
 		if (data.success) {
 			var rating = data.rating;
 
-			rating = rating.replace(/&lt;/g, "<");
-			rating = rating.replace(/&gt;/g, ">");
-			rating = rating.replace(/&amp;/g, "&");
+			rating = rating.replace(/&amp;lt;/g, "<");
+			rating = rating.replace(/&amp;gt;/g, ">");
+			rating = rating.replace(/&amp;amp;/g, "&");
 
 			$('[data-rating-layer="'+id+'"]').html(rating);
 			$('[data-vote-num-id="'+id+'"]').html(data.votenum);

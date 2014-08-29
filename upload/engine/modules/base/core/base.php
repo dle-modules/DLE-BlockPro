@@ -48,6 +48,7 @@ class base {
 
 		// Подрубаем класс для работы с БД
 		$this->db = new SafeMysql(array(
+				'host'    => DBHOST,
 				'user'    => DBUSER,
 				'pass'    => DBPASS,
 				'db'      => DBNAME,
@@ -279,7 +280,7 @@ function getImage($data, $noimage = '', $imageType = 'small', $number, $size, $q
 	$dir_suffix = $size . '/' . $subdir;
 
 	$dir = ROOT_DIR . '/uploads/base/' . $dir_suffix;
-
+	$data = stripslashes($data);
 
 	if (preg_match_all('/<img(?:\\s[^<>]*?)?\\bsrc\\s*=\\s*(?|"([^"]*)"|\'([^\']*)\'|([^<>\'"\\s]*))[^<>]*>/i', $data, $m)) {
 
@@ -290,7 +291,7 @@ function getImage($data, $noimage = '', $imageType = 'small', $number, $size, $q
 
 
 		// Удаляем текущий домен (в т.ч. с www) из строки.
-		$urlShort = str_ireplace(array('http://' . $_SERVER['HTTP_HOST'], 'http://www.' . $_SERVER['HTTP_HOST']), '', $imgOriginal);
+		$urlShort = str_ireplace(array('http://' . $_SERVER['HTTP_HOST'], 'http://www.' . $_SERVER['HTTP_HOST'], 'https://' . $_SERVER['HTTP_HOST'], 'https://www.' . $_SERVER['HTTP_HOST']), '', $imgOriginal);
 
 
 		// Проверяем наша картинка или чужая.
@@ -356,6 +357,8 @@ function getImage($data, $noimage = '', $imageType = 'small', $number, $size, $q
 				// Если файл есть - отдаём картинку с сервера.
 				if (file_exists($dir . $fileName)) {
 					$imgResized = $config['http_home_url'] . 'uploads/base/' . $dir_suffix . $fileName;
+				} else {
+					$imgResized = $noimage;
 				}
 
 			} // Если параметра imgSize нет - отдаём оригинальную картинку
