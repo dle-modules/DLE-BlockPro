@@ -1,7 +1,7 @@
 <?php
 /*
 =============================================================================
-Проверка обновлений
+Проверка обновлений для DLE модулей by ПафНутиЙ
 =============================================================================
 Автор:   ПафНутиЙ
 URL:     http://pafnuty.name/
@@ -14,49 +14,27 @@ if (!defined('DATALIFEENGINE')) die("Go fuck yourself!");
 
 /**
  * Class checkUpdates
- * класс для управления допполями
+ * класс для проверки обновлений
  */
 class checkUpdates {
 
-	/**
-	 * @var
-	 */
 	public $result;
-	/**
-	 * @var string
-	 */
-	public $cacheFile;
-	/**
-	 * @var mixed
-	 */
-	private $cfg;
+	var $infoArray = array();
 
-	/**
-	 *
-	 */
-	function __construct() {
-		$this->cfg       = json_decode(file_get_contents(ENGINE_DIR . '/data/ymaps_config.json'));
-		$this->cacheFile = ENGINE_DIR . '/cache/system/ymap.json';
+	function __construct($infoArray) {
+		$this->infoArray = $infoArray;
 	}
 
+
 	/**
-	 * @param $url
-	 *
-	 * @param $mail
-	 *
-	 * @internal param $date
 	 * @return $this
 	 */
-	public function check($url, $mail) {
+	private function check() {
+		$getInfoArray = $this->getInfo($this->infoArray);
 
-		$cacheArr  = $this->readCache();
-		$$mail     = ($mail) ? $mail : false;
-		$infoArray = $this->getInfo($url, $this->cfg->moduleName, $mail);
-
-		if ($cacheArr['currentVersion'] != $infoArray['currentVersion']) {
-			$this->result = $this->showUpdateInfo($infoArray);
-		}
-		else {
+		if ($this->parseVersion($this->infoArray['currentVersion']) < $this->parseVersion($getInfoArray['currentVersion'])) {
+			$this->result = $this->showUpdateInfo($getInfoArray);
+		} else {
 			$this->result = $this->showUpdateInfo(false);
 		}
 
@@ -65,39 +43,14 @@ class checkUpdates {
 	}
 
 	/**
-	 * @return mixed
-	 */
-	private function readCache() {
-		$file = file_get_contents($this->cacheFile);
-		if (!$file || (json_decode($file)->lastCheck < time() + 36000 )) {
-			$this->createCacheFile();
-		}
-
-		return json_decode($file, true);
-	}
-
-	/**
-	 * @return string
-	 */
-	private function createCacheFile() {
-		$arr = array('currentVersion' => $this->cfg->moduleVersion, 'lastCheck' => time());
-		file_put_contents($this->cacheFile, json_encode($arr), LOCK_EX);
-
-		return file_get_contents($this->cacheFile);
-	}
-
-	/**
-	 * @param $url
-	 * @param $n
-	 * @param $mail
+	 * @param $arr
 	 *
 	 * @return mixed
 	 */
-	private function getInfo($url, $n, $mail) {
-		$thisDomain = $_SERVER['HTTP_HOST'];
-		$mail       = ($mail) ? '&m=' . $mail : false;
-
-		return json_decode(@file_get_contents($url . '?n=' . $n . '&d=' . $thisDomain . $mail), true);
+	private function getInfo($arr) {
+		$arr['d'] = $_SERVER['HTTP_HOST'];
+		$query = http_build_query($arr);
+		return json_decode(@file_get_contents('http://updates.pafnuty.name/' . '?' . $query), true);
 	}
 
 	/**
@@ -108,10 +61,24 @@ class checkUpdates {
 	private function showUpdateInfo($info) {
 		if ($info) {
 			return $info;
-		}
-		else {
+		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * @param $str
+	 *
+	 * @return int
+	 */
+	private function parseVersion($str) {
+		$arr = explode('.', $str);
+		$retNum = 0;
+		foreach ($arr as $num) {
+			$retNum += $num;
+		}
+
+		return $retNum;
 	}
 
 
@@ -119,7 +86,7 @@ class checkUpdates {
 	 * @return mixed
 	 */
 	public function getResult() {
-		return $this->result;
+		return $this->check()->result;
 	}
 
 } //checkUpdates

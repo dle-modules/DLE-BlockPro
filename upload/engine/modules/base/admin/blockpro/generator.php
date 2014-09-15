@@ -140,7 +140,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			<select name="fixed" class="styler">
 				<option value="yes" <? if($cfg['fixed'] == 'yes'):?> selected <?endif?>>Показывать вместе с обычными</option>
 				<option value="only" <? if($cfg['fixed'] == 'only'):?> selected <?endif?> >Показывать только фиксированные</option>
-				<option value="witout" <? if($cfg['fixed'] == 'witout'):?> selected <?endif?> >Показывать только обычные</option>
+				<option value="without" <? if($cfg['fixed'] == 'without'):?> selected <?endif?> >Показывать только обычные</option>
 			</select>
 		</div>
 	</div>

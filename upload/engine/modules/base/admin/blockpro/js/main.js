@@ -14,17 +14,13 @@ var doc = $(document);
 
 
 doc
-	.on('click', '.popup-modal-dismiss', function (e) {
-		e.preventDefault();
-		$.magnificPopup.close();
-	})
-	.on('click', '.modal-lose', function () {
+	.on('click', '.modal-close', function () {
 		$.magnificPopup.close();
 	})
 	.on('click', '.code', function() {
 		$(this).select();
 	})
-	.on('click touchstart', '[data-page-num]', function (event) {
+	.on('click', '[data-page-num]', function (event) {
 
 		var $this = $(this),
 			blockId = $this.parent().data('blockId'),
@@ -54,7 +50,7 @@ doc
 			});
 
 	})
-	.on('click touchstart', '[data-favorite-id]', function (event) {
+	.on('click', '[data-favorite-id]', function (event) {
 		event.preventDefault();
 		var $this = $(this),
 			fav_id = $this.data('favoriteId'),
@@ -177,7 +173,7 @@ doc
 		}
 
 		$('#cat_code').val(prefix + text + suffix);
-	})
+	});
 
 
 
@@ -202,55 +198,11 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
-	$('.mfp-open').magnificPopup();
-
 	$('.mfp-open-ajax').magnificPopup({
 		type: 'ajax'
 	});
 
-	// Инициализация Ladda
-	var laddaLoad = $('.ladda-button').ladda();
-
-	// Дефолтные настройки аякс формы
-	var formOptions = {
-		// dataType: 'json',
-		beforeSubmit: processStart,
-		success: processDone
-	};
-
-	$('#ajaxForm').ajaxForm(formOptions);
-
-
-	/**
-	 * [processStart description]
-	 * @return {[type]} [description]
-	 */
-	function processStart() {
-		laddaLoad.ladda('start')
-	};
-
-	/**
-	 * [processDone description]
-	 * @param  {[type]} data [description]
-	 * @return {[type]}      [description]
-	 */
-	function processDone(data) {
-		var progress = 0;
-		var interval = setInterval(function () {
-			progress = Math.min(progress + Math.random() * 0.2, 1);
-			laddaLoad.ladda('setProgress', progress);
-
-			if (progress === 1) {
-				laddaLoad.ladda('stop');
-				clearInterval(interval);
-			}
-		}, 100);
-
-	};
-
-
 });
-
 
 /**
  * Простейшая функция для реализации эффекта загрузки блока

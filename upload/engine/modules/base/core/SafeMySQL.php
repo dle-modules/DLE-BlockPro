@@ -105,6 +105,15 @@ class SafeMySQL
 		unset($opt); // I am paranoid
 	}
 
+	static public function getInstanse($opt = array())
+	{
+		static $db;
+		if (!is_object($db)) {
+			$db = new SafeMySQL($opt);
+		}
+		return $db;
+	}
+
 	/**
 	 * Conventional function to run a query with placeholders. A mysqli_query wrapper with placeholders support
 	 *

@@ -38,7 +38,7 @@ if ($isAjaxConfig) {
 
 		'startFrom'      => !empty($startFrom) ? $startFrom : '0', // C какой новости начать вывод
 		'limit'          => !empty($limit) ? $limit : '10', // Количество новостей в блоке
-		'fixed'          => !empty($fixed) ? $fixed : 'yes', // Обработка фиксированных новостей (yes/only/witout показ всех/только фиксированных/только обычных новостей)
+		'fixed'          => !empty($fixed) ? $fixed : 'yes', // Обработка фиксированных новостей (yes/only/without показ всех/только фиксированных/только обычных новостей)
 
 		'postId'         => !empty($postId) ? $postId : '', // ID новостей для вывода в блоке (через запятую, или черточку)
 		'notPostId'      => !empty($notPostId) ? $notPostId : '', // ID игнорируемых новостей (через запятую, или черточку)
@@ -157,13 +157,25 @@ if (!$output) {
 	// Подключаем всё необходимое
 	include_once('core/base.php');
 
+	// Вызываем ядро
+	$base = new base();
+
+	// Назначаем конфиг модуля
+	$base->cfg = $base->setConfig($cfg);
+
+	// Пустой массив для конфга шаблонизатора.
 	$tplOptions = array();
-	if ($cfg['nocache']) {
+
+	// Если кеширование блока отключено - будем автоматически проверять скомпилированный шаблон на изменения.
+	if ($base->cfg['nocache']) {
 		$tplOptions['auto_reload'] = true;
 	}
 
-	// Вызываем основной класс
-	$base = new base($config, $cfg, $tplOptions);
+
+	// Подключаем опции шаблонизатора
+	$base->tplOptions = $base->setConfig($tplOptions);
+	// Подключаем шаблонизатор
+	$base->getTemplater($base->tplOptions);
 
 	// Определяем сегодняшнюю дату
 	$tooday = date("Y-m-d H:i:s", (time() + $base->dle_config['date_adjust'] * 60));
@@ -458,11 +470,6 @@ if (!$output) {
 			} else {
 				$list[$key]['favorites'] = '<img data-favorite-id="' . $value['id'] . '" data-action="minus" src="' . $tplArr['theme'] . '/dleimages/minus_fav.gif"  title="Удалить из закладок" alt="Удалить из закладок" />';
 			}
-
-			// $tpl->set( '[complaint]', "<a href=\"javascript:AddComplaint('" . $value['id'] . "', 'news')\">" );
-			// $tpl->set( '[/complaint]', "</a>" );
-
-
 		}
 	}
 
@@ -507,7 +514,7 @@ if (!$output) {
 		$config['allow_cache'] = $cashe_tmp;
 
 		// Подключаем класс постранички
-		require_once(BASE_DIR . '/core/pagination.php');
+		// require_once(BASE_DIR . '/core/pagination.php');
 
 		// Массив с конфигурацией для формирования постранички
 		$pagerConfig = array(
@@ -546,7 +553,6 @@ if (!$output) {
 			$statQ['q'] .= '<br>' . '<b>[' . ($i + 1) . ']</b> ' . $q['query'] . ' <br>[' . ($i + 1) . ' время:] <b>' . $q['timer'] . '</b>';
 			$statQ['t'] += $q['timer'];
 		}
-
 		$dbStat = 'Запрос(ы): ' . $statQ['q'] . '<br>Время выполнения запросов: <b>' . $statQ['t'] . '</b><br>';
 	}
 	// Создаём кеш, если требуется
@@ -563,7 +569,7 @@ if ($cfg['showstat'] && $user_group[$member_id['user_group']]['allow_all_edit'])
 	// Информация об оперативке
 	$mem_usg = (function_exists("memory_get_peak_usage")) ? '<br>Расход памяти: <b>' . round(memory_get_peak_usage() / (1024 * 1024), 2) . 'Мб </b>' : '';
 	// Вывод статистикик
-	echo '<div style="border: solid 1px red; padding: 5px; margin: 5pxx 0;">' . $dbStat . 'Время выполнения скрипта: <b>' . round((microtime(true) - $start), 6) . '</b> c.' . $mem_usg . '</div>';
+	echo '<div class="bp-statistics" style="border: solid 1px red; padding: 5px; margin: 5pxx 0;">' . $dbStat . 'Время выполнения скрипта: <b>' . round((microtime(true) - $start), 6) . '</b> c.' . $mem_usg . '</div>';
 }
 
 

@@ -249,7 +249,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 			var dle_root = '<?=$config['http_home_url']?>';
 			var dle_skin = '<?=$config['skin']?>';
 		</script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/autosize.js/1.18.1/jquery.autosize.min.js"></script>
 
 		<script src="/engine/modules/base/admin/blockpro/js/jquery.form.min.js"></script>
@@ -278,7 +278,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 		<div class="container">
 			<div class="content">
 				<div class="col col-mb-12 col-12">
-					<h1 class="ta-center">Генератор строк подключения BlockPro</h1>
+					<h1 class="ta-center">Генератор строк подключения BlockPro <span class="btn btn-small btn-red mfp-open-ajax" data-mfp-src="/engine/ajax/base/check_updates.php?name=blockpro&currentVersion=4.1">Проверить обновления</span></h1>
 					<hr>
 				</div> <!-- .col col-mb-12 col-12 -->
 			</div> <!-- .content -->

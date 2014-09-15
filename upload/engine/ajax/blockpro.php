@@ -41,7 +41,7 @@ if (function_exists('dle_session')) {
 }
 
 $is_logged = false;
-$member_id = array ();
+$member_id = array();
 
 if ($config['allow_registration']) {
 	require_once ENGINE_DIR . '/modules/sitelogin.php';
