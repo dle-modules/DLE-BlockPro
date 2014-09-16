@@ -49,7 +49,7 @@ class base {
 	}
 
 	public function getDb() {
-		return SafeMysql::getInstanse(array(
+		return SafeMySQL::getInstanse(array(
 			'host'    => DBHOST,
 			'user'    => DBUSER,
 			'pass'    => DBPASS,
@@ -71,7 +71,6 @@ class base {
 	public function setConfig($cfg = array()) {
 		return $cfg;
 	}
-
 
 	public static function getDleConfig() {
 		include(ENGINE_DIR . '/data/config.php');

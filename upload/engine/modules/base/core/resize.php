@@ -61,31 +61,31 @@ if( ! defined( 'DATALIFEENGINE' ) ) {
 			## --------------------------------------------------------
 
 			private function openImageWithCurl($url)
-			{	
+			{
 				$extension = strtolower(strrchr($url, '.'));
 				$this->extension = $extension == '.jpg' ? '.jpeg' : $extension;
 
 				$file = $this->curlRequest($url);
-				if ($file == '') 
+				if ($file == '')
 					return false;
-									
+
 				return imagecreatefromstring($file);
 			}
 
 			## --------------------------------------------------------
 
 			private function curlRequest($url) {
-				$ch = curl_init();   
-				curl_setopt($ch, CURLOPT_URL, $url);			
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);		
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
 				curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:12.0) Gecko/20120403211507 Firefox/12.0');
-				$contents = curl_exec($ch);	
-				curl_close($ch);				
-				return $contents; 
-			}	
+				$contents = curl_exec($ch);
+				curl_close($ch);
+				return $contents;
+			}
 
 			## --------------------------------------------------------
 
@@ -93,14 +93,14 @@ if( ! defined( 'DATALIFEENGINE' ) ) {
 			{
 				// *** Get optimal width and height - based on $option
 				$optionArray = $this->getDimensions($newWidth, $newHeight, $option);
- 
+
 				$optimalWidth  = $optionArray['optimalWidth'];
 				$optimalHeight = $optionArray['optimalHeight'];
- 
- 
+
+
 				// *** Resample - create image canvas of x, y size
 				$this->imageResized = imagecreatetruecolor($optimalWidth, $optimalHeight);
- 
+
 				if($this->extension == '.png' || $this->extension == '.gif')
 				{
 					imagecolortransparent($this->imageResized, imagecolorallocatealpha($this->imageResized, 0, 0, 0, 127));
@@ -115,7 +115,7 @@ if( ! defined( 'DATALIFEENGINE' ) ) {
 			}
 
 			## --------------------------------------------------------
-			
+
 			private function getDimensions($newWidth, $newHeight, $option)
 			{
 
@@ -229,7 +229,7 @@ if( ! defined( 'DATALIFEENGINE' ) ) {
 
 				// *** Now crop from center to exact requested size
 				$this->imageResized = imagecreatetruecolor($newWidth, $newHeight);
- 
+
 				if($this->extension == '.png' || $this->extension == '.gif')
 				{
 					imagecolortransparent($this->imageResized, imagecolorallocatealpha($this->imageResized, 0, 0, 0, 127));

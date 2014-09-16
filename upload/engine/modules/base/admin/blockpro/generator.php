@@ -201,7 +201,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 
 	<div class="content">
 		<div class="col col-mb-12 col-5 col-dt-4 form-label">
-			Логины авторов, для показа их новостей
+			Логины авторов, для исключения их новостей
 		</div>
 		<div class="col col-mb-12 col-7 col-dt-8 form-control">
 			<input class="input" type="text" name="notAuthor" value="<?=$cfg['notAuthor']?>" placeholder="Михаил,username">

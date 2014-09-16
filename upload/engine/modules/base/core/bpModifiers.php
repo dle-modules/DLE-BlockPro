@@ -23,7 +23,6 @@ class bpModifiers extends base {
 	 * @return string $data - обрезанный результат
 	 */
 	public static function textLimit($data, $limit, $etc = '&hellip;', $wordcut = false, $charset = 'utf-8') {
-
 		$data = strip_tags($data, '<br>');
 		$data = trim(str_replace(array('<br>', '<br />'), ' ', $data));
 
@@ -57,7 +56,7 @@ class bpModifiers extends base {
 	 */
 
 	public static function getImage($data, $noimage = '', $imageType = 'small', $number, $size, $quality, $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false, $config = array()) {
-
+		$resizeType = ($resizeType == '' || !$resizeType) ? 'auto' : $resizeType ;
 		// Присваиваем картинке значение noimage;
 		$image = $noimage;
 
@@ -133,7 +132,6 @@ class bpModifiers extends base {
 						}
 
 						// Подрубаем НОРМАЛЬНЫЙ класс для картинок
-						require_once BASE_DIR . '/core/resize_class.php';
 						$resizeImg = new resize($imgResized);
 						$resizeImg->resizeImage( //создание уменьшенной копии
 							$imgSize[0],
