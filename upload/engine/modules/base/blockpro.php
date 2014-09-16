@@ -178,7 +178,12 @@ if (!$output) {
 	$base->getTemplater($base->tplOptions);
 
 	// Определяем сегодняшнюю дату
-	$tooday = date("Y-m-d H:i:s", (time() + $base->dle_config['date_adjust'] * 60));
+	if ($base->config['version_id'] > 10.2) {
+		date_default_timezone_set($base->dle_config['date_adjust']);
+		$tooday = date("Y-m-d H:i:s", time());
+	} else {
+		$tooday = date("Y-m-d H:i:s", (time() + $base->dle_config['date_adjust'] * 60));
+	}
 
 	// Массив с условиями запроса
 	$wheres = array();
