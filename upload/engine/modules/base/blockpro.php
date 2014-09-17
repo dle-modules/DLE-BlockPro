@@ -178,7 +178,7 @@ if (!$output) {
 	$base->getTemplater($base->tplOptions);
 
 	// Определяем сегодняшнюю дату
-	if ($base->config['version_id'] > 10.2) {
+	if ($base->dle_config['version_id'] > 10.2) {
 		date_default_timezone_set($base->dle_config['date_adjust']);
 		$tooday = date("Y-m-d H:i:s", time());
 	} else {

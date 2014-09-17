@@ -29,7 +29,7 @@ class base {
 
 	public $result;
 
-	public static $dle_config = array();
+	public $dle_config = array();
 	public $cfg = array();
 	public $tplOptions = array();
 	public $tpl;
