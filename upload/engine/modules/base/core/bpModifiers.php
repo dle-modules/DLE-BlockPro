@@ -74,7 +74,7 @@ class bpModifiers extends base {
 
 			$url = $m[1][$number - 1];
 			// Выдёргиваем оригинал, на случай если уменьшить надо до размеров больше, чем thumb или medium в новости и если это не запрещено в настройках.
-			$imgOriginal = ($showSmall) ? $url : str_ireplace(array('uploads/thumbs', 'uploads/medium'), 'uploads', $url);
+			$imgOriginal = ($showSmall) ? $url : str_ireplace(array('/thumbs', '/medium'), '', $url);
 
 
 			// Удаляем текущий домен (в т.ч. с www) из строки.
