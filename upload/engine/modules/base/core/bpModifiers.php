@@ -73,8 +73,8 @@ class bpModifiers extends base {
 		if (preg_match_all('/<img(?:\\s[^<>]*?)?\\bsrc\\s*=\\s*(?|"([^"]*)"|\'([^\']*)\'|([^<>\'"\\s]*))[^<>]*>/i', $data, $m)) {
 
 			$url = $m[1][$number - 1];
-			//Выдёргиваем оригинал, на случай если уменьшить надо до размеров больше, чем thumb в новости и если это не запрещено в настройках.
-			$imgOriginal = ($showSmall) ? $url : str_ireplace('/thumbs', '', $url);
+			// Выдёргиваем оригинал, на случай если уменьшить надо до размеров больше, чем thumb или medium в новости и если это не запрещено в настройках.
+			$imgOriginal = ($showSmall) ? $url : str_ireplace(array('uploads/thumbs', 'uploads/medium'), 'uploads', $url);
 
 
 			// Удаляем текущий домен (в т.ч. с www) из строки.
