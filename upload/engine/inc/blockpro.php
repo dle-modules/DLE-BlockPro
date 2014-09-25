@@ -21,7 +21,7 @@ if ($member_id['user_group'] != '1') {
 define('MODULE_DIR', ENGINE_DIR . '/modules/base/admin/blockpro/');
 
 $moduleName = 'blockpro';
-$moduleVersion = '4.2.4';
+$moduleVersion = '4.2.5';
 
 $moderate           = $_REQUEST['moderate'];
 $moderate_checked   = ($moderate) ? 'checked' : '' ;

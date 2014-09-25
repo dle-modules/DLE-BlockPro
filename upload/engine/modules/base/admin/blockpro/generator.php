@@ -8,14 +8,15 @@ if ($member_id['user_group'] != '1') {
 }
 
 function getTemplatesList($dir) {
-	global $cfg;
+	global $cfg, $template;
 
 	$tplFiles = array();
 	$tplFiles[] = '<option value="">Выберите шаблон</option>';
 	$f = scandir($dir);
 	foreach ($f as $file){
 		$filename = str_replace('.tpl', '', $file);
-		// $act = ('blockpro/' . $filename == $cfg['template']) ? 'selected' : '' ;
+		$act = (('blockpro/' . $filename) == $template) ? 'selected' : '' ;
+		
 		if(preg_match('/\.(tpl)/', $file)){
 			$tplFiles[] = '<option '.$act.' value="blockpro/'.$filename.'">'. $filename.'</option>';
 		}

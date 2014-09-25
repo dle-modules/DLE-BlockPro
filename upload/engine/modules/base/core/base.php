@@ -117,8 +117,6 @@ class base {
 		);
 	}
 
-
-
 	/**
 	 * @param $data - массив с информацией о статье
 	 *
@@ -405,5 +403,14 @@ HTML;
 	return $rated;
 }
 
+function stripSlashesInArray($data) {
+	if(is_array($data)) {
+		$data = array_map('stripSlashesInArray', &$data);
+	} else {
+		$data = stripslashes($data);
+	}
+
+	return $data;
+}
 
 ?>

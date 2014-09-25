@@ -287,17 +287,22 @@ if (!$output) {
 		$wheres[]    = $ignorePosts . 'id regexp "[[:<:]](' . str_replace(',', '|', $postsArr) . ')[[:>:]]"';
 	}
 
+	$_currentAuthor = false;
 	// Фильтрация новостей по АВТОРАМ
 	if ($base->cfg['author'] == 'this') {
 		$base->cfg['author'] = $base->db->parse('?s', $_REQUEST["user"]);
+		$_currentAuthor = true;
 	}
 	if ($base->cfg['notAuthor'] == 'this') {
 		$base->cfg['notAuthor'] = $base->db->parse('?s', $_REQUEST["user"]);
+		$_currentAuthor = true;
 	}
 	if ($base->cfg['author'] || $base->cfg['notAuthor']) {
 		$ignoreAuthors = ($base->cfg['notAuthor']) ? 'NOT ' : '';
 		$authorsArr    = ($base->cfg['notAuthor']) ? $base->cfg['notAuthor'] : $base->cfg['author'];
-		$wheres[]      = $ignoreAuthors . 'autor regexp "[[:<:]](' . str_replace(',', '|', $authorsArr) . ')[[:>:]]"';
+		$wheres[]      = ($_currentAuthor) 
+							? $ignoreAuthors . 'autor = '. $authorsArr 
+							: $ignoreAuthors . 'autor regexp "[[:<:]](' . str_replace(',', '|', $authorsArr) . ')[[:>:]]"';
 	}
 
 	// Фильтрация новостей по ДОПОЛНИТЕЛЬНЫМ ПОЛЯМ (проверяется только на заполненность)
@@ -333,18 +338,24 @@ if (!$output) {
 		$wheres[] = implode($_xfSearchLogic, $xfWheres);
 	}
 
+	$_currentTag = false;
 	// Фильтрация новостей по ТЕГАМ
 	if ($base->cfg['tags'] == 'this') {
 		$base->cfg['tags'] = $base->db->parse('?s', $_REQUEST["tag"]);
+		$_currentTag = true;
 	}
 	if ($base->cfg['notTags'] == 'this') {
 		$base->cfg['notTags'] = $base->db->parse('?s', $_REQUEST["tag"]);
+		$_currentTag = true;
 	}
 
 	if ($base->cfg['tags'] || $base->cfg['notTags']) {
 		$ignoreTags = ($base->cfg['notTags']) ? 'NOT ' : '';
 		$tagsArr    = ($base->cfg['notTags']) ? $base->cfg['notTags'] : $base->cfg['tags'];
-		$wheres[]   = $ignoreTags . 'tags regexp "[[:<:]](' . str_replace(',', '|', $tagsArr) . ')[[:>:]]"';
+		$wheres[]      = ($_currentTag) 
+							? $ignoreTags . 'autor = '. $tagsArr 
+							: $ignoreTags . 'autor regexp "[[:<:]](' . str_replace(',', '|', $tagsArr) . ')[[:>:]]"';
+
 	}
 
 	// Если включен режим вывода похожих новостей:
@@ -409,13 +420,17 @@ if (!$output) {
 	// Получаем новости
 	$list = $base->db->getAll($query, $selectRows, PREFIX . '_post', PREFIX . '_post_extras', $ext_query . $where, $_startFrom, $base->cfg['limit']);
 
+	// Обрабатываем данные функцией stripslashes рекурсивно.
+	$list = stripSlashesInArray(&$list);
 
 	// Путь к папке с текущим шаблоном
 	$tplArr['theme'] = '/templates/' . $base->dle_config['skin'];
 
 	// Обрабатываем данные в массиве.
 	foreach ($list as $key => $value) {
-		$list[$key]['xfields'] = xfieldsdataload($value['xfields']);
+		// Плучаем обработанные допполя.
+		$list[$key]['xfields'] = stripSlashesInArray(xfieldsdataload($value['xfields']));
+
 		// Массив данных для формирования ЧПУ
 		$urlArr = array(
 			'category' => $value['category'],
