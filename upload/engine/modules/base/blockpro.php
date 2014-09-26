@@ -353,8 +353,8 @@ if (!$output) {
 		$ignoreTags = ($base->cfg['notTags']) ? 'NOT ' : '';
 		$tagsArr    = ($base->cfg['notTags']) ? $base->cfg['notTags'] : $base->cfg['tags'];
 		$wheres[]      = ($_currentTag) 
-							? $ignoreTags . 'autor = '. $tagsArr 
-							: $ignoreTags . 'autor regexp "[[:<:]](' . str_replace(',', '|', $tagsArr) . ')[[:>:]]"';
+							? $ignoreTags . 'tags = '. $tagsArr 
+							: $ignoreTags . 'tags regexp "[[:<:]](' . str_replace(',', '|', $tagsArr) . ')[[:>:]]"';
 
 	}
 
