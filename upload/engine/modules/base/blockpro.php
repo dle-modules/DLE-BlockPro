@@ -421,7 +421,7 @@ if (!$output) {
 	$list = $base->db->getAll($query, $selectRows, PREFIX . '_post', PREFIX . '_post_extras', $ext_query . $where, $_startFrom, $base->cfg['limit']);
 
 	// Обрабатываем данные функцией stripslashes рекурсивно.
-	$list = stripSlashesInArray(&$list);
+	$list = stripSlashesInArray($list);
 
 	// Путь к папке с текущим шаблоном
 	$tplArr['theme'] = '/templates/' . $base->dle_config['skin'];

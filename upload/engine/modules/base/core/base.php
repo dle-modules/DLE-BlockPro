@@ -405,7 +405,7 @@ HTML;
 
 function stripSlashesInArray($data) {
 	if(is_array($data)) {
-		$data = array_map('stripSlashesInArray', &$data);
+		$data = array_map('stripSlashesInArray', $data);
 	} else {
 		$data = stripslashes($data);
 	}
