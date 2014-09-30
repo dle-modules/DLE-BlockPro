@@ -61,7 +61,7 @@ $pageNum = (isset($_REQUEST['pageNum'])) ? (int)$_REQUEST['pageNum'] : 1;
 $blockId = (isset($_REQUEST['blockId'])) ? $_REQUEST['blockId'] : false;
 
 $cashe_tmp = $config['allow_cache'];
-$config['allow_cache'] = '1';
+$config['allow_cache'] = 'yes'; // 'yes' для совместимости со старыми версиями dle, т.к. там проверяется значение, а не наличие значения переменной.
 $_cr = dle_cache($blockId);
 $config['allow_cache'] = $cashe_tmp;
 
@@ -73,7 +73,7 @@ if ($_cr) {
 	include ENGINE_DIR . '/modules/base/blockpro.php';
 
 } else {
-	die('doh');
+	die('cache not found');
 }
 
 ?>

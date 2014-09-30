@@ -518,7 +518,7 @@ if (!$output) {
 
 		// Включаем кеширование DLE принудительно
 		$cashe_tmp = $base->dle_config['allow_cache'];
-		$config['allow_cache'] = '1';
+		$config['allow_cache'] = 'yes'; // 'yes' для совместимости со старыми версиями dle, т.к. там проверяется значение, а не наличие значения переменной.
 
 		// Проверяем есть ли кеш с указанным именем
 		$ajaxCache = dle_cache($pageCahceName);
