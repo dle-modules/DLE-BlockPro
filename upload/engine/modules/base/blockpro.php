@@ -370,7 +370,7 @@ if (!$output) {
 		$relatedId   = $base->db->parse('id = ?i', $relatedId);
 
 
-		$relatedBody = $base->db->getRow('SELECT id, ?p FROM ?n WHERE approve AND ?p', $relatedRows, PREFIX . '_post', $relatedId);
+		$relatedBody = $base->db->getRow('SELECT id, ?p FROM ?n WHERE ?p', $relatedRows, PREFIX . '_post', $relatedId);
 
 		$bodyToRelated = (strlen($relatedBody['full_story']) < strlen($relatedBody['short_story'])) ? $relatedBody['short_story'] : $relatedBody['full_story'];
 		$bodyToRelated = $base->db->parse('?s', strip_tags($relatedBody['title'] . " " . $bodyToRelated));
