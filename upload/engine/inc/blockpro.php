@@ -252,8 +252,8 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 			var dle_root = '<?=$config['http_home_url']?>';
 			var dle_skin = '<?=$config['skin']?>';
 		</script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/autosize.js/1.18.1/jquery.autosize.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/autosize.js/1.18.1/jquery.autosize.min.js"></script>
 
 		<script src="/engine/modules/base/admin/blockpro/js/jquery.form.min.js"></script>
 		<script src="/engine/modules/base/admin/blockpro/js/jquery.ladda.min.js"></script>
