@@ -39,7 +39,7 @@ if ($isAjaxConfig) {
 		'startFrom'      => !empty($startFrom) ? $startFrom : '0', // C какой новости начать вывод
 		'limit'          => !empty($limit) ? $limit : '10', // Количество новостей в блоке
 		'fixed'          => !empty($fixed) ? $fixed : 'yes', // Обработка фиксированных новостей (yes/only/without показ всех/только фиксированных/только обычных новостей)
-
+		'allowMain'      => !empty($allowMain) ? $allowMain : 'yes', // Обработка новостей, опубликованных на главной (yes/only/without показ всех/только на главной/только не на главной)
 		'postId'         => !empty($postId) ? $postId : '', // ID новостей для вывода в блоке (через запятую, или черточку)
 		'notPostId'      => !empty($notPostId) ? $notPostId : '', // ID игнорируемых новостей (через запятую, или черточку)
 
@@ -215,6 +215,21 @@ if (!$output) {
 			if ($base->cfg['sort'] != 'random' && $base->cfg['sort'] != 'none') {
 				$orderArr[] = 'fixed ' . $ordering;
 			}
+			break;
+	}
+	
+	// Учёт новостей на главной
+	switch ($base->cfg['allowMain']) {
+		case 'only':
+			$wheres[] = 'allow_main = 1';
+			break;
+
+		case 'without':
+			$wheres[] = 'allow_main = 0';
+			break;
+
+		default:
+			// по умолчанию показываем все
 			break;
 	}
 
@@ -406,7 +421,7 @@ if (!$output) {
 	$ext_query = ($base->cfg['avatar']) ? $base->db->parse(' LEFT JOIN ?n u ON (p.autor=u.name) ', USERPREFIX . '_users'): '' ;
 
 	// Поля, выбираемые из БД
-	$selectRows = 'p.id, p.autor, p.date, p.short_story, p.full_story, p.xfields, p.title, p.category, p.alt_name, p.allow_comm, p.comm_num, p.fixed, p.tags, e.news_read, e.allow_rate, e.rating, e.vote_num, e.votes, e.view_edit, e.editdate, e.editor, e.reason' . $ext_query_fields;
+	$selectRows = 'p.id, p.autor, p.date, p.short_story, p.full_story, p.xfields, p.title, p.category, p.alt_name, p.allow_comm, p.comm_num, p.fixed, p.allow_main, p.tags, e.news_read, e.allow_rate, e.rating, e.vote_num, e.votes, e.view_edit, e.editdate, e.editor, e.reason' . $ext_query_fields;
 
 	// Определяем необходимость и данные для сортировки
 	$orderBy = (count($orderArr)) ? 'ORDER BY ' . implode(', ', $orderArr) : '';
@@ -588,7 +603,7 @@ echo $output;
 if ($cfg['showstat'] && $user_group[$member_id['user_group']]['allow_all_edit']) {
 	// Информация об оперативке
 	$mem_usg = (function_exists("memory_get_peak_usage")) ? '<br>Расход памяти: <b>' . round(memory_get_peak_usage() / (1024 * 1024), 2) . 'Мб </b>' : '';
-	// Вывод статистикик
+	// Вывод статистики
 	echo '<div class="bp-statistics" style="border: solid 1px red; padding: 5px; margin: 5pxx 0;">' . $dbStat . 'Время выполнения скрипта: <b>' . round((microtime(true) - $start), 6) . '</b> c.' . $mem_usg . '</div>';
 }
 

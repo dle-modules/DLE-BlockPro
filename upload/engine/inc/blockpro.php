@@ -35,6 +35,7 @@ $cacheLive          = $_REQUEST['cacheLive'];
 $startFrom          = $_REQUEST['startFrom'];
 $limit              = $_REQUEST['limit'];
 $fixed              = $_REQUEST['fixed'];
+$allowMain          = $_REQUEST['allowMain'];
 $postId             = $_REQUEST['postId'];
 $notPostId          = $_REQUEST['notPostId'];
 $author             = $_REQUEST['author'];
@@ -81,8 +82,8 @@ $cfg = array(
 
 	'startFrom'      => !empty($startFrom) ? $startFrom : '0', // C какой новости начать вывод
 	'limit'          => !empty($limit) ? $limit : '10', // Количество новостей в блоке
-	'fixed'          => !empty($fixed) ? $fixed : 'yes', // Обработка фиксированных новостей (yes/only/witout показ всех/только фиксированных/только обычных новостей)
-
+	'fixed'          => !empty($fixed) ? $fixed : 'yes', // Обработка фиксированных новостей (yes/only/without показ всех/только фиксированных/только обычных новостей)
+	'allowMain'      => !empty($allowMain) ? $allowMain : 'yes', // Обработка новостей, опубликованных на главной (yes/only/without показ всех/только на главной/только не на главной)
 	'postId'         => !empty($postId) ? $postId : '', // ID новостей для вывода в блоке (через запятую, или черточку)
 	'notPostId'      => !empty($notPostId) ? $notPostId : '', // ID игнорируемых новостей (через запятую, или черточку)
 

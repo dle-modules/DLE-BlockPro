@@ -146,6 +146,19 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 		</div>
 	</div>
 
+	<div class="content">
+		<div class="col col-mb-12 col-5 col-dt-4 form-label">
+			Обработка новостей, опубликованных на главной
+		</div>
+		<div class="col col-mb-12 col-7 col-dt-8 form-control">
+			<select name="allowMain" class="styler">
+				<option value="yes" <? if($cfg['allowMain'] == 'yes'):?> selected <?endif?>>Показывать все</option>
+				<option value="only" <? if($cfg['allowMain'] == 'only'):?> selected <?endif?> >Показывать только опубликованные на главной</option>
+				<option value="without" <? if($cfg['allowMain'] == 'without'):?> selected <?endif?> >Показывать только неопубликованные на главной</option>
+			</select>
+		</div>
+	</div>
+
 
 	<div class="content">
 		<div class="col col-mb-12 col-5 col-dt-4 form-label">
