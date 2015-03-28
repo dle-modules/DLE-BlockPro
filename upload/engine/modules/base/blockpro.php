@@ -36,6 +36,7 @@ if ($isAjaxConfig) {
 		'nocache' => !empty($nocache) ? $nocache : false, // Не использовать кеш
 		'cacheLive' => (!empty($cacheLive) && !$mcache) ? $cacheLive : false, // Время жизни кеша в минутах
 
+<<<<<<< HEAD
 		'startFrom' => !empty($startFrom) ? $startFrom : '0', // C какой новости начать вывод
 		'limit' => !empty($limit) ? $limit : '10', // Количество новостей в блоке
 		'fixed' => !empty($fixed) ? $fixed : 'yes', // Обработка фиксированных новостей (yes/only/without показ всех/только фиксированных/только обычных новостей)
@@ -45,6 +46,14 @@ if ($isAjaxConfig) {
 
 		'author' => !empty($author) ? $author : '', // Логины авторов, для показа их новостей в блоке (через запятую)
 		'notAuthor' => !empty($notAuthor) ? $notAuthor : '', // Логины игнорируемых авторов (через запятую)
+=======
+		'startFrom'      => !empty($startFrom) ? $startFrom : '0', // C какой новости начать вывод
+		'limit'          => !empty($limit) ? $limit : '10', // Количество новостей в блоке
+		'fixed'          => !empty($fixed) ? $fixed : 'yes', // Обработка фиксированных новостей (yes/only/without показ всех/только фиксированных/только обычных новостей)
+		'allowMain'      => !empty($allowMain) ? $allowMain : 'yes', // Обработка новостей, опубликованных на главной (yes/only/without показ всех/только на главной/только не на главной)
+		'postId'         => !empty($postId) ? $postId : '', // ID новостей для вывода в блоке (через запятую, или черточку)
+		'notPostId'      => !empty($notPostId) ? $notPostId : '', // ID игнорируемых новостей (через запятую, или черточку)
+>>>>>>> origin/master
 
 		'xfilter' => !empty($xfilter) ? $xfilter : '', // Имена дополнительных полей для фильтрации новостей по ним (через запятую)
 		'notXfilter' => !empty($notXfilter) ? $notXfilter : '', // Имена дополнительных полей для игнорирования показа новостей (через запятую)
@@ -239,11 +248,29 @@ if (!$output) {
 	if($protect->status) {
 		$license = true;
 	}
+<<<<<<< HEAD
 	if (!$license) {
 		// Если лицензия не проверилась - скжем об этом
 		$output = (!$protect->errors) ? '<span style="color: red;">Ошибка лицензии, обратитесь к автору модуля.</span>' : $protect->errors;
 	} else {
 		// Если всё ок с лцензией - работаем.	
+=======
+	
+	// Учёт новостей на главной
+	switch ($base->cfg['allowMain']) {
+		case 'only':
+			$wheres[] = 'allow_main = 1';
+			break;
+
+		case 'without':
+			$wheres[] = 'allow_main = 0';
+			break;
+
+		default:
+			// по умолчанию показываем все
+			break;
+	}
+>>>>>>> origin/master
 
 		// Подключаем всё необходимое
 		include_once 'core/base.php';
@@ -471,8 +498,12 @@ if (!$output) {
 		// Фильтрация по ЗНАЧЕНИЮ ДОПОЛНИТЕЛЬНЫХ ПОЛЕЙ
 		if ($base->cfg['xfSearch'] || $base->cfg['notXfSearch']) {
 
+<<<<<<< HEAD
 			// Массив для составления подзапроса
 			$xfWheres = array();
+=======
+		$relatedBody = $base->db->getRow('SELECT id, ?p FROM ?n WHERE ?p', $relatedRows, PREFIX . '_post', $relatedId);
+>>>>>>> origin/master
 
 			// Защита логики построения запроса от кривых рук (если прописать неправильно - будет логика OR)
 			$_xfSearchLogic = (strtolower($base->cfg['xfSearchLogic']) == 'and') ? ' AND ' : ' OR ';
@@ -544,7 +575,12 @@ if (!$output) {
 			$relatedRows = 'title, short_story, full_story, xfields';
 			$relatedIdParsed = $base->db->parse('id = ?i', $relatedId);
 
+<<<<<<< HEAD
 			$relatedBody = $base->db->getRow('SELECT id, ?p FROM ?n p LEFT JOIN ?n e ON (p.id=e.news_id) WHERE ?p', 'p.title, p.short_story, p.full_story, p.xfields, e.related_ids', PREFIX . '_post', PREFIX . '_post_extras', $relatedIdParsed);
+=======
+	// Поля, выбираемые из БД
+	$selectRows = 'p.id, p.autor, p.date, p.short_story, p.full_story, p.xfields, p.title, p.category, p.alt_name, p.allow_comm, p.comm_num, p.fixed, p.allow_main, p.tags, e.news_read, e.allow_rate, e.rating, e.vote_num, e.votes, e.view_edit, e.editdate, e.editor, e.reason' . $ext_query_fields;
+>>>>>>> origin/master
 
 			if ($relatedBody['related_ids'] && $saveRelated) {
 				// Если есть запись id похожих новостей — добавим в условие запроса эти новости.
@@ -842,4 +878,8 @@ if ($cfg['showstat'] && $user_group[$member_id['user_group']]['allow_all_edit'])
 	echo '<div class="bp-statistics" style="border: solid 1px red; padding: 5px; margin: 5pxx 0;">' . $dbStat . 'Время выполнения скрипта: <b>' . round((microtime(true) - $start), 6) . '</b> c.' . $mem_usg . '</div>';
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 ?>
