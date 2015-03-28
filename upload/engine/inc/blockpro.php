@@ -89,7 +89,6 @@ $cfg = array(
 	'nocache' => !empty($nocache) ? $nocache : false, // Не использовать кеш
 	'cacheLive' => (!empty($cacheLive) && !$mcache) ? $cacheLive : false, // Время жизни кеша в минутах
 
-<<<<<<< HEAD
 	'startFrom' => !empty($startFrom) ? $startFrom : '0', // C какой новости начать вывод
 	'limit' => !empty($limit) ? $limit : '10', // Количество новостей в блоке
 	'fixed' => !empty($fixed) ? $fixed : 'yes', // Обработка фиксированных новостей (yes/only/without показ всех/только фиксированных/только обычных новостей)
@@ -99,14 +98,6 @@ $cfg = array(
 
 	'author' => !empty($author) ? $author : '', // Логины авторов, для показа их новостей в блоке (через запятую)
 	'notAuthor' => !empty($notAuthor) ? $notAuthor : '', // Логины игнорируемых авторов (через запятую)
-=======
-	'startFrom'      => !empty($startFrom) ? $startFrom : '0', // C какой новости начать вывод
-	'limit'          => !empty($limit) ? $limit : '10', // Количество новостей в блоке
-	'fixed'          => !empty($fixed) ? $fixed : 'yes', // Обработка фиксированных новостей (yes/only/without показ всех/только фиксированных/только обычных новостей)
-	'allowMain'      => !empty($allowMain) ? $allowMain : 'yes', // Обработка новостей, опубликованных на главной (yes/only/without показ всех/только на главной/только не на главной)
-	'postId'         => !empty($postId) ? $postId : '', // ID новостей для вывода в блоке (через запятую, или черточку)
-	'notPostId'      => !empty($notPostId) ? $notPostId : '', // ID игнорируемых новостей (через запятую, или черточку)
->>>>>>> origin/master
 
 	'xfilter' => !empty($xfilter) ? $xfilter : '', // Имена дополнительных полей для фильтрации новостей по ним (через запятую)
 	'notXfilter' => !empty($notXfilter) ? $notXfilter : '', // Имена дополнительных полей для игнорирования показа новостей (через запятую)

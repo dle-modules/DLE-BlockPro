@@ -99,7 +99,6 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 <form id="ajaxForm1" method="get">
 	<input type="hidden" name="mod" value="blockpro">
 	<input type="hidden" name="setPreview" value="y">
-<<<<<<< HEAD
 	<div class="logic-block">
 		<div class="content">
 			<div class="col col-mb-12 col-5 col-dt-4 form-label">
@@ -177,91 +176,6 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 					</p>
 				</div>
 			</div>
-=======
-
-	<div class="content">
-		<div class="col col-mb-12 col-5 col-dt-4 form-label">
-			Новости на модерации
-		</div>
-		<div class="col col-mb-12 col-7 col-dt-8 form-control">
-			<input class="checkbox" type="checkbox" value="y" name="moderate" id="moderate"  <?=$moderate_checked?>> <label for="moderate"><span></span> показывать</label>
-		</div>
-	</div>
-	<div class="content">
-		<div class="col col-mb-12 col-5 col-dt-4 form-label">
-			Шаблон блока <b>blockpro/</b>
-		</div>
-		<div class="col col-mb-12 col-7 col-dt-8 form-control">
-			<?=$optTemplates?>
-		</div>
-	</div>
-
-	<div class="content">
-		<div class="col col-mb-12 col-5 col-dt-4 form-label">
-			Время жизни кеша (мин)
-		</div>
-		<div class="col col-mb-12 col-7 col-dt-8 form-control">
-			<input class="input" type="text" name="cacheLive" value="<?=$cfg['cacheLive']?>" placeholder="например 180 - это 3 часа"> <br>
-			<input class="checkbox" type="checkbox" value="y" name="nocache" id="nocache"  <?=$nocache_checked?>> <label for="nocache"><span></span> отключить кеширование блока</label>
-		</div>
-	</div>
-
-	<div class="content">
-		<div class="col col-mb-12 col-5 col-dt-4 form-label">
-			C какой новости начать вывод
-		</div>
-		<div class="col col-mb-12 col-7 col-dt-8 form-control">
-			<input class="input" type="text" name="startFrom" value="<?=($cfg['startFrom'] > 0) ? $cfg['startFrom'] : '';?>" placeholder="по умолчанию <?=$cfg['startFrom']?>">
-		</div>
-	</div>
-
-	<div class="content">
-		<div class="col col-mb-12 col-5 col-dt-4 form-label">
-			Количество новостей в блоке
-		</div>
-		<div class="col col-mb-12 col-7 col-dt-8 form-control">
-			<input class="input" type="text" name="limit" value="<?=($cfg['limit'] != 10) ? $cfg['limit'] : '';?>" placeholder="по умолчанию <?=$cfg['limit']?>">
-		</div>
-	</div>
-
-	<div class="content">
-		<div class="col col-mb-12 col-5 col-dt-4 form-label">
-			Обработка фиксированных новостей
-		</div>
-		<div class="col col-mb-12 col-7 col-dt-8 form-control">
-			<select name="fixed" class="styler">
-				<option value="yes" <? if($cfg['fixed'] == 'yes'):?> selected <?endif?>>Показывать вместе с обычными</option>
-				<option value="only" <? if($cfg['fixed'] == 'only'):?> selected <?endif?> >Показывать только фиксированные</option>
-				<option value="without" <? if($cfg['fixed'] == 'without'):?> selected <?endif?> >Показывать только обычные</option>
-			</select>
-		</div>
-	</div>
-
-	<div class="content">
-		<div class="col col-mb-12 col-5 col-dt-4 form-label">
-			Обработка новостей, опубликованных на главной
-		</div>
-		<div class="col col-mb-12 col-7 col-dt-8 form-control">
-			<select name="allowMain" class="styler">
-				<option value="yes" <? if($cfg['allowMain'] == 'yes'):?> selected <?endif?>>Показывать все</option>
-				<option value="only" <? if($cfg['allowMain'] == 'only'):?> selected <?endif?> >Показывать только опубликованные на главной</option>
-				<option value="without" <? if($cfg['allowMain'] == 'without'):?> selected <?endif?> >Показывать только неопубликованные на главной</option>
-			</select>
-		</div>
-	</div>
-
-
-	<div class="content">
-		<div class="col col-mb-12 col-5 col-dt-4 form-label">
-			Категории для показа
-		</div>
-		<div class="col col-mb-12 col-7 col-dt-8 form-control">
-			<select name="catId[]" class="styler" multiple>
-				<?=base_get_category()?>
-			</select>
-			<input class="input" type="text" name="catId[]" value="<?=$cfg['catId']?>" placeholder="или так: 1-10,15,18,45-150"> <br>
-			<input class="checkbox" type="checkbox" value="y" name="subcats" id="subcats"  <?=$subcats_checked?>> <label for="subcats"><span></span> Выводить подкатегории выбранных категорий</label>
->>>>>>> origin/master
 		</div>
 		
 		<div class="content">
