@@ -42,8 +42,8 @@ class bpModifiers extends base {
 	 *
 	 * @param  string  $data       Строка, из которой будем выдёргивать картинку
 	 * @param  string  $noimage    картинка-заглушка
-	 * @param  string  $imageType  Тип картинки (small/original) - для получения соответствующей картинки
-	 * @param  integer $number     Номер картинки в контенте
+	 * @param  string  $imageType  Тип картинки (small/original/intext) - для получения соответствующей картинки или массива картинок
+	 * @param  integer/string $number     Номер картинки в контенте или all для вывода всех картинок
 	 * @param  string  $size       Размер картики (например 100 или 100x150)
 	 * @param  string  $quality    Качество картинки (0-100)
 	 * @param  string  $resizeType Тип ресайза (exact, portrait, landscape, auto, crop)
@@ -56,112 +56,165 @@ class bpModifiers extends base {
 	 */
 
 	public static function getImage($data, $noimage = '', $imageType = 'small', $number, $size, $quality, $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false, $config = array()) {
+
 		$resizeType = ($resizeType == '' || !$resizeType) ? 'auto' : $resizeType ;
-		// Присваиваем картинке значение noimage;
-		$image = $noimage;
+		$quality = ($quality == '' || !$quality) ? '100' : $quality ;
+		$noimage = str_replace($config['http_home_url'].'/', $config['http_home_url'], $noimage);
+
+		// Удалим из адреса сайта последний слеш.
+		$config['http_home_url'] = (substr($config['http_home_url'], -1, 1) == '/') ? substr($config['http_home_url'], 0, -1) : $config['http_home_url'];
+
+		// Задаём папку  для загрзки картинок по умолчанию.
+		$uploadDir = '/uploads/base/';
 
 		// Задаём подпапку при необходимости
 		if ($subdir) {
-			$subdir = $subdir . '/';
+			// Если subdir начнается со слеша - значит это папка от корня сайта, а не подпапака в base.
+			if (substr($subdir, 0, 1) == '/') {
+				$uploadDir = $subdir;
+			} else {
+				$uploadDir = $uploadDir . $subdir . '/';
+			}
 		}
-		// Задаём папку для картинок
-		$dir_suffix = $subdir . $size . '/';
 
-		$dir = ROOT_DIR . '/uploads/base/' . $dir_suffix;
+		// Задаём папку для картинок
+		$imageDir = $uploadDir . $size . '/';
+
+		$dir = ROOT_DIR . $imageDir;
+		
 		$data = stripslashes($data);
+		$arImages = array();
 
 		if (preg_match_all('/<img(?:\\s[^<>]*?)?\\bsrc\\s*=\\s*(?|"([^"]*)"|\'([^\']*)\'|([^<>\'"\\s]*))[^<>]*>/i', $data, $m)) {
 
-			$url = $m[1][$number - 1];
-			// Выдёргиваем оригинал, на случай если уменьшить надо до размеров больше, чем thumb или medium в новости и если это не запрещено в настройках.
-			$imgOriginal = ($showSmall) ? $url : str_ireplace(array('/thumbs', '/medium'), '', $url);
-
-
-			// Удаляем текущий домен (в т.ч. с www) из строки.
-			$urlShort = str_ireplace(array('http://' . $_SERVER['HTTP_HOST'], 'http://www.' . $_SERVER['HTTP_HOST'], 'https://' . $_SERVER['HTTP_HOST'], 'https://www.' . $_SERVER['HTTP_HOST']), '', $imgOriginal);
-
-
-			// Проверяем наша картинка или чужая.
-			$isHttp = (preg_match('~^http(s)?://~', $urlShort)) ? true : false;
-
-			// Проверяем разрешено ли тянуть сторонние картинки.
-			$grabRemoteOn = ($grabRemote) ? true : false;
-
-			// Отдаём заглушку если это смайлик или спойлер, или если ничего нет.
-			if (
-				(stripos($urlShort, 'dleimages') !== false && stripos($urlShort, 'engine/data/emoticons') !== false)
-				|| (!$urlShort)
-			) {
-				$imgResized  = false;
-				$imgOriginal = false;
-			} elseif ($isHttp && !$grabRemoteOn) {
-				// Если внешняя картинка - возвращаем её если запрещено грабить в строке подключения
-				$imgResized = $urlShort;
-			} elseif ($data != '') {
-				// Работаем с картинкой, если есть косяк - стопарим, такая картинка нам не пойдёт, вставим заглушку
-				// Если есть параметр size и есть картинка - включаем обрезку картинок
-				if ($size && $urlShort) {
-					// Создаём и назначаем права, если нет таковых
-					if (!is_dir($dir)) {
-						@mkdir($dir, 0755, true);
-						@chmod($dir, 0755);
-					}
-					if (!chmod($dir, 0755)) {
-						@chmod($dir, 0755);
+			$i=1; // Счётчик
+			// Если регулярка нашла картинку — работаем.
+			if (isset($m[1])) {
+				foreach ($m[1] as $key => $url) {
+					// Если это смайлик или спойлер — пропускаем.
+					if (stripos($url, 'dleimages') !== false || stripos($url, 'engine/data/emoticons') !== false) {
+						continue;
+					} 
+					// Если номер картинки меньше, чем требуется — проходим мимо.
+					if ($number != 'all' && $i < (int)$number) {
+						// Не забываем прибавить счётчик.
+						$i++;
+						continue;
 					}
 
-					// Присваиваем переменной значение картинки (в т.ч. если это внешняя картинка)
-					$imgResized = $urlShort;
-
-					// Если не внешняя картинка - подставляем корневю дирректорию, чтоб ресайзер понял что ему дают.
-					if (!$isHttp) {
-						$imgResized = ROOT_DIR . $urlShort;
+					// Если в настройках вызова указано выдёргивание оригинала — отдадим оригинал.
+					if ($imageType == 'original') {
+						$imageItem = str_ireplace(array('/thumbs', '/medium'), '', $url);
 					}
+					// Если intext — отдадим то, что получили в тексте.
+					if ($imageType == 'intext') {
+						$imageItem = $url;
+					}
+					// Если small — то будем работать с картинкой.
+					if ($imageType == 'small') {						
+						// Выдёргиваем оригинал, на случай если уменьшить надо до размеров больше, чем thumb или medium в новости и если это не запрещено в настройках.
+						$imageItem = ($showSmall) ? $url : str_ireplace(array('/thumbs', '/medium'), '', $url);
 
-					// Определяем новое имя файла
-					$fileName = $size . '_' . $resizeType . '_' . strtolower(basename($imgResized));
+						// Удаляем текущий домен (в т.ч. с www) из строки.
+						$urlShort = str_ireplace(array('http://' . $_SERVER['HTTP_HOST'], 'http://www.' . $_SERVER['HTTP_HOST'], 'https://' . $_SERVER['HTTP_HOST'], 'https://www.' . $_SERVER['HTTP_HOST']), '', $imageItem);
 
-					// Если картинки нет и она локальная, или картинка внешняя и разрешено тянуть внешние - создаём её
-					if ((!file_exists($dir . $fileName) && !$isHttp) || (!file_exists($dir . $fileName) && $grabRemoteOn && $isHttp)) {
-						// Разделяем высоту и ширину
-						$imgSize = explode('x', $size);
+						// Проверяем наша картинка или чужая.
+						$isRemote = (preg_match('~^http(s)?://~', $urlShort)) ? true : false;
 
-						// Если указана только одна величина - присваиваем второй первую, будет квадрат для exact, auto и crop, иначе класс ресайза жестоко тупит, ожидая вторую переменную.
-						if (count($imgSize) == '1') {
-							$imgSize[1] = $imgSize[0];
+						// Проверяем разрешено ли тянуть сторонние картинки.
+						$grabRemoteOn = ($grabRemote) ? true : false;
+
+						// Отдаём заглушку, если ничего нет.
+						if (!$urlShort) {
+							$imageItem = $noimage;
+							continue;
+						} 
+
+						// Если внешняя картинка и запрещего грабить картинки к себе — возвращаем её.
+						if ($isRemote && !$grabRemoteOn) {
+							$imgResized = $urlShort;
+							continue;
+						} 
+
+						// Работаем с картинкой
+						// Если есть параметр size — включаем ресайз картинок
+						if ($size) {
+							// Создаём и назначаем права, если нет таковых
+							if (!is_dir($dir)) {
+								@mkdir($dir, 0755, true);
+								@chmod($dir, 0755);
+							}
+							if (!chmod($dir, 0755)) {
+								@chmod($dir, 0755);
+							}
+
+							// Присваиваем переменной значение картинки (в т.ч. если это внешняя картинка)
+							$imgResized = $urlShort;
+
+							// Если не внешняя картинка — подставляем корневю дирректорию, чтоб ресайзер понял что ему дают.
+							if (!$isRemote) {
+								$imgResized = ROOT_DIR . $urlShort;
+							}
+							// Определяем новое имя файла
+							$fileName = $size . '_' . $resizeType . '_' . strtolower(basename($imgResized));
+
+							// Если картинки нет в папке обработанных картинок
+							if(!file_exists($dir . $fileName)) {
+								// Если картинка локальная, или картинка внешняя и разрешено тянуть внешние — обработаем её.
+								if (!$isRemote || ($grabRemoteOn && $isRemote)) {
+									// Разделяем высоту и ширину
+									$imgSize = explode('x', $size);
+
+									// Если указана только одна величина - присваиваем второй первую, будет квадрат для exact, auto и crop, иначе класс ресайза жестоко тупит, ожидая вторую переменную.
+									if (count($imgSize) == '1') {
+										$imgSize[1] = $imgSize[0];
+									}
+
+									// @TODO: по хорошему надо бы вынести ресайз в отдельный метод на случай, если понадобится другой класс для ресайза.
+									// Подрубаем класс для картинок
+									$resizeImg = new resize($imgResized);
+									$resizeImg->resizeImage( // Создание уменьшенной копии
+										$imgSize[0], // Размер картинки по ширине
+										$imgSize[1], // Размер картинки по высоте
+										$resizeType // Метод уменьшения (exact, portrait, landscape, auto, crop)
+									);
+									$resizeImg->saveImage($dir . $fileName, $quality); // Сохраняем картинку в заданную папку
+								}
+							} 
+							
+							$imgResized = $config['http_home_url'] . $imageDir . $fileName;							
+ 
+						} else {
+							// Если параметра imgSize нет - отдаём исходную картинку
+							$imgResized = $urlShort;
 						}
 
-						// Подрубаем НОРМАЛЬНЫЙ класс для картинок
-						$resizeImg = new resize($imgResized);
-						$resizeImg->resizeImage( //создание уменьшенной копии
-							$imgSize[0],
-							$imgSize[1],
-							$resizeType //Метод уменьшения (exact, portrait, landscape, auto, crop)
-						);
-						$resizeImg->saveImage($dir . $fileName, $quality); //Сохраняем картинку в папку /uploads/base/[размер_уменьшенной_копии]
-					}
-					// Если файл есть - отдаём картинку с сервера.
-					if (file_exists($dir . $fileName)) {
-						$imgResized = $config['http_home_url'] . 'uploads/base/' . $dir_suffix . $fileName;
-					} else {
-						$imgResized = $noimage;
-					}
+						// Отдаём дальше результат обработки.					
+						$imageItem = $imgResized;
 
-				} // Если параметра imgSize нет - отдаём оригинальную картинку
-				else {
-					$imgResized = $urlShort;
+					} // if($imageType == 'small')
+					$arImages[$i] = $imageItem;
+					if ($number == $i) {
+						break;
+					}
+					$i++;
 				}
-			}
+				
+			} 
 
-			if ($imageType == 'original') {
-				$image = $imgOriginal;
-			} elseif ($imageType == 'small') {
-				$image = $imgResized;
-			}
-
+		} 
+		else {
+			// Если регулярка не нашла картинку - отдадим заглушку
+			$arImages[$number] = $noimage;
 		}
 
-		return $image;
+		// Если хотим все картинки — не вопрос, получим массив.
+		if ($number == 'all') {
+		
+			return $arImages;
+		}
+		// По умолчанию возвращаем отдну картинку (понимаю, что метод должен возвращать всегда один тип данных, но это сделано из-за совместимости версий)
+		return $arImages[$number];
 
 	}
 
@@ -178,6 +231,15 @@ class bpModifiers extends base {
 		$n     = intval($n);
 
 		return $n % 10 == 1 && $n % 100 != 11 ? $words[0] . $words[1] : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? $words[0] . $words[2] : $words[0] . $words[3]);
+	}
+
+	/**
+	 * Функция для вывода print_r в шаблон
+	 * @param  mixed     $var входящие данные]
+	 * @return string    print_r
+	 */
+	public static function dump($var) {
+		return print_r($var, true);
 	}
 
 

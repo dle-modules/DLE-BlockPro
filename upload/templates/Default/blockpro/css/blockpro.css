@@ -1,0 +1,97 @@
+/* ==========================================================================
+   Навигация blockpro */
+/* ========================================================================== */
+
+.bp-pager:before,
+.bp-pager:after {
+	display: table;
+	content: " ";
+}
+.bp-pager:after {
+	clear: both;
+}
+.bp-pager [data-page-num],
+.bp-pager .current {
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 20px;
+	display: inline-block;
+	margin-bottom: 7px;
+	padding: 5px 8px 3px;
+	cursor: pointer;
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;
+	text-decoration: none;
+	color: #fff;
+	border: 0;
+	border-radius: 3px;
+	background: #4a9fc5;
+	background-image: none;
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	    -ms-user-select: none;
+	        user-select: none;
+	-webkit-transition: all ease .3s;
+	   -moz-transition: all ease .3s;
+	     -o-transition: all ease .3s;
+	        transition: all ease .3s;
+	-webkit-box-shadow: 0 2px 0 #3584a7;
+	   -moz-box-shadow: 0 2px 0 #3584a7;
+	        box-shadow: 0 2px 0 #3584a7;
+}
+.bp-pager [data-page-num]:focus {
+	outline: thin dotted #333;
+	outline: 5px auto -webkit-focus-ring-color;
+	outline-offset: -2px;
+}
+.bp-pager [data-page-num]:hover,
+.bp-pager [data-page-num]:focus {
+	text-decoration: none;
+	color: #fff;
+	background: #50bd98;
+	-webkit-box-shadow: 0 2px 0 #3c9e7d;
+	   -moz-box-shadow: 0 2px 0 #3c9e7d;
+	        box-shadow: 0 2px 0 #3c9e7d;
+}
+.bp-pager [data-page-num]:active {
+	outline: 0;
+	-webkit-box-shadow: 0 2px 0 #50bd98;
+	   -moz-box-shadow: 0 2px 0 #50bd98;
+	        box-shadow: 0 2px 0 #50bd98;
+}
+
+.bp-pager .current {
+	cursor: default;
+	background: #c70000;
+	-webkit-box-shadow: 0 2px 0 #940000;
+	   -moz-box-shadow: 0 2px 0 #940000;
+	        box-shadow: 0 2px 0 #940000;
+}
+/**
+ * .base-loader - класс, добавляемый к блоку при аякс-загрузке
+ */
+.base-loader {
+	position: relative;
+}
+.base-loader:after {
+	background: rgba(255, 255, 255, .9) url(../base-loader.gif) 50% 50% no-repeat;
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	content: "";
+	-webkit-transition: all ease .3s;
+	     -o-transition: all ease .3s;
+	        transition: all ease .3s;
+}
+
+/**
+ * [data-favorite-id] - селектор favorites
+ */
+
+[data-favorite-id] {
+	cursor: pointer;
+}

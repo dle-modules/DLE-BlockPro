@@ -1,0 +1,33 @@
+/* ==========================================================================
+   Иконки сайта */
+/* ========================================================================== */
+
+
+	.icon {
+		// Основные стили для иконок
+		display: inline-block;
+		overflow: hidden;
+		width: 20px;
+		height: 20px;
+		vertical-align: text-top;
+		background: url(/local/codenails/images/all-icons.png) 0 0 no-repeat;
+
+		// Не нужно писать &.icon-xxx т.к. это создаёт лишний код в css
+		&-small {
+			width: 14px;
+			height: 14px;
+		} //.icon-small
+		&-medium {
+			width: 26px;
+		} //.icon-medium
+		&-fw {
+			margin-right: 5px;
+		} //.icon-fw
+
+		&-expamle {
+			background-position: -20px -20px;
+		} //.icon-expamle
+
+	} //.icon
+
+

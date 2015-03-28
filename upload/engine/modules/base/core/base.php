@@ -90,8 +90,14 @@ class base {
 
 		// Добавляем свой модификатор в шаблонизатор для вывода картинок
 		$this->tpl->addModifier(
-			'image', function ($data, $noimage = '', $imageType = 'small', $number = 1, $size, $quality, $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false) use ($config) {
+			'image', function ($data, $noimage = '', $imageType = 'small', $number = 1, $size, $quality = '100', $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false) use ($config) {
 				return bpModifiers::getImage($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $config);
+			}
+		);
+		// Добавляем свой модификатор в шаблонизатор для вывода print_r
+		$this->tpl->addModifier(
+			'dump', function ($data) {
+				return bpModifiers::dump($data);
 			}
 		);
 
@@ -239,6 +245,28 @@ class base {
 		return $showTags;
 	}
 
+	/**
+	 * Получаем несколько уникальных случайных чисел в заданном диапазоне
+	 * 
+	 * @param  integer $from  от
+	 * @param  integer $to    до
+	 * @param  integer $count кол-во чисел
+	 * 
+	 * @return array          массив с числами
+	 */
+	public function getRand($from = 1, $to = 2000, $count = 15) {
+		$arNumbers = $tmp = array();
+		for ($i = 0; $i < $count; $i++) {
+			do {
+				$a = mt_rand($from, $to);
+			} while (isset($tmp[$a]));
+			$tmp[$a] = $from;
+			$arNumbers[] = $a;
+		}
+		unset($tmp);
+		return $arNumbers;
+	}
+
 
 } // base Class
 
@@ -289,7 +317,7 @@ function formateDate($date, $_f = false) {
  */
 function getCatInfo($category, $info = false, $noicon = false) {
 	global $cat_info, $config;
-
+	
 	$my_cat      = array();
 	$my_cat_icon = array();
 	$my_cat_link = array();
@@ -358,7 +386,7 @@ function getNormalHomeHttp() {
 
 
 /**
- * Показ рейтинга через модуль. Функция переписана из стандартной т.к. стандартная имела ID, конликтующие с самими собой.
+ * Показ рейтинга через модуль. Функция переписана из стандартной т.к. стандартная имела ID, конфликтующие с самими собой.
  * @param  integer  $id       ID новости
  * @param  integer  $rating   значение рейтинга
  * @param  integer  $vote_num кол-во голосов
@@ -366,26 +394,31 @@ function getNormalHomeHttp() {
  * @return mixed
  */
 function baseShowRating($id, $rating, $vote_num, $allow = true) {
-	global $lang;
+	global $lang, $config;
 
-	if( $rating AND $vote_num ) $rating = round( ($rating / $vote_num), 0 );
-	else $rating = 0;
-	$rating = $rating * 20;
+	if( !$config['rating_type'] ) {
+		
+		if( $rating AND $vote_num ) $rating = round( ($rating / $vote_num), 0 );
+		else $rating = 0;
+		
+		if ($rating < 0 ) $rating = 0;
 
-	if( !$allow ) {
-
-		$rated = <<<HTML
+		$rating = $rating * 20;
+	
+		if( !$allow ) {
+		
+			$rated = <<<HTML
 <div class="rating">
-	<ul class="unit-rating">
+		<ul class="unit-rating">
 		<li class="current-rating" style="width:{$rating}%;">{$rating}</li>
-	</ul>
+		</ul>
 </div>
 HTML;
-
-		return $rated;
-	}
-
-	$rated = <<<HTML
+		
+			return $rated;
+		}
+	
+		$rated = <<<HTML
 <div data-rating-layer="{$id}">
 	<div class="rating">
 		<ul class="unit-rating">
@@ -399,8 +432,37 @@ HTML;
 	</div>
 </div>
 HTML;
+	
+		return $rated;
 
-	return $rated;
+	} elseif ($config['rating_type'] == "1") {
+		
+		if( $rating < 0 ) $rating = 0;
+		
+		if( $allow ) $rated = "<span data-rating-layer=\"{$id}\" class=\"ratingtypeplus ignore-select\" >{$rating}</span>";
+		else $rated = "<span class=\"ratingtypeplus ignore-select\" >{$rating}</span>";
+		
+		return $rated;
+	
+	} elseif ($config['rating_type'] == "2") {
+		
+		$extraclass = "ratingzero";
+		
+		if( $rating < 0 ) {
+			$extraclass = "ratingminus";
+		}
+		
+		if( $rating > 0 ) {
+			$extraclass = "ratingplus";
+			$rating = "+".$rating;
+		}
+		
+		if( $allow ) $rated = "<span data-rating-layer=\"{$id}\" class=\"ratingtypeplusminus ignore-select {$extraclass}\" >{$rating}</span>";
+		else $rated = "<span class=\"ratingtypeplusminus ignore-select {$extraclass}\" >{$rating}</span>";
+		
+		return $rated;
+		
+	}
 }
 
 function stripSlashesInArray($data) {

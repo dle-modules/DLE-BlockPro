@@ -1,0 +1,80 @@
+	/* ==========================================================================
+	   TOPNAVI */
+	/* ========================================================================== */
+
+			.topnavi,
+			.topnavi li {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			.topnavi {
+				background: @gray;
+				margin: 20px 0;
+				.clearfix();
+				@media (max-width: @screenTablet) {
+					padding-bottom: 10px;
+				}
+				li {
+					a {
+						font: normal 18px/20px @Arial;
+						text-decoration: none;
+						color: @black;
+						display: block;
+						padding: 5px 15px 3px 30px;
+					}
+					@media (min-width: @screenPhone) and (max-width: @screenTabletMax) {
+						width: 50%;
+						float: left;
+					}
+					@media (min-width: @screenDesktop) {
+						float: left;
+						a {
+							font-size: 16px;
+							border-left: solid 1px @gray;
+							padding: 5px 15px;
+							text-transform: uppercase;
+							.transition();
+							&:hover {
+								color: @red;
+								background: @gray1Dark;
+							}
+
+						}
+						&:first-child a {
+							border: 0;
+						}
+					}
+				}
+				@media (min-width: @screenTabletMax) {
+					display: table;
+					width: 100%;
+					li {
+						display: table-cell;
+						// position: relative;
+						float: none;
+						vertical-align: middle;
+
+						a {
+							.transition();
+						}
+					}
+					@-moz-document url-prefix() {
+
+						display: block;
+
+						li {
+							display: block;
+							float: left;
+						}
+					}
+					li {
+						text-align: left;
+					}
+					> li {
+						text-align: center;
+					}
+				}
+
+			} //.topnavi
+

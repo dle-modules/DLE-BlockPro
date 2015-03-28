@@ -74,9 +74,7 @@ class checkUpdates {
 	private function parseVersion($str) {
 		$arr = explode('.', $str);
 		$retNum = 0;
-		foreach ($arr as $num) {
-			$retNum += $num;
-		}
+		$retNum += ($arr[0]*100) + ($arr[1]*10) + $arr[2];
 
 		return $retNum;
 	}

@@ -173,18 +173,117 @@ doc
 		}
 
 		$('#cat_code').val(prefix + text + suffix);
+	})
+	.on('click', '.btn-external-save', function(event) {
+		event.preventDefault();
+		var $this = $(this),
+			$data = $this.data();
+
+		$.magnificPopup.open({
+			items: {
+				src: $data.mfpSrc
+			},
+			focus: '#name',
+			type: 'ajax'
+		});
+	})
+	// Аякс отправка формы с эффектами
+	.on('submit', '[data-ajax-submit]', function() {
+		var $this = $(this),
+			laddaLoad,
+			options = {
+				dataType: 'html',
+				beforeSubmit: processStart,
+				success: processDone
+			};
+
+		$this.ajaxSubmit(options);
+
+		return false;
+	})
+	.on('click', '.delete-widget', function(event) {
+		event.preventDefault();
+		$data = $(this).data();
+		$.magnificPopup.open({
+			items: {
+				src: '<form method="post"><input type="hidden" name="blockId" value="'+$data.widgetId+'"><input type="hidden" name="widgetDelete" value="Y"><div class="col-mb-12 col-8 col-dt-6 col-ld-5 center-block"><div class="content"><div class="modal-white"><span class="modal-close popup-modal-dismiss">&times;</span><div class="modal-header"><p>Удалить виджет "'+$data.widgetName+'"?</p></div><div class="modal-content p10"><div class="ta-center mb10"><button class="btn btn-red ladda-button mr10" type="submit" data-style="expand-left"><span class="ladda-label">Удалить</span></button><span class="btn modal-close">Отмена</span></div></div></div></div></div></form>'
+			},
+			type: 'inline'
+		});
+	})
+	.on('sheckLicenseStatus', function(event) {
+		var $licenseStatus = $('#licenseStatus');
+		$.ajax({
+			url: '/engine/ajax/base/check_status.php'
+		})
+		.done(function(data) {
+			$licenseStatus.html(data);
+		})
+		.fail(function() {
+			console.log("error");
+		})
+		.always(function() {
+			console.log("complete");
+		});
+		
 	});
+
+// pre-submit callback
+function processStart(formData, jqForm, options) {
+	laddaLoadNew = jqForm.find('.ladda-button').ladda();
+	laddaLoadNew.ladda('start');
+
+	return true;
+}
+
+// post-submit callback
+function processDone(responseText, statusText, xhr, $form) {
+
+	var $responseText = $(responseText),
+		responseResult = ($responseText.is('form')) ? $responseText.html() : responseText;
+	var progress = 0;
+	var interval = setInterval(function () {
+		progress = Math.min(progress + Math.random() * 0.2, 1);
+		laddaLoadNew.ladda('setProgress', progress);
+
+		if (progress === 1) {
+			laddaLoadNew.ladda('stop');
+			clearInterval(interval);
+			// Тут что-то делаем с пришедшими данными
+			if (statusText == 'success') {
+				if ($form.data('ajaxSubmit') == 'reload') {
+					location.reload();
+				};
+				if ($form.data('ajaxSubmit') != 'noreload' && $form.data('ajaxSubmit') != 'reload') {
+					$form.html(responseResult);
+				};
+			};
+		}
+
+	}, 100);
+}
+
 
 
 
 
 jQuery(document).ready(function ($) {
+	// Проверка лицензии (визуальное отображение статуса)
+	$(window).load(function() {
+		$(document).trigger('sheckLicenseStatus');
+	});
 	// Авторазмер для блоков с кодом
 	$('.code').autosize();
 
 	// Селекты
 
-	var $select = $('.styler').selectize();
+	var $select = $('.styler').chosen({
+		disable_search_threshold: 10,
+		no_results_text: "Ничего не найдено!",
+		placeholder_text_multiple: 'выберите опции',
+		placeholder_text_multiple: 'выберите опцию',
+		width: "100%"
+	});
 
 	// Табы с настройками
 	$('#tab').easyResponsiveTabs();
@@ -200,6 +299,9 @@ jQuery(document).ready(function ($) {
 
 	$('.mfp-open-ajax').magnificPopup({
 		type: 'ajax'
+	});
+	$('.open-img').magnificPopup({
+		type: 'image'
 	});
 
 });

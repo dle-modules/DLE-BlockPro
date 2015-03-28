@@ -1,0 +1,37 @@
+/* Breadcrumb
+-----------------------------------------------------------------------------*/
+.breadcrumb {
+	.clearfix;
+	ul {     
+		margin: 10px 0 15px 0;
+		padding: 0;
+		list-style: digits;		
+		list-style-position: inside;
+		li {   
+			padding-left: 12px;
+			float: left; 
+			color: @linkColor;
+			
+			&:first-child {
+				list-style: none;
+				padding-left: 0;
+			}
+			
+			a {
+				color: @linkColor;
+				
+				&:hover {
+					color: @linkHoverColor;
+				} 
+			}   
+			
+			span {
+				// display: inline-block;
+				padding: 0 8px;   
+				// overflow: hidden;
+				// text-indent: -9999px;
+				// background: url(images/gray_dot_arr.png) no-repeat 50% 50%;
+			}
+		}     
+	}
+} 

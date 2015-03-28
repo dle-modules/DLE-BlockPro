@@ -1,0 +1,79 @@
+// Сюда пишем основные классы, включаемые внутри
+
+@Arial: Arial, Helvetica, sans-serif;                    // Arial
+@Tahoma: Tahoma, sans-serif;                             // Tahoma
+@Verdana: Verdana, Geneva, Arial, Helvetica, sans-serif; // Verdana
+@Trebuchet: "Trebuchet MS", Tahoma, sans-serif;          // Trebuchet
+@OpenSans: "Open Sans Condensed", Tahoma, sans-serif;    // OpenSans
+@PTSans: "PT Sans Narrow", PTsansNarrow, Arial, sans-serif; // PTSans
+
+
+
+.after() {
+	position: absolute;
+	content: "";
+}
+
+.border-radius(@radius: 10px) {
+	-webkit-border-radius: @radius;
+	-moz-border-radius: @radius;
+	border-radius: @radius;
+}
+
+.box-shadow(@shadow : 0 0 10px rgba(0, 0, 0, 0.4)) {
+	-webkit-box-shadow: @shadow;
+	-moz-box-shadow: @shadow;
+	box-shadow: @shadow;
+}
+
+.box-sizing(@type : border-box) {
+	-webkit-box-sizing: @type;
+	-moz-box-sizing: @type;
+	box-sizing: @type;
+}
+.text-shadow(@a : 0 1px 1px rgba(0, 0, 0, 0.4)) {
+	text-shadow: @a;
+}
+
+.transition(@transition : all ease .3s) {
+	-webkit-transition: @transition;
+	-moz-transition: @transition;
+	-o-transition: @transition;
+	transition: @transition;
+}
+.user-select(@select : none) {
+	-webkit-user-select: @select;
+	-moz-user-select: @select;
+	-ms-user-select: @select;
+	user-select: @select;
+}
+
+.rotate (@deg : -45deg) {
+	-webkit-transform: rotate(@deg);
+	-ms-transform: rotate(@deg);
+	transform: rotate(@deg);
+}
+
+// Webkit-style focus
+// ------------------
+.tab-focus() {
+	// Default
+	outline: thin dotted #333;
+	// Webkit
+	outline: 5px auto -webkit-focus-ring-color;
+	outline-offset: -2px;
+}
+
+// Placeholder text
+// -------------------------
+.placeholder(@color: @placeholderText) {
+	&:-moz-placeholder {
+		color: @color;
+	}
+	&:-ms-input-placeholder {
+		color: @color;
+	}
+	&::-webkit-input-placeholder {
+		color: @color;
+	}
+}

@@ -21,10 +21,12 @@ if ($member_id['user_group'] != '1') {
 define('MODULE_DIR', ENGINE_DIR . '/modules/base/admin/blockpro/');
 
 $moduleName = 'blockpro';
-$moduleVersion = '4.2.6';
+$moduleVersion = '4.5.3';
 
 $moderate           = $_REQUEST['moderate'];
 $moderate_checked   = ($moderate) ? 'checked' : '' ;
+$future             = $_REQUEST['future'];
+$future_checked     = ($future) ? 'checked' : '' ;
 $template           = $_REQUEST['template'];
 $cachePrefix        = $_REQUEST['cachePrefix'];
 $cacheSuffixOff     = $_REQUEST['cacheSuffixOff'];
@@ -35,6 +37,7 @@ $cacheLive          = $_REQUEST['cacheLive'];
 $startFrom          = $_REQUEST['startFrom'];
 $limit              = $_REQUEST['limit'];
 $fixed              = $_REQUEST['fixed'];
+$allowMain          = $_REQUEST['allowMain'];
 $postId             = $_REQUEST['postId'];
 $notPostId          = $_REQUEST['notPostId'];
 $author             = $_REQUEST['author'];
@@ -65,65 +68,80 @@ $showNav            = $_REQUEST['showNav'];
 $showNav_checked    = ($showNav) ? 'checked' : '' ;
 $pageNum            = $_REQUEST['pageNum'];
 $navStyle           = $_REQUEST['navStyle'];
+$cacheVars          = $_REQUEST['cacheVars'];
+$xfSortType         = $_REQUEST['xfSortType'];
+$symbols            = $_REQUEST['symbols'];
+$notSymbols         = $_REQUEST['notSymbols'];
+$saveRelated        = $_REQUEST['saveRelated'];
+
+
 
 $cfg = array(
-	'moderate'       => !empty($moderate) ? $moderate : false, // Показывать только новости на модерации
+	'moderate' => !empty($moderate) ? $moderate : false, // Показывать только новости на модерации
 
-	'template'       => !empty($template) ? $template : 'blockpro/blockpro', // Название шаблона (без расширения)
+	'template' => !empty($template) ? $template : 'blockpro/blockpro', // Название шаблона (без расширения)
 
-	'cachePrefix'    => !empty($cachePrefix) ? $cachePrefix : 'news', // Префикс кеша
+	'cachePrefix' => !empty($cachePrefix) ? $cachePrefix : 'news', // Префикс кеша
 	'cacheSuffixOff' => !empty($cacheSuffixOff) ? true : false, // Отключить суффикс кеша (будет создаваться один кеш-файл для всех пользователей). По умолчанию включен, т.е. для каждой группы пользователей будет создаваться свой кеш (на случай разного отображения контента разным юзерам).
 
 	'cacheNameAddon' => '', // Назначаем дополнение к имени кеша, если имеются переменные со значениями this, они будут дописаны в имя кеша, иначе для разных мест будет создаваться один и тот же файл кеша
 
-	'nocache'        => !empty($nocache) ? $nocache : false, // Не использовать кеш
-	'cacheLive'      => (!empty($cacheLive) && !$mcache) ? $cacheLive : false, // Время жизни кеша в минутах
+	'nocache' => !empty($nocache) ? $nocache : false, // Не использовать кеш
+	'cacheLive' => (!empty($cacheLive) && !$mcache) ? $cacheLive : false, // Время жизни кеша в минутах
 
-	'startFrom'      => !empty($startFrom) ? $startFrom : '0', // C какой новости начать вывод
-	'limit'          => !empty($limit) ? $limit : '10', // Количество новостей в блоке
-	'fixed'          => !empty($fixed) ? $fixed : 'yes', // Обработка фиксированных новостей (yes/only/witout показ всех/только фиксированных/только обычных новостей)
+	'startFrom' => !empty($startFrom) ? $startFrom : '0', // C какой новости начать вывод
+	'limit' => !empty($limit) ? $limit : '10', // Количество новостей в блоке
+	'fixed' => !empty($fixed) ? $fixed : 'yes', // Обработка фиксированных новостей (yes/only/without показ всех/только фиксированных/только обычных новостей)
+	'allowMain' => !empty($allowMain) ? $allowMain : 'yes', // Обработка новостей, опубликованных на главной (yes/only/without показ всех/только на главной/только не на главной)
+	'postId' => !empty($postId) ? $postId : '', // ID новостей для вывода в блоке (через запятую, или черточку)
+	'notPostId' => !empty($notPostId) ? $notPostId : '', // ID игнорируемых новостей (через запятую, или черточку)
 
-	'postId'         => !empty($postId) ? $postId : '', // ID новостей для вывода в блоке (через запятую, или черточку)
-	'notPostId'      => !empty($notPostId) ? $notPostId : '', // ID игнорируемых новостей (через запятую, или черточку)
+	'author' => !empty($author) ? $author : '', // Логины авторов, для показа их новостей в блоке (через запятую)
+	'notAuthor' => !empty($notAuthor) ? $notAuthor : '', // Логины игнорируемых авторов (через запятую)
 
-	'author'         => !empty($author) ? $author : '', // Логины авторов, для показа их новостей в блоке (через запятую)
-	'notAuthor'      => !empty($notAuthor) ? $notAuthor : '', // Логины игнорируемых авторов (через запятую)
+	'xfilter' => !empty($xfilter) ? $xfilter : '', // Имена дополнительных полей для фильтрации новостей по ним (через запятую)
+	'notXfilter' => !empty($notXfilter) ? $notXfilter : '', // Имена дополнительных полей для игнорирования показа новостей (через запятую)
 
-	'xfilter'        => !empty($xfilter) ? $xfilter : '', // Имена дополнительных полей для фильтрации новостей по ним (через запятую)
-	'notXfilter'     => !empty($notXfilter) ? $notXfilter : '', // Имена дополнительных полей для игнорирования показа новостей (через запятую)
+	'xfSearch' => !empty($xfSearch) ? $xfSearch : false, // синтаксис передачи данных: &xfSearch=имя_поля|значение||имя_поля|значение
+	'notXfSearch' => !empty($notXfSearch) ? $notXfSearch : false, // синтаксис передачи данных: &notXfSearch=имя_поля|значение||имя_поля|значение
+	'xfSearchLogic' => !empty($xfSearchLogic) ? $xfSearchLogic : 'OR', // Принимает OR или AND (по умолчанию OR)
 
-	'xfSearch'       => !empty($xfSearch) ? $xfSearch : false, // синтаксис передачи данных: &xfSearch=имя_поля|значение||имя_поля|значение
-	'notXfSearch'    => !empty($notXfSearch) ? $notXfSearch : false, // синтаксис передачи данных: &notXfSearch=имя_поля|значение||имя_поля|значение
-	'xfSearchLogic'  => !empty($xfSearchLogic) ? $xfSearchLogic : 'OR', // Принимает OR или AND (по умолчанию OR)
+	'catId' => !empty($catId) ? $catId : '', // Категории для показа	(через запятую, или черточку)
+	'subcats' => !empty($subcats) ? $subcats : false, // Выводить подкатегории указанных категорий (&subcats=y), работает и с диапазонами.
+	'notCatId' => !empty($notCatId) ? $notCatId : '', // Игнорируемые категории (через запятую, или черточку)
+	'notSubcats' => !empty($notSubcats) ? $notSubcats : false, // Игнорировать подкатегории игнорируемых категорий (&notSubcats=y), работает и с диапазонами.
 
-	'catId'          => !empty($catId) ? $catId : '', // Категории для показа	(через запятую, или черточку)
-	'subcats'        => !empty($subcats) ? $subcats : false, // Выводить подкатегории указанных категорий (&subcats=y), работает и с диапазонами.
-	'notCatId'       => !empty($notCatId) ? $notCatId : '', // Игнорируемые категории (через запятую, или черточку)
-	'notSubcats'     => !empty($notSubcats) ? $notSubcats : false, // Игнорировать подкатегории игнорируемых категорий (&notSubcats=y), работает и с диапазонами.
+	'tags' => !empty($tags) ? $tags : '', // Теги из облака тегов для показа новостей, содержащих их (через запятую)
+	'notTags' => !empty($notTags) ? $notTags : '', // Игнорируемые теги (через запятую)
 
-	'tags'           => !empty($tags) ? $tags : '', // Теги из облака тегов для показа новостей, содержащих их (через запятую)
-	'notTags'        => !empty($notTags) ? $notTags : '', // Игнорируемые теги (через запятую)
+	'day' => !empty($day) ? $day : false, // Временной период для отбора новостей
+	'dayCount' => !empty($dayCount) ? $dayCount : false, // Интервал для отбора (т.е. к примеру выбираем новости за прошлую недею так: &day=14&dayCount=7 )
+	'sort' => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title, download, symbol или xf|xfieldname где xfieldname - имя дополнительного поля)
+	'xfSortType' => !empty($xfSortType) ? $xfSortType : 'int', // Тип сортировки по допполю (string, int) - для корректной сортировки по строки используем `string`, по умолчанию сортируется как число (для цен полезно).
+	'order' => !empty($order) ? $order : 'new', // Направление сортировки (new, old, asis)
 
-	'day'            => !empty($day) ? $day : false, // Временной период для отбора новостей
-	'dayCount'       => !empty($dayCount) ? $dayCount : false, // Интервал для отбора (т.е. к примеру выбираем новости за прошлую недею так: &day=14&dayCount=7 )
-	'sort'           => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title)
-	'order'          => !empty($order) ? $order : 'new', // Направление сортировки (new, old)
+	'avatar' => !empty($avatar) ? $avatar : false, // Вывод аватарки пользователя (немного усложнит запрос).
 
-	'avatar'         => !empty($avatar) ? $avatar : false, // Вывод аватарки пользователя (немного усложнит запрос).
+	'showstat' => !empty($showstat) ? $showstat : false, // Показывать время и статистику по блоку
 
-	'showstat'       => !empty($showstat) ? $showstat : false, // Показывать время и статистику по блоку
-
-	'related'        => !empty($related) ? $related : false, // Включить режим вывода похожих новостей (по умолчанию нет)
-	'showNav'        => !empty($showNav) ? $showNav : false, // Включить постраничную навигацию
-	'pageNum'        => !empty($pageNum) ? $pageNum : '1', // Текущая страница при постраничной конфигурации
-	'navStyle'       => !empty($navStyle) ? $navStyle : 'classic', // Стиль навигации. Возможны следующие стили:
+	'related' => !empty($related) ? $related : false, // Включить режим вывода похожих новостей (по умолчанию нет)
+	'saveRelated' => !empty($saveRelated) ? $saveRelated : false, // Включить запись похожих новостей в БД
+	'showNav' => !empty($showNav) ? $showNav : false, // Включить постраничную навигацию
+	'pageNum' => !empty($pageNum) ? $pageNum : '1', // Текущая страница при постраничной конфигурации
+	'navStyle' => !empty($navStyle) ? $navStyle : 'classic', // Стиль навигации. Возможны следующие стили:
 	/*
-		classic:	<< Первая  < 1 [2] 3 >  Последняя >>
-		digg:		<< Назад  1 2 ... 5 6 7 8 9 [10] 11 12 13 14 ... 25 26  Вперёд >>
-		extended:	<< Назад | Страница 2 из 11 | Показаны новости 6-10 из 52 | Вперёд >>
-		punbb:		1 ... 4 5 [6] 7 8 ... 15
-	*/
+	classic:	<< Первая  < 1 [2] 3 >  Последняя >>
+	digg:		<< Назад  1 2 ... 5 6 7 8 9 [10] 11 12 13 14 ... 25 26  Вперёд >>
+	extended:	<< Назад | Страница 2 из 11 | Показаны новости 6-10 из 52 | Вперёд >>
+	punbb:		1 ... 4 5 [6] 7 8 ... 15
+	 */
+	'options' => !empty($options) ? $options : false, // Опции, публикации новости для показа (Публиковать на главной, Разрешить рейтинг статьи, Разрешить комментарии, Запретить индексацию страницы для поисковиков, Зафиксировать новость) main|rating|comments|noindex
+	'notOptions' => !empty($notOptions) ? $notOptions : false, // Опции, публикации новости для исключения (Публиковать на главной, Разрешить рейтинг статьи, Разрешить комментарии, Запретить индексацию страницы для поисковиков, Зафиксировать новость) main|rating|comments|noindex
 
+	'future' => !empty($future) ? $future : false, // Выводить только новости, дата публикации которых не наступила (Полезно для афиш) &future=y
+	'cacheVars' => !empty($cacheVars) ? $cacheVars : false, // Значимые переменные в формировании кеша блока на случай разного вывода в зависимости от условий расположения модуля. Сюда можно передавать ключи, доступные через $_REQUEST или значения переменной $dle_module
+	'symbols' => !empty($symbols) ? $symbols : false, // Символьные коды для фильтрации по символьному каталогу. Перечисляем через запятую.
+	'notSymbols' => !empty($notSymbols) ? $notSymbols : false, // Символьные коды для исключающей фильтрации по символьному каталогу. Перечисляем через запятую или пишем this для текущего символьного кода
 );
 
 if ($_REQUEST['setPreview']) {
@@ -156,86 +174,55 @@ if ($_REQUEST['setPreview']) {
 
 
 function base_dle_cache($prefix, $cache_id = false, $member_prefix = false) {
-	global $config, $is_logged, $member_id, $mcache;
+	global $config, $is_logged, $member_id;
 
-	if( !$config['allow_cache'] ) return false;
+	if ($is_logged) {
+		$end_file = $member_id['user_group'];
+	} else {
+		$end_file = "0";
+	}
 
-	$config['clear_cache'] = (intval($config['clear_cache']) > 1) ? intval($config['clear_cache']) : 0;
-
-	if( $is_logged ) $end_file = $member_id['user_group'];
-	else $end_file = "0";
-
-	if( ! $cache_id ) {
-
+	if (!$cache_id) {
 		$key = $prefix;
-
 	} else {
-
-		$cache_id = md5( $cache_id );
-
-		if( $member_prefix ) $key = $prefix . "_" . $cache_id . "_" . $end_file;
-		else $key = $prefix . "_" . $cache_id;
-
+		$cache_id = md5($cache_id);
+		if ($member_prefix) {
+			$key = $prefix . "_" . $cache_id . "_" . $end_file;
+		} else {
+			$key = $prefix . "_" . $cache_id;
+		}
 	}
 
-	if ( $mcache ) {
-
-		return memcache_get( $mcache, md5( DBNAME . PREFIX . md5(DBUSER) .$key ) );
-
-	} else {
-
-		$buffer = @file_get_contents( ENGINE_DIR . "/cache/" . $key . ".tmp" );
-
-		if ( $buffer !== false AND $config['clear_cache'] ) {
-
-			$file_date = @filemtime( ENGINE_DIR . "/cache/" . $key . ".tmp" );
-			$file_date = time()-$file_date;
-
-			if ( $file_date > ( $config['clear_cache'] * 60 ) ) {
-				$buffer = false;
-				@unlink( ENGINE_DIR . "/cache/" . $key . ".tmp" );
-			}
-
-			return $buffer;
-
-		} else return $buffer;
-
-	}
+	$buffer = @file_get_contents(ENGINE_DIR . "/cache/" . $key . ".tmp");
+	
+	return $buffer;
 }
 
 function base_create_cache($prefix, $cache_text, $cache_id = false, $member_prefix = false) {
-	global $config, $is_logged, $member_id, $mcache;
+	global $config, $is_logged, $member_id;
+	if ($is_logged) {
+		$end_file = $member_id['user_group'];
+	} else {
+		$end_file = "0";
+	}
 
-	if( !$config['allow_cache'] ) return false;
-
-	if( $is_logged ) $end_file = $member_id['user_group'];
-	else $end_file = "0";
-
-	if( ! $cache_id ) {
+	if (!$cache_id) {
 		$key = $prefix;
 	} else {
-		$cache_id = md5( $cache_id );
+		$cache_id = md5($cache_id);
 
-		if( $member_prefix ) $key = $prefix . "_" . $cache_id . "_" . $end_file;
-		else $key = $prefix . "_" . $cache_id;
+		if ($member_prefix) {
+			$key = $prefix . "_" . $cache_id . "_" . $end_file;
+		} else {
+			$key = $prefix . "_" . $cache_id;
+		}
 
 	}
 
+	file_put_contents(ENGINE_DIR . "/cache/" . $key . ".tmp", $cache_text, LOCK_EX);
 
-	if ( $mcache ) {
+	@chmod(ENGINE_DIR . "/cache/" . $key . ".tmp", 0666);
 
-		$config['clear_cache'] = (intval($config['clear_cache']) > 1) ? intval($config['clear_cache']) : 0;
-
-		if ( $config['clear_cache'] ) $set_time = $config['clear_cache'] * 60; else $set_time = 86400;
-
-		memcache_set( $mcache, md5( DBNAME . PREFIX . md5(DBUSER) .$key ), $cache_text, MEMCACHE_COMPRESSED, $set_time );
-
-	} else {
-
-		file_put_contents (ENGINE_DIR . "/cache/" . $key . ".tmp", $cache_text, LOCK_EX);
-
-		@chmod( ENGINE_DIR . "/cache/" . $key . ".tmp", 0666 );
-	}
 }
 
 ?>
@@ -243,7 +230,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 <html>
 	<head>
 		<meta charset="<?=$config['charset']?>">
-		<title>BlockPro - генератор строк подключения</title>
+		<title>BlockPro</title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -252,14 +239,14 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 			var dle_root = '<?=$config['http_home_url']?>';
 			var dle_skin = '<?=$config['skin']?>';
 		</script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/autosize.js/1.18.1/jquery.autosize.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/autosize.js/1.18.1/jquery.autosize.min.js"></script>
 
 		<script src="/engine/modules/base/admin/blockpro/js/jquery.form.min.js"></script>
 		<script src="/engine/modules/base/admin/blockpro/js/jquery.ladda.min.js"></script>
 		<script src="/engine/modules/base/admin/blockpro/js/jquery.easyResponsiveTabs.min.js"></script>
 		<script src="/engine/modules/base/admin/blockpro/js/jquery.magnificpopup.min.js"></script>
-		<script src="/engine/modules/base/admin/blockpro/js/jquery.selectize.min.js"></script>
+		<script src="/engine/modules/base/admin/blockpro/js/jquery.chosen.min.js"></script>
 		<script src="/engine/modules/base/admin/blockpro/js/main.js"></script>
 	</head>
 	<body>
@@ -281,7 +268,8 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 		<div class="container">
 			<div class="content">
 				<div class="col col-mb-12 col-12">
-					<h1 class="ta-center">Генератор строк подключения BlockPro <span class="btn btn-small btn-red mfp-open-ajax" data-mfp-src="/engine/ajax/base/check_updates.php?name=<?=$moduleName?>&currentVersion=<?=$moduleVersion?>">Проверить обновления</span></h1>
+					<h1 class="ta-center mb10">BlockPro <span class="btn btn-small btn-red mfp-open-ajax" data-mfp-src="/engine/ajax/base/check_updates.php?name=<?=$moduleName?>&currentVersion=<?=$moduleVersion?>">Проверить обновления</span></h1>
+					<div class="ta-center">Статус лицензии: <span id="licenseStatus"></span></div>
 					<hr>
 				</div> <!-- .col col-mb-12 col-12 -->
 			</div> <!-- .content -->
@@ -291,6 +279,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 						<ul class="resp-tabs-list">
 							<li>Параметры</li>
 							<li>Результат</li>
+							<li>Виджеты</li>
 							<li>Хелперы</li>
 							<li>Документация и техподдержка</li>
 						</ul>
@@ -304,16 +293,55 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 									<div class="col col-mb-12">
 										<?if ($_REQUEST['setPreview']): ?>
 											<?
-												$moduleUrl = 'include file="engine/modules/base/blockpro.php?';
+												$moduleUrl = 'include file="engine/modules/base/blockpro.php';
 												$paramsUrl = array();
 
+												// Удаляем значения по умолчанию за ненадобностью.
+												if ($cfg['template'] == 'blockpro/blockpro') {												
+													unset($cfg['template']);
+												}
+												if ($cfg['cachePrefix'] == 'news') {												
+													unset($cfg['cachePrefix']);
+												}
+												if ($cfg['limit'] == 10) {												
+													unset($cfg['limit']);
+												}
+												if ($cfg['fixed'] == 'yes') {												
+													unset($cfg['fixed']);
+												}
+												if ($cfg['allowMain'] == 'yes') {												
+													unset($cfg['allowMain']);
+												}
+												if ($cfg['xfSearchLogic'] == 'on') {												
+													unset($cfg['xfSearchLogic']);
+												}
+												if ($cfg['sort'] == 'top') {												
+													unset($cfg['sort']);
+												}
+												if ($cfg['order'] == 'on') {												
+													unset($cfg['order']);
+												}
+												if ($cfg['pageNum'] == 1) {												
+													unset($cfg['pageNum']);
+												}
+												if ($cfg['navStyle'] == 'classic') {												
+													unset($cfg['navStyle']);
+												}
+												if ($cfg['xfSortType'] == 'int') {												
+													unset($cfg['xfSortType']);
+												}
+
+												$filteredCfg = array_filter($cfg);
+												if (count($filteredCfg) > 0) {
+													$moduleUrl .='?';
+												}
 												foreach (array_filter($cfg) as $key => $value) {
 													$paramsUrl[] = $key . '=' . $value;
-												}
-												$moduleUrl  .= implode('&', $paramsUrl);
+												}												
+												$moduleUrl .= implode('&amp;', $paramsUrl);
 											?>
-											<h2>Ваша строка подключения:</h2>
-											<textarea  class="input input-block-level code">{<?=$moduleUrl?>"}</textarea>
+											<h2>Ваша строка подключения: <span class="btn btn-green btn-small btn-external-save" data-mfp-src="/engine/ajax/base/save_block_pro.php?blockId=<?=$pageCahceName?>">Создать виджет</span></h2>
+											<textarea rows="1" class="input input-block-level code">{<?=$moduleUrl?>"}</textarea>
 											<h2>Предпросмотр блока:</h2>
 											<hr>
 											<div class="content">
@@ -355,6 +383,9 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 								</div>
 							</div>
 							<div>
+								<?include(MODULE_DIR . 'vidgets.php');?>
+							</div>
+							<div>
 							<h2>Картинки</h2>
 								<div class="content">
 									<div class="col col-mb-12 col-5 col-dt-4 form-label">
@@ -382,6 +413,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 										<select name="img_type" class="styler" data-setimage data-img-type>
 											<option value="small">Уменьшенная копия</option>
 											<option value="original">Оригинальная картинка</option>
+											<option value="intext">Как есть</option>
 										</select>
 									</div>
 								</div>
@@ -390,7 +422,10 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 										Номер картинки в контенте
 									</div>
 									<div class="col col-mb-12 col-7 col-dt-8 form-control">
-										<input type="text" class="input" name="img_number" value="1" placeholder="например 3" data-setimage data-img-count>
+										<input type="text" class="input" name="img_number" value="1" placeholder="например 3 или all" data-setimage data-img-count>
+										<div class="alert alert-info">
+											Можно прописать "<b>all</b>" для вывода массива со всеми картинками выбраного поля.
+	 									</div>
 									</div>
 								</div>
 								<div class="content">
@@ -518,7 +553,6 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 
 
 							</div>
-
 							<div>
 								<div class="content">
 									<div class="col col-mb-12 col-2 form-label">
