@@ -56,7 +56,7 @@ doc
 			fav_id = $this.data('favoriteId'),
 			action = $this.data('action');
 
-		$.get(dle_root + "engine/ajax/favorites.php", {
+		$.get(dle_root + 'engine/ajax/favorites.php', {
 			fav_id: fav_id,
 			action: action,
 			skin: dle_skin
@@ -214,7 +214,7 @@ doc
 	.on('sheckLicenseStatus', function(event) {
 		var $licenseStatus = $('#licenseStatus');
 		$.ajax({
-			url: '/engine/ajax/base/check_status.php'
+			url: dle_root + 'engine/ajax/base/check_status.php'
 		})
 		.done(function(data) {
 			$licenseStatus.html(data);
@@ -341,7 +341,7 @@ function base_loader (id, method, className) {
  */
 function base_rate(rate, id) {
 
-	$.get(dle_root + "engine/ajax/rating.php", {
+	$.get(dle_root + 'engine/ajax/rating.php', {
 		go_rate: rate,
 		news_id: id,
 		skin: dle_skin
