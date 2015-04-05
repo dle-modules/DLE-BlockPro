@@ -22,17 +22,7 @@ $cfg = array(
 	// ID групп, для которых доступно управление модулем в админке.
 	'allowGroups'   => '1',
 	// Массив с запросами, которые будут выполняться при установке
-	'queries'       => array(
-		1 => 'CREATE TABLE IF NOT EXISTS `' . PREFIX . '_blockpro_blocks` (
-  `id` tinyint(6) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `block_id` varchar(100) NOT NULL,
-  `params` mediumtext NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `block_id` (`block_id`)
-) ENGINE=MyISAM;',
-	),
+	'queries'       => array(),
 	// Устанавливать админку (true/false). Включает показ кнопки установки и удаления админки.
 	'installAdmin'  => true,
 	// Отображать шаги утановки модуля
@@ -55,20 +45,236 @@ $steps = <<<HTML
 <h2 class="mt0">Редактирование файлов</h2>
 <ol>
 	<li>
-		Открыть файл <b>/templates/{$config['skin']}/main.tpl</b> 
+		Из CSS-файла шаблона удалить:
+		<textarea readonly class="code" rows="15">/* ==========================================================================
+   Навигация blockpro */
+/* ========================================================================== */
+
+	.bp-pager:before,
+	.bp-pager:after {
+		content: " ";
+		display: table;
+	}
+	.bp-pager:after {
+		clear: both;
+	}
+	.bp-pager [data-page-num],
+	.bp-pager .current {
+		display: inline-block;
+		color: #ffffff;
+		margin-bottom: 0;
+		font-weight: normal;
+		text-align: center;
+		vertical-align: middle;
+		cursor: pointer;
+		background-image: none;
+		background: #4a9fc5;
+		border: 0;
+		text-decoration: none;
+		white-space: nowrap;
+		padding: 10px 15px 8px;
+		font-size: 18px;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		-webkit-transition: all ease 0.3s;
+		-moz-transition: all ease 0.3s;
+		-o-transition: all ease 0.3s;
+		transition: all ease 0.3s;
+		-webkit-box-shadow: 0 2px 0 #3584a7;
+		-moz-box-shadow: 0 2px 0 #3584a7;
+		box-shadow: 0 2px 0 #3584a7;
+		padding: 5px 8px 3px;
+		font-size: 12px;
+		line-height: 20px;
+		border-radius: 3px;
+		margin-bottom: 7px;
+	}
+	.bp-pager [data-page-num]:focus {
+		outline: thin dotted #333;
+		outline: 5px auto -webkit-focus-ring-color;
+		outline-offset: -2px;
+	}
+	.bp-pager [data-page-num]:hover,
+	.bp-pager [data-page-num]:focus {
+		color: #ffffff;
+		background: #50bd98;
+		text-decoration: none;
+		-webkit-box-shadow: 0 2px 0 #3c9e7d;
+		-moz-box-shadow: 0 2px 0 #3c9e7d;
+		box-shadow: 0 2px 0 #3c9e7d;
+	}
+	.bp-pager [data-page-num]:active {
+		outline: 0;
+		-webkit-box-shadow: 0 2px 0 #50bd98;
+		-moz-box-shadow: 0 2px 0 #50bd98;
+		box-shadow: 0 2px 0 #50bd98;
+	}
+
+	.bp-pager .current {
+		cursor: default;
+		background: #c70000;
+		-webkit-box-shadow: 0 2px 0 #940000;
+		-moz-box-shadow: 0 2px 0 #940000;
+		box-shadow: 0 2px 0 #940000;
+	}
+	/**
+	* .base-loader - класс, добавляемый к блоку при аякс-загрузке
+	*/
+	.base-loader {
+		position: relative;
+	}
+	.base-loader:after {
+		position: absolute;
+		content: "";
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 1;
+		background: rgba(255, 255, 255, 0.9) url(../blockpro/base-loader.gif) 50% 50% no-repeat;
+		-webkit-transition: all ease 0.3s;
+		-moz-transition: all ease 0.3s;
+		-o-transition: all ease 0.3s;
+		transition: all ease 0.3s;
+	}
+
+	/**
+	 * [data-favorite-id] - селектор favorites
+	 */
+
+	[data-favorite-id] {
+		cursor: pointer;
+	}</textarea>
 	</li>
 	<li>
-		Добавить перед <b>&lt;/head&gt;</b>:
-		<textarea readonly class="code" rows="1"><link href="{THEME}/blockpro/css/blockpro.css" rel="stylesheet" /></textarea>
+		Из js файла шаблона удалить:
+		<textarea readonly class="code" rows="15">$(document)
+	.on('click touchstart', '[data-page-num]', function (event) {
+
+		var \$this = $(this),
+			blockId = \$this.parent().data('blockId'),
+			pageNum = \$this.data('pageNum'),
+			\$block = $('#' + blockId);
+
+		base_loader(blockId, 'start');
+
+		$.ajax({
+			url: dle_root + 'engine/ajax/blockpro.php',
+			dataType: 'html',
+			data: {
+				pageNum: pageNum,
+				blockId: blockId
+			},
+		})
+			.done(function (data) {
+				\$block.html($(data).html());
+				console.log(data);
+			})
+			.fail(function () {
+				base_loader(blockId, 'stop');
+				console.log("error");
+			})
+			.always(function () {
+				base_loader(blockId, 'stop');
+			});
+
+	})
+	.on('click touchstart', '[data-favorite-id]', function (event) {
+		event.preventDefault();
+		var \$this = $(this),
+			fav_id = \$this.data('favoriteId'),
+			action = \$this.data('action');
+
+		ShowLoading('');
+		$.get(dle_root + "engine/ajax/favorites.php", {
+			fav_id: fav_id,
+			action: action,
+			skin: dle_skin
+		}, function (data) {
+			HideLoading('');
+			var \$img = $(data),
+				src = \$img.prop('src'),
+				title = \$img.prop('title'),
+				imgAction = (action == 'plus') ? 'minus' : 'plus',
+				l = src.split(imgAction).length;
+			if (l == 2) {
+				$('[data-favorite-id=' + fav_id + ']')
+					.prop({
+						alt: title,
+						title: title,
+						src: src
+					})
+					.data({
+						action: imgAction,
+						favoriteId: fav_id
+					});
+			};
+		});
+
+	});
+
+/**
+ * Простейшая функция для реализации эффекта загрузки блока
+ * Добавляет/удаляет заданный класс для заданного блока
+ * вся работа по оформлению ложится на css
+ *
+ * @author ПафНутиЙ <pafnuty10@gmail.com>
+ *
+ * @param  {str} id        ID блока
+ * @param  {str} method    start/stop
+ * @param  {str} className Имя класса, добавляемого блоку
+ */
+function base_loader (id, method, className) {
+	var \$block = $('#' + id),
+		cname = (className) ? className : 'base-loader';
+	if (method == 'start') {
+		\$block.addClass(cname);
+	};
+
+	if (method == 'stop') {
+		\$block.removeClass(cname);
+	};
+}
+
+/**
+ * Функция выставления рейтинга в модуле blockpro
+ *
+ * @author ПафНутиЙ <pafnuty10@gmail.com>
+ *
+ * @param  {int} rate Значение рейтинга
+ * @param  {int} id   ID новости
+ *
+ * @return {str}      Результат обработки рейтинга
+ */
+function base_rate(rate, id) {
+	ShowLoading('');
+
+	$.get(dle_root + "engine/ajax/rating.php", {
+		go_rate: rate,
+		news_id: id,
+		skin: dle_skin
+	}, function (data) {
+		HideLoading('');
+		if (data.success) {
+			var rating = data.rating;
+
+			rating = rating.replace(/&amp;lt;/g, "<");
+			rating = rating.replace(/&amp;gt;/g, ">");
+			rating = rating.replace(/&amp;amp;/g, "&");
+
+			$('[data-rating-layer="'+id+'"]').html(rating);
+			$('[data-vote-num-id="'+id+'"]').html(data.votenum);
+
+			$("#ratig-layer-" + id).html(rating);
+			$("#vote-num-id-" + id).html(data.votenum);
+		}
+
+	}, "json");
+};/script></textarea>
 	</li>
-	<li>
-		Добавить перед <b>&lt;/head&gt;</b>:
-		<textarea readonly class="code" rows="1"><script src="{THEME}/blockpro/js/blockpro.js"></script></textarea>
-		или
-		<textarea readonly class="code" rows="1"><script src="{THEME}/blockpro/js/blockpro_new.js"></script></textarea>
-		если хотте использовать возможность навигации по стрелкам браузера при ajax-переключении страниц модуля.
-	</li>
-	<li>Выполнить установку админчасти и таблиц модуля (кнопка ниже).</li>
+	<li>Выполнить удаление админчасти модуля (кнопка ниже).</li>
 </ol>
 HTML;
 
@@ -87,7 +293,7 @@ function installer()
 		$adminInstalled = ($aq['name'] == $cfg['moduleName']) ? true : false;
 
 	}
-	if (isset($_POST['notaccept']) && $cfg['showLicense'] && !$adminInstalled) {
+	if (isset($_POST['notaccept']) && $cfg['showLicense']) {
 		$output = <<<HTML
 		<div class="content">
 			<div class="col col-mb-12">
@@ -97,7 +303,7 @@ function installer()
 			</div>
 		</div>
 HTML;
-	} elseif (empty($_POST['accept']) && $cfg['showLicense'] && !$adminInstalled) {
+	} elseif (empty($_POST['accept']) && $cfg['showLicense']) {
 		$output = <<<HTML
 		<form method="post">
 			<div class="content">
@@ -145,7 +351,7 @@ HTML;
 			}
 
 			$output .= '<li><b>Установка завершена!</b></li></ul></div>';
-			$output .= '<div class="alert">Не забудьте удалить файлы установщика (blockpro_install.php и blockpro_upgrade.php)!</div>';
+			$output .= '<div class="alert">Не забудьте удалить файл установщика!</div>';
 			if ($cfg['installAdmin'] && $install_admin) {
 				$output .= '<p><a class="btn" href="/' . $config['admin_path'] . '?mod=' . $cfg['moduleName'] . '" target="_blank" title="Перейти к управлению модулем">Настройка модуля</a></p> <hr>';
 			}
@@ -154,7 +360,7 @@ HTML;
 		elseif (!empty($_POST['remove'])) {
 			$remove_admin = $dle_api->uninstall_admin_module($cfg['moduleName']);
 			$output .= '<div class="descr"><p><b>Админчасть модуля удалена</b></p></div>';
-			$output .= '<div class="alert">Не забудьте удалить файл установщика!</div>';
+			$output .= '<div class="alert">Теперь запустите <a href="blockpro_install.php">blockpro_install.php</a>!</div>';
 		} // Если через $_POST ничего не передаётся, выводим форму для установки модуля
 		else {
 			// Выводим кнопку удаления  модуля
@@ -190,15 +396,7 @@ HTML;
 			else {
 				if (!$adminInstalled) {
 					$installForm = <<<HTML
-				<div class="form-field clearfix">
-					<div class="label">Установка админчасти</div>
-					<div class="control">
-						<form method="POST">
-							<input type="hidden" name="install" value="1">
-							<button class="btn" type="submit">Установить админчасть модуля</button>
-						</form>
-					</div>
-				</div>
+				<div class="alert alert-info">Модуль не установлен на сайте, можно переходить к <a href="blockpro_install.php">установке</a></div>
 HTML;
 				}
 			}
@@ -208,10 +406,8 @@ HTML;
 				$output .= $steps;
 			}
 			$output .= <<<HTML
-			<p class="alert">Перед установкой модуля обязательно <a href="/{$config['admin_path']}?mod=dboption" target="_blank" title="Открыть инструменты работы с БД DLE в новом окне">сделайте бэкап БД</a>!</p>
+			<p class="alert">Перед установкой/удалением модуля обязательно <a href="/{$config['admin_path']}?mod=dboption" target="_blank" title="Открыть инструменты работы с БД DLE в новом окне">сделайте бэкап БД</a>!</p>
 			<div class="descr">
-				<h2>Установка таблиц модуля и админчасти</h2>
-
 				$installForm
 				$uninstallForm
 			</div>
@@ -292,7 +488,7 @@ function chasetConflict($string)
 				<div class="col col-mb-12 ta-center">
 					<h1><?= $cfg['moduleTitle'] ?></big> v.<?= $cfg['moduleVersion'] ?>
 						от <?= $cfg['moduleDate'] ?></h1>
-						<div class="text-muted">Установка модуля</div>
+						<div class="text-red">Обновление модуля с более ранней версии</div>
 					<hr>
 				</div>
 			</div>
