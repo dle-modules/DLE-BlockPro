@@ -457,7 +457,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 											<option value="landscape">уменьшение по ширине</option>
 											<option value="portrait">уменьшение по высоте</option>
 											<option value="crop">crop (уменьшение и обрезка лишнего)</option>
-										</select>
+										</select> <br>
 										<input class="checkbox" type="checkbox" value="true" name="img_grab" id="img_grab" checked data-setimage> <label for="img_grab"><span></span> Грабить сторонние картинки к себе</label> <br>
 										<input class="checkbox" type="checkbox" value="true" name="img_get_small" id="img_get_small" data-setimage> <label for="img_get_small"><span></span> Обрабатывать уменьшенную копию, если есть</label> <br>
 									</div>

@@ -121,7 +121,7 @@ if ($member_id['user_group'] == '1') {
 
 		} else {
 			$modal = '<div class="col-mb-12 col-8 col-dt-6 col-ld-5 center-block">
-				<form method="POST" action="/engine/ajax/base/save_block_pro.php" data-ajax-submit>
+				<form method="POST" action="' . $config['http_home_url'] . '/engine/ajax/base/save_block_pro.php" data-ajax-submit>
 					<div class="content">
 						<div class="modal-white">
 							<span class="modal-close popup-modal-dismiss">&times;</span>
