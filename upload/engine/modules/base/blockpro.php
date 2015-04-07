@@ -361,16 +361,8 @@ if (!$output) {
 				break;
 
 			case 'random':	// Случайные				
-				// Для ускорения работы сначала узнаем сколько всего новостей в БД
-				$allNewsCount = $base->db->getOne('SELECT COUNT(*) as count FROM ?n', PREFIX . '_post');
-				
-				// Умножим лимит на два, чтобы избежать "дыр" при удалённых новостях.
-				$limitReach = $base->cfg['limit'] * 2;
-				
-				// Отбираем новости по рандомным ID
-				$wheres[] = 'id IN (' . implode(',', $base->getRand(1, $allNewsCount, $limitReach)) . ')';
-				
-				// И сортируем отобранные новости в случайном порядке
+							
+				// Сортируем отобранные новости в случайном порядке
 				$orderArr[] = 'RAND()';
 				break;
 
@@ -589,6 +581,32 @@ if (!$output) {
 		// Подчистим массив от пустых значений
 		$wheres = array_filter($wheres);
 
+		// Когда выбран вариант вывода случайных новостей
+		if ($base->cfg['sort'] == 'random') {
+
+			// Складываем условия для рандомных новостей
+			$randWhere = (count($wheres)) ? ' WHERE ' . implode(' AND ', $wheres) : '';
+
+			$subsel1 = $base->db->parse('SELECT id FROM ?n ?p ORDER BY id ASC LIMIT 1', PREFIX . '_post', $randWhere);
+			$subsel2 = $base->db->parse('SELECT id FROM ?n ?p ORDER BY id DESC LIMIT 1', PREFIX . '_post', $randWhere);
+
+			$randDiapazone = $base->db->getAll('
+				SELECT id FROM ?n AS t WHERE 
+				t.id = (?p) 
+				OR t.id = (?p) 
+			', PREFIX . '_post', $subsel1, $subsel2);
+
+			// Умножим лимит на два, чтобы избежать "дыр" при удалённых новостях.
+			$limitReach = $base->cfg['limit'] * 2;
+
+			if (count($randDiapazone) == 2) {
+				// Если в итоге получим 2 элемента массива - значит добились, чего хотели
+				// Сбросим массив условий т.к. кроме ID нам больше ничего не требуется, всё уже отобрано.
+				$wheres = array();
+				$wheres[] = 'id IN (' . implode(',', $base->getRand($randDiapazone[0]['id'], $randDiapazone[1]['id'], $limitReach)) . ')';
+			}
+
+		}
 		// Складываем условия
 		$where = (count($wheres)) ? ' WHERE ' . implode(' AND ', $wheres) : '';
 
@@ -728,9 +746,9 @@ if (!$output) {
 		$tplArr['pages'] = '';
 
 		if ($base->cfg['showNav']) {
-
+			
 			// Получаем общее количество новостей по заданным параметрам отбора
-			$totalCount = $base->db->getOne('SELECT COUNT(*) as count FROM ?n as p ?p', PREFIX . '_post', $where);
+			$totalCount = $base->db->getOne('SELECT COUNT(*) as count FROM ?n as p LEFT JOIN ?n e ON (p.id=e.news_id) ?p', PREFIX . '_post', PREFIX . '_post_extras', $where);
 			// Вычитаем переменную startFrom для корректного значения кол-ва новостей
 			$totalCount = $totalCount - $base->cfg['startFrom'];
 
