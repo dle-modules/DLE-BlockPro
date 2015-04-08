@@ -234,7 +234,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link rel="stylesheet" href="engine/modules/base/admin/blockpro/css/main.css">
+		<link rel="stylesheet" href="engine/modules/base/admin/blockpro/css/main.css?v=<?=$moduleVersion?>">
 		<script>
 			var dle_root = '<?=$config['http_home_url']?>';
 			var dle_skin = '<?=$config['skin']?>';
@@ -242,12 +242,12 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/autosize.js/1.18.1/jquery.autosize.min.js"></script>
 
-		<script src="engine/modules/base/admin/blockpro/js/jquery.form.min.js"></script>
-		<script src="engine/modules/base/admin/blockpro/js/jquery.ladda.min.js"></script>
-		<script src="engine/modules/base/admin/blockpro/js/jquery.easyResponsiveTabs.min.js"></script>
-		<script src="engine/modules/base/admin/blockpro/js/jquery.magnificpopup.min.js"></script>
-		<script src="engine/modules/base/admin/blockpro/js/jquery.chosen.min.js"></script>
-		<script src="engine/modules/base/admin/blockpro/js/main.js"></script>
+		<script src="engine/modules/base/admin/blockpro/js/jquery.form.min.js?v=<?=$moduleVersion?>"></script>
+		<script src="engine/modules/base/admin/blockpro/js/jquery.ladda.min.js?v=<?=$moduleVersion?>"></script>
+		<script src="engine/modules/base/admin/blockpro/js/jquery.easyResponsiveTabs.min.js?v=<?=$moduleVersion?>"></script>
+		<script src="engine/modules/base/admin/blockpro/js/jquery.magnificpopup.min.js?v=<?=$moduleVersion?>"></script>
+		<script src="engine/modules/base/admin/blockpro/js/jquery.chosen.min.js?v=<?=$moduleVersion?>"></script>
+		<script src="engine/modules/base/admin/blockpro/js/main.js?v=<?=$moduleVersion?>"></script>
 	</head>
 	<body>
 		<div class="container container-blue">
