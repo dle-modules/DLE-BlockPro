@@ -133,16 +133,17 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<select name="sort" class="styler">
 					<option value="">Стандартный топ</option>
-					<option value="none"     <? if($cfg['sort'] == 'none'):?> selected <?endif?>>Без сортировки</option>
-					<option value="date"     <? if($cfg['sort'] == 'date'):?> selected <?endif?>>По дате добавления</option>
-					<option value="rating"   <? if($cfg['sort'] == 'rating'):?> selected <?endif?>>По рейтингу</option>
-					<option value="comms"    <? if($cfg['sort'] == 'comms'):?> selected <?endif?>>По кол-ву комментариев</option>
-					<option value="views"    <? if($cfg['sort'] == 'views'):?> selected <?endif?>>По кол-ву просмотов</option>
-					<option value="random"   <? if($cfg['sort'] == 'random'):?> selected <?endif?>>В случаном порядке</option>
-					<option value="title"    <? if($cfg['sort'] == 'title'):?> selected <?endif?>>По алфавиту</option>
-					<option value="hit"      <? if($cfg['sort'] == 'hit'):?> selected <?endif?>>Хит (Правильный топ)</option>
-					<option value="download" <? if($cfg['sort'] == 'download'):?> selected <?endif?>>По кол-ву скачиваний</option>
-					<option value="symbol"   <? if($cfg['sort'] == 'symbol'):?> selected <?endif?>>По символьному коду</option>
+					<option value="none"        <?if($cfg['sort'] == 'none'):?> selected <?endif?>>Без сортировки</option>
+					<option value="date"        <?if($cfg['sort'] == 'date'):?> selected <?endif?>>По дате добавления</option>
+					<option value="rating"      <?if($cfg['sort'] == 'rating'):?> selected <?endif?>>По рейтингу</option>
+					<option value="comms"       <?if($cfg['sort'] == 'comms'):?> selected <?endif?>>По кол-ву комментариев</option>
+					<option value="views"       <?if($cfg['sort'] == 'views'):?> selected <?endif?>>По кол-ву просмотов</option>
+					<option value="random"      <?if($cfg['sort'] == 'random'):?> selected <?endif?>>В случаном порядке</option>
+					<option value="randomLight" <?if($cfg['sort'] == 'randomLight'):?> selected <?endif?>>В случаном порядке (Light)</option>
+					<option value="title"       <?if($cfg['sort'] == 'title'):?> selected <?endif?>>По алфавиту</option>
+					<option value="hit"         <?if($cfg['sort'] == 'hit'):?> selected <?endif?>>Хит (Правильный топ)</option>
+					<option value="download"    <?if($cfg['sort'] == 'download'):?> selected <?endif?>>По кол-ву скачиваний</option>
+					<option value="symbol"      <?if($cfg['sort'] == 'symbol'):?> selected <?endif?>>По символьному коду</option>
 					<?=showXFields('sort', 'xf|', true)?>
 				</select>
 				<p>

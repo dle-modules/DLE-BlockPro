@@ -1,4 +1,4 @@
-<?php
+<?
 /*
 =============================================================================
 BLockPro - основной модуль
@@ -63,7 +63,7 @@ if ($isAjaxConfig) {
 
 		'day' => !empty($day) ? $day : false, // Временной период для отбора новостей
 		'dayCount' => !empty($dayCount) ? $dayCount : false, // Интервал для отбора (т.е. к примеру выбираем новости за прошлую недею так: &day=14&dayCount=7 )
-		'sort' => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title, download, symbol или xf|xfieldname где xfieldname - имя дополнительного поля)
+		'sort' => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title, hit, random, randomLight, download, symbol или xf|xfieldname где xfieldname - имя дополнительного поля)
 		'xfSortType' => !empty($xfSortType) ? $xfSortType : 'int', // Тип сортировки по допполю (string, int) - для корректной сортировки по строки используем `string`, по умолчанию сортируется как число (для цен полезно).
 		'order' => !empty($order) ? $order : 'new', // Направление сортировки (new, old, asis)
 
@@ -204,7 +204,7 @@ if (!$output) {
 	$protect->local_key_path = ENGINE_DIR . '/data/';
 	$protect->local_key_name = 'blockpro.lic';
 	$protect->server = 'http://api.pafnuty.name/api.php';
-	$protect->release_date = '2015-04-08'; // гггг-мм-дд
+	$protect->release_date = '2015-04-09'; // гггг-мм-дд
 	$protect->activation_key = @file_get_contents(ENGINE_DIR . '/data/blockpro.key');
 
 	$protect->status_messages = array(
@@ -310,7 +310,7 @@ if (!$output) {
 				break;
 
 			default:
-				if ($base->cfg['sort'] != 'random' && $base->cfg['sort'] != 'none') {
+				if ($base->cfg['sort'] != 'random' && $base->cfg['sort'] != 'randomLight' && $base->cfg['sort'] != 'none') {
 					$orderArr[] = 'fixed ' . $ordering;
 				}
 				break;
@@ -360,10 +360,9 @@ if (!$output) {
 				$orderArr[] = 'e.news_read ' . $ordering;
 				break;
 
-			case 'random':	// Случайные				
-							
-				// Сортируем отобранные новости в случайном порядке
+			case 'random':	// Случайные	
 				$orderArr[] = 'RAND()';
+				// randomLight ниже т.к. у него отдельный алгоритм
 				break;
 
 			case 'title':	// По алфавиту
@@ -581,30 +580,27 @@ if (!$output) {
 		// Подчистим массив от пустых значений
 		$wheres = array_filter($wheres);
 
-		// Когда выбран вариант вывода случайных новостей
-		if ($base->cfg['sort'] == 'random') {
+		// Когда выбран вариант вывода случайных новостей (Лёгкий режим)
+		if ($base->cfg['sort'] == 'randomLight') { 
 
-			// Складываем условия для рандомных новостей
+			// Складываем условия выборки для рандомных новостей
 			$randWhere = (count($wheres)) ? ' WHERE ' . implode(' AND ', $wheres) : '';
-
-			$subsel1 = $base->db->parse('SELECT id FROM ?n ?p ORDER BY id ASC LIMIT 1', PREFIX . '_post', $randWhere);
-			$subsel2 = $base->db->parse('SELECT id FROM ?n ?p ORDER BY id DESC LIMIT 1', PREFIX . '_post', $randWhere);
-
-			$randDiapazone = $base->db->getAll('
-				SELECT id FROM ?n AS t WHERE 
-				t.id = (?p) 
-				OR t.id = (?p) 
-			', PREFIX . '_post', $subsel1, $subsel2);
-
-			// Умножим лимит на два, чтобы избежать "дыр" при удалённых новостях.
-			$limitReach = $base->cfg['limit'] * 2;
-
-			if (count($randDiapazone) == 2) {
-				// Если в итоге получим 2 элемента массива - значит добились, чего хотели
-				// Сбросим массив условий т.к. кроме ID нам больше ничего не требуется, всё уже отобрано.
-				$wheres = array();
-				$wheres[] = 'id IN (' . implode(',', $base->getRand($randDiapazone[0]['id'], $randDiapazone[1]['id'], $limitReach)) . ')';
-			}
+			// Получим массив с id новостей
+			$randDiapazone = $base->db->getCol('SELECT id FROM ?n AS p ?p', PREFIX . '_post', $randWhere);			
+			// Перемешаем
+			shuffle($randDiapazone);
+			// Возьмём только нужное количество элементов
+			$randIds = array_slice($randDiapazone, 0, $base->cfg['limit']);
+			$randIds = implode(',', $randIds);
+			// Удалим из памяти ненужное
+			unset($randDiapazone);
+			unset($randWhere);
+			// Сбрасываем ненужные условия выборки
+			$wheres = array();
+			// Задаём условие выборки по предварительно полученным ID
+			$wheres[] = 'id IN (' . $randIds . ')';
+			// И выводим в том порядке, в ктором сформировались ID
+			$orderArr = array('FIELD (p.id, ' . $randIds . ')');
 
 		}
 		// Складываем условия
@@ -859,5 +855,3 @@ if ($cfg['showstat'] && $user_group[$member_id['user_group']]['allow_all_edit'])
 	// Вывод статистики
 	echo '<div class="bp-statistics" style="border: solid 1px red; padding: 5px; margin: 5pxx 0;">' . $dbStat . 'Время выполнения скрипта: <b>' . round((microtime(true) - $start), 6) . '</b> c.' . $mem_usg . '</div>';
 }
-
-?>
