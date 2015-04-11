@@ -63,7 +63,7 @@ if ($isAjaxConfig) {
 
 		'day' => !empty($day) ? $day : false, // Временной период для отбора новостей
 		'dayCount' => !empty($dayCount) ? $dayCount : false, // Интервал для отбора (т.е. к примеру выбираем новости за прошлую недею так: &day=14&dayCount=7 )
-		'sort' => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title, hit, random, randomLight, download, symbol или xf|xfieldname где xfieldname - имя дополнительного поля)
+		'sort' => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title, hit, random, randomLight, download, symbol, editdate или xf|xfieldname где xfieldname - имя дополнительного поля)
 		'xfSortType' => !empty($xfSortType) ? $xfSortType : 'int', // Тип сортировки по допполю (string, int) - для корректной сортировки по строки используем `string`, по умолчанию сортируется как число (для цен полезно).
 		'order' => !empty($order) ? $order : 'new', // Направление сортировки (new, old, asis)
 
@@ -204,7 +204,7 @@ if (!$output) {
 	$protect->local_key_path = ENGINE_DIR . '/data/';
 	$protect->local_key_name = 'blockpro.lic';
 	$protect->server = 'http://api.pafnuty.name/api.php';
-	$protect->release_date = '2015-04-09'; // гггг-мм-дд
+	$protect->release_date = '2015-04-11'; // гггг-мм-дд
 	$protect->activation_key = @file_get_contents(ENGINE_DIR . '/data/blockpro.key');
 
 	$protect->status_messages = array(
@@ -310,7 +310,7 @@ if (!$output) {
 				break;
 
 			default:
-				if ($base->cfg['sort'] != 'random' && $base->cfg['sort'] != 'randomLight' && $base->cfg['sort'] != 'none') {
+				if ($base->cfg['sort'] != 'random' && $base->cfg['sort'] != 'randomLight' && $base->cfg['sort'] != 'none' && $base->cfg['sort'] != 'editdate') {
 					$orderArr[] = 'fixed ' . $ordering;
 				}
 				break;
@@ -384,6 +384,11 @@ if (!$output) {
 
 			case 'top':	// Топ как в DLE (сортировка по умолчанию)
 				$orderArr[] = 'e.rating ' . $ordering . ', p.comm_num ' . $ordering . ', e.news_read ' . $ordering;
+				break;
+
+			case 'editdate':	// По дате редактрования
+				$orderArr[] = 'e.editdate ' . $ordering;
+				$wheres[] = 'e.editdate > 0';
 				break;
 
 			case $xfSortName:	// Сортировка по значению дополнительного поля

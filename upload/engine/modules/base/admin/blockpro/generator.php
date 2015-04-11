@@ -144,6 +144,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 					<option value="hit"         <?if($cfg['sort'] == 'hit'):?> selected <?endif?>>Хит (Правильный топ)</option>
 					<option value="download"    <?if($cfg['sort'] == 'download'):?> selected <?endif?>>По кол-ву скачиваний</option>
 					<option value="symbol"      <?if($cfg['sort'] == 'symbol'):?> selected <?endif?>>По символьному коду</option>
+					<option value="editdate"    <?if($cfg['sort'] == 'editdate'):?> selected <?endif?>>По дате редактирования</option>
 					<?=showXFields('sort', 'xf|', true)?>
 				</select>
 				<p>
