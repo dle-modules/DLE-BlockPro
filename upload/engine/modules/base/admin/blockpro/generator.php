@@ -440,9 +440,9 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<input class="radio" id="xfSearchLogicOR" type="radio" name="xfSearchLogic" <? if($cfg['xfSearchLogic'] != 'AND'):?> checked <?endif?>>
-				<label for="xfSearchLogicOR"><span></span>И (OR)</label>
+				<label for="xfSearchLogicOR"><span></span>ИЛИ (OR)</label>
 				<input class="radio" id="xfSearchLogicAND" type="radio" name="xfSearchLogic" value="AND" <? if($cfg['xfSearchLogic'] == 'AND'):?> checked <?endif?>>
-				<label for="xfSearchLogicAND" class="ml10"><span></span>ИЛИ (AND)</label>
+				<label for="xfSearchLogicAND" class="ml10"><span></span>И (AND)</label>
 
 			</div>
 		</div>

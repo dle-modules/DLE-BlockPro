@@ -21,7 +21,7 @@ if ($member_id['user_group'] != '1') {
 define('MODULE_DIR', ENGINE_DIR . '/modules/base/admin/blockpro/');
 
 $moduleName = 'blockpro';
-$moduleVersion = '4.5.6';
+$moduleVersion = '4.5.7';
 
 $moderate           = $_REQUEST['moderate'];
 $moderate_checked   = ($moderate) ? 'checked' : '' ;
@@ -268,7 +268,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 		<div class="container">
 			<div class="content">
 				<div class="col col-mb-12 col-12">
-					<h1 class="ta-center mb10">BlockPro <span class="btn btn-small btn-red mfp-open-ajax" data-mfp-src="engine/ajax/base/check_updates.php?name=<?=$moduleName?>&currentVersion=<?=$moduleVersion?>">Проверить обновления</span></h1>
+					<h1 class="ta-center mb10">BlockPro <small class="text-muted fz20">(<?=$moduleVersion?>)</small> <span class="btn btn-small btn-red mfp-open-ajax" data-mfp-src="engine/ajax/base/check_updates.php?name=<?=$moduleName?>&currentVersion=<?=$moduleVersion?>">Проверить обновления</span></h1>
 					<div class="ta-center">Статус лицензии: <span id="licenseStatus"></span></div>
 					<hr>
 				</div> <!-- .col col-mb-12 col-12 -->
