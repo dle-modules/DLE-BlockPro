@@ -575,12 +575,11 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 									</div>
 									<div class="col col-mb-12 mb10">
 										<div class="alert">
-											<p class="mt0">Если Вы скачали этот модуль не с сайта <b>store.pafnuty.name</b>, техподдержка оказана не будет и скорее всего у вас взломанная версия модуля.</p>
-											<p class="mb0">Покупка модуля так же не является поводом для получения технической поддержки. Всвязи с повальным распространением нулов, рипов, складчин и т.п. способов получить бесплатно то, на что у разработчиков уходит много времени и сил, <b>техническая поддержка по модулю оказывается только клиентам техподдержки.</b></p>
+											<p class="mt0">Если Вы скачали этот модуль не с сайта <b>store.pafnuty.name</b>, техподдержка оказана не будет и скорее всего у вас взломанная версия модуля.</p>											
+										<p>Начиная с версии 4.5.8 техническая поддержка клиентов осуществляется через систему обращений. Это удобнее и гораздо эффективнее, чем email-переписка или переписка в различных месседжерах.</p>
 										</div>
-										<p>Для получения статуса клиента техподдержки, необходимо <a class="btn btn-small" href="http://pafnuty.name/newclient.html" target="_blank">заполнить анкету</a></p>
-										<p>При этом в комментарии обязательно укажите дату покупки и информацию об оплате модуля.</p>
-										<p>Если Вы уже являеетесь клиентом (покупали шаблон или другие модули) &mdash; напомните мне об этом, решим любые вопросы.</p>
+										<p>Для получения техподдержки или решения иных вопросов, связанных с модулем просто <a href="https://pafnuty.omnidesk.ru/" terget="_blank" class="btn btn-small">создайте бращение</a></p>
+										<p>Если вопрос связан с выводм новостей — не забывайте указать строку подключения и прикреплять файл шаблона модуля, если он отличается от стандартного.</p>
 									</div>
 								</div>
 							</div>
@@ -594,12 +593,9 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 			<div class="content">
 				<div class="col col-mb-12">
 				<hr class="mt0">
-					Контакты для связи и техподдержки<br>
-					<a href="http://blockpro.ru/" target="_blank" title="Сайт поддержки">blockpro.ru</a> <br>
-					<a href="http://pafnuty.name/" target="_blank" title="Сайт автора">ПафНутиЙ</a> <br>
-					<a href="https://twitter.com/pafnuty_name" target="_blank" title="Twitter">@pafnuty_name</a> <br>
-					<a href="http://gplus.to/pafnuty" target="_blank" title="google+">+Павел</a> <br>
-					<a href="mailto:pafnuty10@gmail.com" title="email автора">pafnuty10@gmail.com</a>
+					Контакты для связи и техподдержки:<br>
+					<a href="https://pafnuty.omnidesk.ru/" target="_blank" title="Сайт поддержки">pafnuty.omnidesk.ru</a> — техподдержка <br>
+					<a href="http://bp.pafnuty.name/" target="_blank" title="Официальный сайт модуля">bp.pafnuty.name</a> — документация <br>
 				</div>
 			</div>
 		</div>

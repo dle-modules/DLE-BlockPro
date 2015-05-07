@@ -3,6 +3,7 @@
 - Краткая информация о шаблонных тега прописана в шаблоне **{THEME}/blockpro/blockpro.tpl**, расширенный пример **{THEME}/blockpro/fullexample.tpl**
 - Более детальная информация по используемому шаблонизатору модуля находится в [документации по шаблонизатору](https://github.com/bzick/fenom/blob/master/docs/ru/readme.md)
 - Официальный сайт: [bp.pafnuty.name](http://bp.pafnuty.name/)
+- Техническая поддержка: [pafnuty.omnidesk.ru](https://pafnuty.omnidesk.ru/)
 - [Лицензионное соглашение](http://bp.pafnuty.name/licence/)
 
 ## Установка модуля
