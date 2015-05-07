@@ -204,7 +204,7 @@ if (!$output) {
 	$protect->local_key_path = ENGINE_DIR . '/data/';
 	$protect->local_key_name = 'blockpro.lic';
 	$protect->server = 'http://api.pafnuty.name/api.php';
-	$protect->release_date = '2015-04-21'; // гггг-мм-дд
+	$protect->release_date = '2015-05-07'; // гггг-мм-дд
 	$protect->activation_key = @file_get_contents(ENGINE_DIR . '/data/blockpro.key');
 
 	$protect->status_messages = array(
@@ -486,7 +486,7 @@ if (!$output) {
 			}
 
 			// Добавляем полученные данные (и логику) в основной массив, формирующий запрос
-			$wheres[] = '(' . implode($_xfSearchLogic, $xfWheres) . ')';
+			$wheres[] = implode($_xfSearchLogic, $xfWheres);
 		}
 
 		// Фильтрация новостей по ТЕГАМ
@@ -709,7 +709,7 @@ if (!$output) {
 			$list[$key]['showRating'] = '';
 			$list[$key]['showRatingCount'] = '';
 			if ($value['allow_rate']) {
-				$list[$key]['showRatingCount'] = '<span data-vote-num-id="' . $value['id'] . '">' . $value['vote_num'] . '</span>';
+				$list[$key]['showRatingCount'] = '<span class="ignore-select" data-vote-num-id="' . $value['id'] . '">' . $value['vote_num'] . '</span>';
 
 				if ($base->dle_config['short_rating'] and $user_group[$member_id['user_group']]['allow_rating']) {
 					$list[$key]['showRating'] = baseShowRating($value['id'], $value['rating'], $value['vote_num'], 1);

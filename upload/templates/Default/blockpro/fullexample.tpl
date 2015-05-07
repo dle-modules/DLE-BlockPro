@@ -75,16 +75,13 @@
 				<span class="btn" {$el.ratingOnclickPlus}>+</span>
 			{elseif $dleConfig.rating_type == '2'}					
 				{* Если рейтинг 2го типа (лайк и дизлайк) *}
-			<span class="btn" {$el.ratingOnclickPlus}>+</span>
-			<span class="btn" {$el.ratingOnclickMinus}>-</span>
-			{else}
-				{* Если тип рейтинга не установлен (обычный рейтинг) *}
-				{$el.showRating}
+				<span class="btn" {$el.ratingOnclickMinus}>-</span>
+				<span class="btn" {$el.ratingOnclickPlus}>+</span>
 			{/if}
 			{* Показываем кол-во голосов *}
 			{$el.showRatingCount}
 			{* Цифровое значение рейтинга *}
-			{$el.rating}
+			{$el.showRating}
 		</div>
 
 		<div class="box-header">Все доступные теги новости ID={$el.id} и их значения</div>

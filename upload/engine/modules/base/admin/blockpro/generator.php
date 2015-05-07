@@ -148,7 +148,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 					<?=showXFields('sort', 'xf|', true)?>
 				</select>
 				<p>
-					<input class="radio" id="orderNEW" type="radio" name="order" <? if($cfg['order'] != 'old'):?> checked <?endif?>>
+					<input class="radio" id="orderNEW" type="radio" name="order" value="new" <? if($cfg['order'] != 'old'):?> checked <?endif?>>
 					<label for="orderNEW" class="mr10"><span></span>По убыванию</label>
 					<input class="radio" id="orderOLD" type="radio" name="order" value="old" <? if($cfg['order'] == 'old'):?> checked <?endif?>>
 					<label for="orderOLD" class="mr10"><span></span>По возрастанию</label>

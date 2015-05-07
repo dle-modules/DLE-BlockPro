@@ -409,9 +409,9 @@ function baseShowRating($id, $rating, $vote_num, $allow = true) {
 		
 			$rated = <<<HTML
 <div class="rating">
-		<ul class="unit-rating">
+	<ul class="unit-rating">
 		<li class="current-rating" style="width:{$rating}%;">{$rating}</li>
-		</ul>
+	</ul>
 </div>
 HTML;
 		
@@ -439,7 +439,7 @@ HTML;
 		
 		if( $rating < 0 ) $rating = 0;
 		
-		if( $allow ) $rated = "<span data-rating-layer=\"{$id}\" class=\"ratingtypeplus ignore-select\" >{$rating}</span>";
+		if( $allow ) $rated = "<span data-rating-layer=\"{$id}\" class=\"ignore-select\" ><span class=\"ratingtypeplus ignore-select\" >{$rating}</span></span>";
 		else $rated = "<span class=\"ratingtypeplus ignore-select\" >{$rating}</span>";
 		
 		return $rated;
@@ -457,7 +457,7 @@ HTML;
 			$rating = "+".$rating;
 		}
 		
-		if( $allow ) $rated = "<span data-rating-layer=\"{$id}\" class=\"ratingtypeplusminus ignore-select {$extraclass}\" >{$rating}</span>";
+		if( $allow ) $rated = "<span data-rating-layer=\"{$id}\" class=\"ignore-select\" ><span class=\"ratingtypeplusminus ignore-select {$extraclass}\" >{$rating}</span></span>";
 		else $rated = "<span class=\"ratingtypeplusminus ignore-select {$extraclass}\" >{$rating}</span>";
 		
 		return $rated;

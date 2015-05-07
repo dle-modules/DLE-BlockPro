@@ -133,7 +133,6 @@ function base_rate(rate, id) {
 		skin: dle_skin
 	}, function (data) {
 		HideLoading('');
-		console.log(data);
 		if (data.success) {
 			var rating = data.rating;
 

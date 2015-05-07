@@ -21,7 +21,7 @@ if ($member_id['user_group'] != '1') {
 define('MODULE_DIR', ENGINE_DIR . '/modules/base/admin/blockpro/');
 
 $moduleName = 'blockpro';
-$moduleVersion = '4.5.7';
+$moduleVersion = '4.5.8';
 
 $moderate           = $_REQUEST['moderate'];
 $moderate_checked   = ($moderate) ? 'checked' : '' ;
@@ -318,7 +318,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 												if ($cfg['sort'] == 'top') {												
 													unset($cfg['sort']);
 												}
-												if ($cfg['order'] == 'on') {												
+												if ($cfg['order'] == 'new') {												
 													unset($cfg['order']);
 												}
 												if ($cfg['pageNum'] == 1) {												

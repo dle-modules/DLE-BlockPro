@@ -33,7 +33,7 @@ $arCheck = array(
 	),
 	array(
 		'name'  => 'IonCube Loader',
-		'req'   => 'UTF-8',
+		'req'   => '4.4 и выше',
 		'check' => checkIonCube()
 	),
 	array(
