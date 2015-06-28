@@ -189,6 +189,15 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				<div class="alert">Добавит 1 лёгкий запрос на блок</div>
 			</div>
 		</div>
+		<div class="content">
+			<div class="col col-mb-12 col-5 col-dt-4 form-label">
+				&nbsp;
+			</div>
+			<div class="col col-mb-12 col-7 col-dt-8 form-control">
+				<input class="checkbox" type="checkbox" value="y" name="navDefaultGet" id="navDefaultGet"  <?=$navDefaultGet_checked?>> <label for="navDefaultGet"><span></span> Отслеживать стандартную навигацию DLE</label>
+				<div class="alert alert-info">При указании этого параметра модуль модуль будет брать значение текущей страницы и формировать постраничную навигацию так же как это делается в DLE. Переход между страницами новостей будет осуществляться с перезагрузкой страницы.</div>
+			</div>
+		</div>
 
 		<div class="content">
 			<div class="col col-mb-12 col-5 col-dt-4 form-label">
@@ -250,22 +259,10 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				<input class="checkbox" type="checkbox" value="y" name="future" id="future"  <?=$future_checked?>> <label for="future"><span></span> включить</label>
 				<div class="alert alert-info">
 					<div>При включении режима афиши дни будут прибавляться, а не вычитаться.</div>
-					<div><a href="/engine/modules/base/admin/blockpro/images/days.png" title="Красным полупрозрачным блоком выделены дни, новости которых попадут в вывод." class="open-img">Пояснение по временным параметрам</a></div>
+					<div><a href="engine/modules/base/admin/blockpro/images/days.png" title="Красным полупрозрачным блоком выделены дни, новости которых попадут в вывод." class="open-img">Пояснение по временным параметрам</a></div>
 				</div>
 			</div>
 		</div>
-		<div class="content">
-			<div class="col col-mb-12 col-5 col-dt-4 form-label">
-				Режим замены {content}
-			</div>
-			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="checkbox" type="checkbox" value="y" name="navDefaultGet" id="navDefaultGet"  <?=$navDefaultGet_checked?>> <label for="navDefaultGet"><span></span> включить (экспериментальный режим)</label>
-				<div class="alert alert-info">
-					<div>При включении режима замены {content} модуль будет брать значение текущей страницы и формировать постраничную навигацию так же как это делается в DLE. Переход между страницами новостей будет осуществляться с перезагрузкой страницы.</div>
-				</div>
-			</div>
-		</div>
-
 	</div> <!-- .logic-block -->
 
 	<div class="logic-block">
