@@ -74,6 +74,7 @@ if ($isAjaxConfig) {
 		'related' => !empty($related) ? $related : false, // Включить режим вывода похожих новостей (по умолчанию нет)
 		'saveRelated' => !empty($saveRelated) ? $saveRelated : false, // Включить запись похожих новостей в БД
 		'showNav' => !empty($showNav) ? $showNav : false, // Включить постраничную навигацию
+		'navDefaultGet' => !empty($navDefaultGet) ? $navDefaultGet : false, // Слушать дефолтный get-параметр постраничной навигации
 		'pageNum' => !empty($pageNum) ? $pageNum : '1', // Текущая страница при постраничной конфигурации
 		'navStyle' => !empty($navStyle) ? $navStyle : 'classic', // Стиль навигации. Возможны следующие стили:
 		/*
@@ -81,6 +82,10 @@ if ($isAjaxConfig) {
 		digg:		<< Назад  1 2 ... 5 6 7 8 9 [10] 11 12 13 14 ... 25 26  Вперёд >>
 		extended:	<< Назад | Страница 2 из 11 | Показаны новости 6-10 из 52 | Вперёд >>
 		punbb:		1 ... 4 5 [6] 7 8 ... 15
+		arrows:	    << Назад Вперёд >>
+		 */
+		/**
+		 * @todo  реализовать функционал с options и notOptions
 		 */
 		'options' => !empty($options) ? $options : false, // Опции, публикации новости для показа (Публиковать на главной, Разрешить рейтинг статьи, Разрешить комментарии, Запретить индексацию страницы для поисковиков, Зафиксировать новость) main|rating|comments|noindex
 		'notOptions' => !empty($notOptions) ? $notOptions : false, // Опции, публикации новости для исключения (Публиковать на главной, Разрешить рейтинг статьи, Разрешить комментарии, Запретить индексацию страницы для поисковиков, Зафиксировать новость) main|rating|comments|noindex
@@ -89,6 +94,7 @@ if ($isAjaxConfig) {
 		'cacheVars' => !empty($cacheVars) ? $cacheVars : false, // Значимые переменные в формировании кеша блока на случай разного вывода в зависимости от условий расположения модуля. Сюда можно передавать ключи, доступные через $_REQUEST или значения переменной $dle_module
 		'symbols' => !empty($symbols) ? $symbols : false, // Символьные коды для фильтрации по символьному каталогу. Перечисляем через запятую.
 		'notSymbols' => !empty($notSymbols) ? $notSymbols : false, // Символьные коды для исключающей фильтрации по символьному каталогу. Перечисляем через запятую или пишем this для текущего символьного кода
+		'fields' => !empty($fields) ? $fields : false, // Дополнение к выборке полей из БД (p.field,e.field)
 	);
 }
 
@@ -100,31 +106,42 @@ if ($cfg['notCatId'] == 'this') {
 	$cfg['cacheNameAddon'] .= $category_id . 'nCId_';
 }
 if ($cfg['postId'] == 'this') {
-	$cfg['cacheNameAddon'] .= $_REQUEST["newsid"] . 'pId_';
+	$cfg['cacheNameAddon'] .= $_REQUEST['newsid'] . 'pId_';
 }
 if ($cfg['notPostId'] == 'this') {
-	$cfg['cacheNameAddon'] .= $_REQUEST["newsid"] . 'nPId_';
+	$cfg['cacheNameAddon'] .= $_REQUEST['newsid'] . 'nPId_';
 }
 if ($cfg['author'] == 'this') {
-	$cfg['cacheNameAddon'] .= $_REQUEST["user"] . 'a_';
+	$cfg['cacheNameAddon'] .= $_REQUEST['user'] . 'a_';
 }
 if ($cfg['notAuthor'] == 'this') {
-	$cfg['cacheNameAddon'] .= $_REQUEST["user"] . 'nA_';
+	$cfg['cacheNameAddon'] .= $_REQUEST['user'] . 'nA_';
 }
 if ($cfg['tags'] == 'this') {
-	$cfg['cacheNameAddon'] .= $_REQUEST["tag"] . 't_';
+	$cfg['cacheNameAddon'] .= $_REQUEST['tag'] . 't_';
 }
 if ($cfg['notTags'] == 'this') {
-	$cfg['cacheNameAddon'] .= $_REQUEST["tag"] . 'nT_';
+	$cfg['cacheNameAddon'] .= $_REQUEST['tag'] . 'nT_';
 }
 if ($cfg['symbols'] == 'this') {
-	$cfg['cacheNameAddon'] .= $_REQUEST["catalog"] . 's_';
+	$cfg['cacheNameAddon'] .= $_REQUEST['catalog'] . 's_';
 }
 if ($cfg['notSymbols'] == 'this') {
-	$cfg['cacheNameAddon'] .= $_REQUEST["catalog"] . 'nS_';
+	$cfg['cacheNameAddon'] .= $_REQUEST['catalog'] . 'nS_';
 }
 if ($cfg['related'] == 'this') {
-	$cfg['cacheNameAddon'] .= $_REQUEST["newsid"] . 'r_';
+	$cfg['cacheNameAddon'] .= $_REQUEST['newsid'] . 'r_';
+}
+
+if ($cfg['xfilter'] == 'this') {
+	$cfg['cacheNameAddon'] .= $_REQUEST['xf'] . 'xf_';
+}
+if ($cfg['notXfilter'] == 'this') {
+	$cfg['cacheNameAddon'] .= $_REQUEST['xf'] . 'nXf_';
+}
+
+if ($cfg['navDefaultGet']) {
+	$cfg['cacheNameAddon'] .= $_REQUEST['cstart'] . 'cs_';
 }
 
 if ($cfg['cacheVars']) {
@@ -220,10 +237,10 @@ if (!$output) {
 	    'maximum_delay_period_expired'   => '<span style="color:red;">Ошибка</span>, льготный период локального ключа истек.',
 	    'local_key_tampering'            => '<span style="color:red;">Ошибка</span>, локальный лицензионный ключ поврежден или не действителен.',
 	    'local_key_invalid_for_location' => '<span style="color:red;">Ошибка</span>, локальный ключ не подходит к данному сайту.',
-	    'missing_license_file'           => '<span style="color:red;">Ошибка</span>, создайте следующий пустой файл и папки если их нет:<br />',
+	    'missing_license_file'           => '<span style="color:red;">Ошибка</span>, создайте следующий пустой файл и папки если его нет:<br />',
 	    'license_file_not_writable'      => '<span style="color:red;">Ошибка</span>, сделайте доступными для записи следующие пути:<br />',
-	    'invalid_local_key_storage'      => '<span style="color:red;">Ошибка</span>, не возможно удалить старый локальный ключ.',
-	    'could_not_save_local_key'       => '<span style="color:red;">Ошибка</span>, не возможно записать новый локальный ключ.',
+	    'invalid_local_key_storage'      => '<span style="color:red;">Ошибка</span>, невозможно удалить старый локальный ключ.',
+	    'could_not_save_local_key'       => '<span style="color:red;">Ошибка</span>, невозможно записать новый локальный ключ.',
 	    'license_key_string_mismatch'    => '<span style="color:red;">Ошибка</span>, локальный ключ не действителен для указанной лицензии.',
 	);
 
@@ -275,6 +292,10 @@ if (!$output) {
 		} else {
 			$today = date("Y-m-d H:i:s", (mktime(0, 0, 0) + 86400 + $base->dle_config['date_adjust'] * 60));
 			$rightNow = date("Y-m-d H:i:s", (time() + $base->dle_config['date_adjust'] * 60));
+		}
+
+		if ($base->cfg['navDefaultGet']) {
+			$base->cfg['pageNum'] = (isset($_GET['cstart']) && (int)$_GET['cstart'] > 0) ? (int)$_GET['cstart'] : 1;
 		}
 
 		// Массив с условиями запроса
@@ -331,7 +352,7 @@ if (!$output) {
 				break;
 		}
 		// Зададим произвольное имя для несуществующей сортировки
-		$xfSortName = 'd_ddd_Dddf_fdfdf';
+		$xfSortName = 'blockpro_undefined_sort_xfields';
 		if (strpos($base->cfg['sort'], 'xf|') !== false) {
 			// Если задана сортировка по значению допполя - то присвоим переменной имя этого поля и подкорректируем данные для swich
 			$base->cfg['sort'] = str_replace('xf|', '', $base->cfg['sort']);
@@ -402,66 +423,86 @@ if (!$output) {
 		}
 
 		// Фильтрация КАТЕГОРИЙ по их ID
-		if ($base->cfg['catId'] == 'this') {
+		if ($base->cfg['catId'] == 'this' && $category_id) {
 			$base->cfg['catId'] = ($base->cfg['subcats']) ? get_sub_cats($category_id) : $category_id;
 		}
-		if ($base->cfg['notCatId'] == 'this') {
+		if ($base->cfg['notCatId'] == 'this' && $category_id) {
 			$base->cfg['notCatId'] = ($base->cfg['notSubcats']) ? get_sub_cats($category_id) : $category_id;
 		}
-
 		if ($base->cfg['catId'] || $base->cfg['notCatId']) {
 			$ignore = ($base->cfg['notCatId']) ? 'NOT ' : '';
 			$catArr = ($base->cfg['notCatId']) ? $base->getDiapazone($base->cfg['notCatId'], $base->cfg['notSubcats']) : $base->getDiapazone($base->cfg['catId'], $base->cfg['subcats']);	
-
-			if ($base->dle_config['allow_multi_category']) {				
-				$catsGet = 'category regexp "[[:<:]](' . str_replace(',', '|', $catArr) . ')[[:>:]]"';			
-			} else {				
-				$catsGet = 'category IN (\'' . str_replace(',', "','", $catArr) . '\')';			
+			if ($catArr[0] > 0) {
+				if ($base->dle_config['allow_multi_category']) {				
+					$catsGet = 'category regexp "[[:<:]](' . str_replace(',', '|', $catArr) . ')[[:>:]]"';			
+				} else {				
+					$catsGet = 'category IN (\'' . str_replace(',', "','", $catArr) . '\')';			
+				}
+				
+				$wheres[] = $ignore . $catsGet;		
 			}
 			
-			$wheres[] = $ignore . $catsGet;		
 
 		}
 
 		// Фильтрация НОВОСТЕЙ по их ID
-		if ($base->cfg['postId'] == 'this') {
+		if ($base->cfg['postId'] == 'this' && $_REQUEST["newsid"]) {
 			$base->cfg['postId'] = $_REQUEST["newsid"];
 		}
-		if ($base->cfg['notPostId'] == 'this') {
+		if ($base->cfg['notPostId'] == 'this' && $_REQUEST["newsid"]) {
 			$base->cfg['notPostId'] = $_REQUEST["newsid"];
 		}
 
 		if (($base->cfg['postId'] || $base->cfg['notPostId']) && $base->cfg['related'] == '') {
 			$ignorePosts = ($base->cfg['notPostId']) ? 'NOT ' : '';
 			$postsArr = ($base->cfg['notPostId']) ? $base->getDiapazone($base->cfg['notPostId']) : $base->getDiapazone($base->cfg['postId']);
-			// $wheres[] = $ignorePosts . 'id regexp "[[:<:]](' . str_replace(',', '|', $postsArr) . ')[[:>:]]"';
-			$wheres[] = 'id ' . $ignorePosts . ' IN (' . $postsArr . ')';
+			if ($postsArr !== '0') {
+				$wheres[] = 'id ' . $ignorePosts . ' IN (' . $postsArr . ')';
+			}
 		}
 
 		$_currentAuthor = false;
 		// Фильтрация новостей по АВТОРАМ
-		if ($base->cfg['author'] == 'this') {
+		if ($base->cfg['author'] == 'this' && isset($_REQUEST["user"])) {
 			$base->cfg['author'] = $base->db->parse('?s', $_REQUEST["user"]);
 			$_currentAuthor = true;
 		}
-		if ($base->cfg['notAuthor'] == 'this') {
+		if ($base->cfg['notAuthor'] == 'this' && isset($_REQUEST["user"])) {
 			$base->cfg['notAuthor'] = $base->db->parse('?s', $_REQUEST["user"]);
 			$_currentAuthor = true;
 		}
 		if ($base->cfg['author'] || $base->cfg['notAuthor']) {
 			$ignoreAuthors = ($base->cfg['notAuthor']) ? 'NOT ' : '';
 			$authorsArr = ($base->cfg['notAuthor']) ? $base->cfg['notAuthor'] : $base->cfg['author'];
-			$wheres[] = ($_currentAuthor)
-			? $ignoreAuthors . 'autor = ' . $authorsArr
-			: $ignoreAuthors . 'autor regexp "[[:<:]](' . str_replace(',', '|', $authorsArr) . ')[[:>:]]"';
+			if ($authorsArr !== 'this') {
+				// Если в строке подключения &author=this и мы просматриваем страницу юзера, то сюда уже попадёт логин пользователя
+				$wheres[] = ($_currentAuthor)
+				? $ignoreAuthors . 'autor = ' . $authorsArr
+				: $ignoreAuthors . 'autor regexp "[[:<:]](' . str_replace(',', '|', $authorsArr) . ')[[:>:]]"';
+			}
 		}
 
 		// Фильтрация новостей по ДОПОЛНИТЕЛЬНЫМ ПОЛЯМ (проверяется только на заполненность)
+		$_currentXfield = false;
+		if ($base->cfg['xfilter'] == 'this' && isset($_REQUEST["xf"])) {
+			$base->cfg['xfilter'] = $base->db->parse('?s', '%' . $_REQUEST["xf"] . '%');
+			$_currentXfield = true;
+		}
+		if ($base->cfg['notXfilter'] == 'this' && isset($_REQUEST["xf"])) {
+			$base->cfg['notXfilter'] = $base->db->parse('?s', '%' . $_REQUEST["xf"] . '%');
+			$_currentXfield = true;
+		}
 
 		if ($base->cfg['xfilter'] || $base->cfg['notXfilter']) {
 			$ignoreXfilters = ($base->cfg['notXfilter']) ? 'NOT ' : '';
 			$xfiltersArr = ($base->cfg['notXfilter']) ? $base->cfg['notXfilter'] : $base->cfg['xfilter'];
-			$wheres[] = $ignoreXfilters . 'p.xfields regexp "[[:<:]](' . str_replace(',', '|', $xfiltersArr) . ')[[:>:]]"';
+
+			if ($xfiltersArr !== 'this') {
+				// Если в строке подключения &xfilter=this и мы просматриваем страницу допполя, то сюда уже попадёт имя этого поля
+				$wheres[] = ($_currentXfield)
+				? $ignoreXfilters . 'xfields LIKE ' . $xfiltersArr
+				: $ignoreXfilters . 'autor regexp "[[:<:]](' . str_replace(',', '|', $xfiltersArr) . ')[[:>:]]"';
+			}
 		}
 
 		// Фильтрация по ЗНАЧЕНИЮ ДОПОЛНИТЕЛЬНЫХ ПОЛЕЙ
@@ -491,11 +532,11 @@ if (!$output) {
 
 		// Фильтрация новостей по ТЕГАМ
 		$_currentTag = false;
-		if ($base->cfg['tags'] == 'this') {
+		if ($base->cfg['tags'] == 'this' && isset($_REQUEST['tag']) && $_REQUEST['tag'] != '') {
 			$base->cfg['tags'] = $base->db->parse('?s', $_REQUEST["tag"]);
 			$_currentTag = true;
 		}
-		if ($base->cfg['notTags'] == 'this') {
+		if ($base->cfg['notTags'] == 'this' && isset($_REQUEST['tag']) && $_REQUEST['tag'] != '') {
 			$base->cfg['notTags'] = $base->db->parse('?s', $_REQUEST["tag"]);
 			$_currentTag = true;
 		}
@@ -503,18 +544,29 @@ if (!$output) {
 		if ($base->cfg['tags'] || $base->cfg['notTags']) {
 			$ignoreTags = ($base->cfg['notTags']) ? 'NOT ' : '';
 			$tagsArr = ($base->cfg['notTags']) ? $base->cfg['notTags'] : $base->cfg['tags'];
-			$wheres[] = ($_currentTag)
-			? $ignoreTags . 'tags = ' . $tagsArr
-			: $ignoreTags . 'tags regexp "[[:<:]](' . str_replace(',', '|', $tagsArr) . ')[[:>:]]"';
+
+
+			if ($tagsArr !== 'this') {
+				// Если в строке подключения &tags=this и мы просматриваем страницу тегов, то сюда уже попадёт название тега
+				$wherTag = ($_currentTag)
+				? $ignoreTags . 'tag = ' . $tagsArr
+				: $ignoreTags . 'tag regexp "[[:<:]](' . str_replace(',', '|', $tagsArr) . ')[[:>:]]"';
+				// Делаем запрос на получение ID новостей, содержащих требуемые теги
+				$tagNews = $base->db->getCol('SELECT news_id FROM ?n  WHERE ?p', PREFIX . '_tags', $wherTag);
+				$tagNews = array_unique($tagNews);
+
+				$wheres[] = 'id ' . $ignoreTags . ' IN (' . implode(',', $tagNews) . ')';
+
+			}
 		}
 
 		// Фильтрация новостей по символьным кодам
 		$_currentSymbol = false;
-		if ($base->cfg['symbols'] == 'this') {
+		if ($base->cfg['symbols'] == 'this' && isset($_REQUEST["catalog"])) {
 			$base->cfg['symbols'] = $base->db->parse('?s', $_REQUEST["catalog"]);
 			$_currentSymbol = true;
 		}
-		if ($base->cfg['notSymbols'] == 'this') {
+		if ($base->cfg['notSymbols'] == 'this' && isset($_REQUEST["catalog"])) {
 			$base->cfg['notSymbols'] = $base->db->parse('?s', $_REQUEST["catalog"]);
 			$_currentSymbol = true;
 		}
@@ -522,9 +574,12 @@ if (!$output) {
 		if ($base->cfg['symbols'] || $base->cfg['notSymbols']) {
 			$ignoreSymbols = ($base->cfg['notSymbols']) ? 'NOT ' : '';
 			$symbolsArr = ($base->cfg['notSymbols']) ? $base->cfg['notSymbols'] : $base->cfg['symbols'];
-			$wheres[] = ($_currentSymbol)
-			? $ignoreSymbols . 'symbol = ' . $symbolsArr
-			: $ignoreSymbols . 'symbol regexp "[[:<:]](' . str_replace(',', '|', $symbolsArr) . ')[[:>:]]"';
+			if ($symbolsArr !== 'this') {
+				// Если в строке подключения &symbols=this и мы просматриваем страницу буквенного каталога, то сюда уже попадёт название буквы
+				$wheres[] = ($_currentSymbol)
+				? $ignoreSymbols . 'symbol = ' . $symbolsArr
+				: $ignoreSymbols . 'symbol regexp "[[:<:]](' . str_replace(',', '|', $symbolsArr) . ')[[:>:]]"';
+			}
 		}
 
 		// Если включен режим вывода похожих новостей:
@@ -617,6 +672,7 @@ if (!$output) {
 			$ext_query .= $base->db->parse(' LEFT JOIN ?n u ON (p.autor=u.name) ', USERPREFIX . '_users');
 		}
 
+		// Если выбрана сортировка по кол-ву скачиваний прикрепленных файлов
 		if ($base->cfg['sort'] == 'download') {
 			$ext_query_fields .= ', d.news_id, sum(d.dcount) as dcount ';
 			$ext_query .= $base->db->parse(' LEFT JOIN ?n d ON (p.id=d.news_id) ', PREFIX . '_files');
@@ -625,8 +681,14 @@ if (!$output) {
 			$groupBy = ' GROUP BY p.id ';
 		}
 
+		if ($base->cfg['fields']) {
+			$customFields = ', ' . trim($base->cfg['fields']);
+		} else {
+			$customFields = '';
+		}
+
 		// Поля, выбираемые из БД
-		$selectRows = 'p.id, p.autor, p.date, p.short_story, p.full_story, p.xfields, p.title, p.category, p.alt_name, p.allow_comm, p.comm_num, p.fixed, p.allow_main, p.symbol, p.tags, e.news_read, e.allow_rate, e.rating, e.vote_num, e.votes, e.related_ids, e.view_edit, e.editdate, e.editor, e.reason' . $ext_query_fields;
+		$selectRows = 'p.id, p.autor, p.date, p.short_story, p.full_story, p.xfields, p.title, p.category, p.alt_name, p.allow_comm, p.comm_num, p.fixed, p.allow_main, p.symbol, p.tags, e.news_read, e.allow_rate, e.rating, e.vote_num, e.votes, e.related_ids, e.view_edit, e.editdate, e.editor, e.reason' . $customFields . $ext_query_fields;
 
 		if ($base->cfg['order'] == 'asis' && $base->cfg['postId'] && $postsArr) {
 			$orderArr = array('FIELD (p.id, ' . $postsArr . ')');
@@ -647,7 +709,7 @@ if (!$output) {
 		$list = stripSlashesInArray($list);
 
 		// Путь к папке с текущим шаблоном
-		$tplArr['theme'] = '/templates/' . $base->dle_config['skin'];
+		$tplArr['theme'] = $base->dle_config['http_home_url'] . '/templates/' . $base->dle_config['skin'];
 
 		// Делаем доступным конфиг DLE внутри шаблона
 		$tplArr['dleConfig'] = $base->dle_config;
@@ -785,6 +847,20 @@ if (!$output) {
 				'style' => $base->cfg['navStyle'],
 				'current_page' => $base->cfg['pageNum'],
 			);
+			if ($base->cfg['navDefaultGet']) {
+				$pagerConfig['is_default_dle_get'] = true;
+				$pagerConfig['query_string'] = 'cstart';
+				$pagerConfig['link_tag'] = '<a href=":link">:name</a>';
+				$pagerConfig['current_tag'] = '<span class="current">:name</span>';
+				$pagerConfig['prev_tag'] = '<a href=":link" class="prev">&lsaquo; Назад</a>';
+				$pagerConfig['prev_text_tag'] = '<span class="prev">&lsaquo; Назад</span>';
+				$pagerConfig['next_tag'] = '<a href=":link" class="next">Далее &rsaquo;</a>';
+				$pagerConfig['next_text_tag'] = '<span class="next">Далее &rsaquo;</span>';
+				$pagerConfig['first_tag'] = '<a href=":link" class="first">Первая &laquo;</a>';
+				$pagerConfig['last_tag'] = '<a href=":link" class="last">&raquo; Последняя</a>';
+				$pagerConfig['extended_pageof'] = 'Страница :current_page из :total_pages';
+				$pagerConfig['extended_itemsof'] = 'Показаны новости :current_first_item &mdash; :current_last_item из :total_items';
+			}
 			// Если более 1 страницы
 			if ($totalCount > $base->cfg['limit']) {
 				$pagination = new Pager($pagerConfig);

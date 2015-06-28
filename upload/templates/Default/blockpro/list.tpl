@@ -10,7 +10,6 @@
 		$list - переменная, содержащая массив с новостями.
 	*}
 	{var $newsCount = $list|length}
-
 	В блоке {$newsCount} {$newsCount|declination:'новост|ь|и|ей'}
 	{*Пробегаем по массиву с новостями*}
 	{foreach $list as $key => $el}

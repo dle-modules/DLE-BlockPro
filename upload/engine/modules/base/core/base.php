@@ -48,7 +48,7 @@ class base {
 
 	}
 
-	public function getDb() {
+	public static function getDb() {
 		return SafeMySQL::getInstanse(array(
 			'host'    => DBHOST,
 			'user'    => DBUSER,
@@ -81,6 +81,7 @@ class base {
 
 		// Добавляем свой модификатор в шаблонизатор для ограничения кол-ва символов в тексте
 		$config = $this->dle_config;
+		$db = $this->db;
 
 		$this->tpl->addModifier(
 			'limit', function ($data, $limit, $etc = '&hellip;', $wordcut = false) use ($config) {
@@ -98,6 +99,13 @@ class base {
 		$this->tpl->addModifier(
 			'dump', function ($data) {
 				return bpModifiers::dump($data);
+			}
+		);
+
+		// Добавляем модификатор для получения списка пользователей
+		$this->tpl->addModifier(
+			'getAuthors', function ($data, $fields = false) use ($db) {
+				return bpModifiers::getAuthors($data, $fields = false, $db);
 			}
 		);
 

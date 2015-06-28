@@ -242,6 +242,31 @@ class bpModifiers extends base {
 		return print_r($var, true);
 	}
 
+	public static function getAuthors($array, $fields = false, $db)
+	{
+
+		$array = array_unique($array);
+		if ($fields) {
+			$fields = trim($fields);
+		} else {
+			$fields = '*';
+		}
+		if (count($array) == 1) {
+			$select = 'SELECT ?p FROM ?n WHERE name = ?s';
+			$array = $array[0];
+		} else {
+			$select = 'SELECT ?p FROM ?n WHERE name IN(?a)';
+		}
+
+		$_result = $db->getAll($select, $fields, USERPREFIX . '_users', $array);
+
+		foreach ($_result as $key => $user) {
+			unset($user['password']);
+			$result[$user['name']] = $user;
+		}
+		return $result;
+	}
+
 
 } // bpModifiers
 

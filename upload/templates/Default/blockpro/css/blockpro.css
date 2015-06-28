@@ -11,6 +11,7 @@
 	clear: both;
 }
 .bp-pager [data-page-num],
+.bp-pager a,
 .bp-pager .current {
 	font-size: 12px;
 	font-weight: normal;
@@ -40,13 +41,16 @@
 	   -moz-box-shadow: 0 2px 0 #3584a7;
 	        box-shadow: 0 2px 0 #3584a7;
 }
-.bp-pager [data-page-num]:focus {
+.bp-pager [data-page-num]:focus,
+.bp-pager a:focus {
 	outline: thin dotted #333;
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -2px;
 }
 .bp-pager [data-page-num]:hover,
-.bp-pager [data-page-num]:focus {
+.bp-pager [data-page-num]:focus,
+.bp-pager a:focus,
+.bp-pager a:hover {
 	text-decoration: none;
 	color: #fff;
 	background: #50bd98;
@@ -54,7 +58,8 @@
 	   -moz-box-shadow: 0 2px 0 #3c9e7d;
 	        box-shadow: 0 2px 0 #3c9e7d;
 }
-.bp-pager [data-page-num]:active {
+.bp-pager [data-page-num]:active,
+.bp-pager a:active {
 	outline: 0;
 	-webkit-box-shadow: 0 2px 0 #50bd98;
 	   -moz-box-shadow: 0 2px 0 #50bd98;

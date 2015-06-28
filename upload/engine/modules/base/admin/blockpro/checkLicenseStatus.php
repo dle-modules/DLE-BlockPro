@@ -45,10 +45,10 @@ $protect->status_messages = array(
     'maximum_delay_period_expired'   => '<span style="color:red;">Ошибка</span>, льготный период локального ключа истек.',
     'local_key_tampering'            => '<span style="color:red;">Ошибка</span>, локальный лицензионный ключ поврежден или не действителен.',
     'local_key_invalid_for_location' => '<span style="color:red;">Ошибка</span>, локальный ключ не подходит к данному сайту.',
-    'missing_license_file'           => '<span style="color:red;">Ошибка</span>, создайте следующий пустой файл и папки если их нет:<br />',
+    'missing_license_file'           => '<span style="color:red;">Ошибка</span>, создайте следующий пустой файл и папки если его нет:<br />',
     'license_file_not_writable'      => '<span style="color:red;">Ошибка</span>, сделайте доступными для записи следующие пути:<br />',
-    'invalid_local_key_storage'      => '<span style="color:red;">Ошибка</span>, не возможно удалить старый локальный ключ.',
-    'could_not_save_local_key'       => '<span style="color:red;">Ошибка</span>, не возможно записать новый локальный ключ.',
+    'invalid_local_key_storage'      => '<span style="color:red;">Ошибка</span>, невозможно удалить старый локальный ключ.',
+    'could_not_save_local_key'       => '<span style="color:red;">Ошибка</span>, невозможно записать новый локальный ключ.',
     'license_key_string_mismatch'    => '<span style="color:red;">Ошибка</span>, локальный ключ не действителен для указанной лицензии.',
 );
 

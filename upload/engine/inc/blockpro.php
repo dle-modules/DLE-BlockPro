@@ -21,7 +21,7 @@ if ($member_id['user_group'] != '1') {
 define('MODULE_DIR', ENGINE_DIR . '/modules/base/admin/blockpro/');
 
 $moduleName = 'blockpro';
-$moduleVersion = '4.5.8';
+$moduleVersion = '4.6.0';
 
 $moderate           = $_REQUEST['moderate'];
 $moderate_checked   = ($moderate) ? 'checked' : '' ;
@@ -73,6 +73,7 @@ $xfSortType         = $_REQUEST['xfSortType'];
 $symbols            = $_REQUEST['symbols'];
 $notSymbols         = $_REQUEST['notSymbols'];
 $saveRelated        = $_REQUEST['saveRelated'];
+$fields             = $_REQUEST['fields'];
 
 
 
@@ -116,7 +117,7 @@ $cfg = array(
 
 	'day' => !empty($day) ? $day : false, // Временной период для отбора новостей
 	'dayCount' => !empty($dayCount) ? $dayCount : false, // Интервал для отбора (т.е. к примеру выбираем новости за прошлую недею так: &day=14&dayCount=7 )
-	'sort' => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title, download, symbol или xf|xfieldname где xfieldname - имя дополнительного поля)
+	'sort' => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title, hit, random, randomLight, download, symbol, editdate или xf|xfieldname где xfieldname - имя дополнительного поля)
 	'xfSortType' => !empty($xfSortType) ? $xfSortType : 'int', // Тип сортировки по допполю (string, int) - для корректной сортировки по строки используем `string`, по умолчанию сортируется как число (для цен полезно).
 	'order' => !empty($order) ? $order : 'new', // Направление сортировки (new, old, asis)
 
@@ -127,6 +128,7 @@ $cfg = array(
 	'related' => !empty($related) ? $related : false, // Включить режим вывода похожих новостей (по умолчанию нет)
 	'saveRelated' => !empty($saveRelated) ? $saveRelated : false, // Включить запись похожих новостей в БД
 	'showNav' => !empty($showNav) ? $showNav : false, // Включить постраничную навигацию
+	'navDefaultGet' => !empty($navDefaultGet) ? $navDefaultGet : false, // Слушать дефолтный get-параметр постраничной навигации
 	'pageNum' => !empty($pageNum) ? $pageNum : '1', // Текущая страница при постраничной конфигурации
 	'navStyle' => !empty($navStyle) ? $navStyle : 'classic', // Стиль навигации. Возможны следующие стили:
 	/*
@@ -134,7 +136,9 @@ $cfg = array(
 	digg:		<< Назад  1 2 ... 5 6 7 8 9 [10] 11 12 13 14 ... 25 26  Вперёд >>
 	extended:	<< Назад | Страница 2 из 11 | Показаны новости 6-10 из 52 | Вперёд >>
 	punbb:		1 ... 4 5 [6] 7 8 ... 15
+	arrows:	    << Назад Вперёд >>
 	 */
+	
 	'options' => !empty($options) ? $options : false, // Опции, публикации новости для показа (Публиковать на главной, Разрешить рейтинг статьи, Разрешить комментарии, Запретить индексацию страницы для поисковиков, Зафиксировать новость) main|rating|comments|noindex
 	'notOptions' => !empty($notOptions) ? $notOptions : false, // Опции, публикации новости для исключения (Публиковать на главной, Разрешить рейтинг статьи, Разрешить комментарии, Запретить индексацию страницы для поисковиков, Зафиксировать новость) main|rating|comments|noindex
 
@@ -142,8 +146,8 @@ $cfg = array(
 	'cacheVars' => !empty($cacheVars) ? $cacheVars : false, // Значимые переменные в формировании кеша блока на случай разного вывода в зависимости от условий расположения модуля. Сюда можно передавать ключи, доступные через $_REQUEST или значения переменной $dle_module
 	'symbols' => !empty($symbols) ? $symbols : false, // Символьные коды для фильтрации по символьному каталогу. Перечисляем через запятую.
 	'notSymbols' => !empty($notSymbols) ? $notSymbols : false, // Символьные коды для исключающей фильтрации по символьному каталогу. Перечисляем через запятую или пишем this для текущего символьного кода
+	'fields' => !empty($fields) ? $fields : false, // Дополнение к выборке полей из БД (p.field,e.field)
 );
-
 if ($_REQUEST['setPreview']) {
 	// Формируем имя кеш-файла с конфигом
 	$pageCahceName = $cfg;
@@ -576,7 +580,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 									<div class="col col-mb-12 mb10">
 										<div class="alert">
 											<p class="mt0">Если Вы скачали этот модуль не с сайта <b>store.pafnuty.name</b>, техподдержка оказана не будет и скорее всего у вас взломанная версия модуля.</p>											
-										<p>Начиная с версии 4.5.8 техническая поддержка клиентов осуществляется через систему обращений. Это удобнее и гораздо эффективнее, чем email-переписка или переписка в различных месседжерах.</p>
+										<p>Начиная с версии 4.6.0 техническая поддержка клиентов осуществляется через систему обращений. Это удобнее и гораздо эффективнее, чем email-переписка или переписка в различных месседжерах.</p>
 										</div>
 										<p>Для получения техподдержки или решения иных вопросов, связанных с модулем просто <a href="https://pafnuty.omnidesk.ru/" target="_blank" class="btn btn-small">создайте бращение</a></p>
 										<p>Если вопрос связан с выводм новостей — не забывайте указать строку подключения и прикреплять файл шаблона модуля, если он отличается от стандартного.</p>

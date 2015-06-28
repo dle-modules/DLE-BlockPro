@@ -2,34 +2,34 @@
 /**
  * @author col.shrapnel@gmail.com
  * @link http://phpfaq.ru/safemysql
- *
- * Safe and convenient vay to handle SQL queries utilizing type-hinted placeholders.
- *
+ * 
+ * Safe and convenient way to handle SQL queries utilizing type-hinted placeholders.
+ * 
  * Key features
  * - set of helper functions to get the desired result right out of query, like in PEAR::DB
- * - conditional query building using parse() method to build queries of whatever comlexity,
+ * - conditional query building using parse() method to build queries of whatever comlexity, 
  *   while keeping extra safety of placeholders
  * - type-hinted placeholders
- *
- *  Type-hinted placeholders are great because
+ * 
+ *  Type-hinted placeholders are great because 
  * - safe, as any other [properly implemented] placeholders
  * - no need for manual escaping or binding, makes the code extra DRY
  * - allows support for non-standard types such as identifier or array, which saves A LOT of pain in the back.
- *
+ * 
  * Supported placeholders at the moment are:
- *
+ * 
  * ?s ("string")  - strings (also DATE, FLOAT and DECIMAL)
- * ?i ("integer") - the name says it all
- * ?n ("name")    - identifiers (table and field names)
+ * ?i ("integer") - the name says it all 
+ * ?n ("name")    - identifiers (table and field names) 
  * ?a ("array")   - complex placeholder for IN() operator  (substituted with string of 'a','b','c' format, without parentesis)
  * ?u ("update")  - complex placeholder for SET operator (substituted with string of `field`='value',`field`='value' format)
  * and
  * ?p ("parsed") - special type placeholder, for inserting already parsed statements without any processing, to avoid double parsing.
- *
- * Some examples:
+ * 
+ * Connection:
  *
  * $db = new SafeMySQL(); // with default settings
- *
+ * 
  * $opts = array(
  *		'user'    => 'user',
  *		'pass'    => 'pass',
@@ -37,26 +37,33 @@
  *		'charset' => 'latin1'
  * );
  * $db = new SafeMySQL($opts); // with some of the default settings overwritten
- *
- *
+ * 
+ * Alternatively, you can just pass an existing mysqli instance that will be used to run queries 
+ * instead of creating a new connection.
+ * Excellent choice for migration!
+ * 
+ * $db = new SafeMySQL(['mysqli' => $mysqli]);
+ * 
+ * Some examples:
+ * 
  * $name = $db->getOne('SELECT name FROM table WHERE id = ?i',$_GET['id']);
  * $data = $db->getInd('id','SELECT * FROM ?n WHERE id IN ?a','table', array(1,2));
  * $data = $db->getAll("SELECT * FROM ?n WHERE mod=?s LIMIT ?i",$table,$mod,$limit);
  *
  * $ids  = $db->getCol("SELECT id FROM tags WHERE tagname = ?s",$tag);
  * $data = $db->getAll("SELECT * FROM table WHERE category IN (?a)",$ids);
- *
+ * 
  * $data = array('offers_in' => $in, 'offers_out' => $out);
  * $sql  = "INSERT INTO stats SET pid=?i,dt=CURDATE(),?u ON DUPLICATE KEY UPDATE ?u";
  * $db->query($sql,$pid,$data,$data);
- *
+ * 
  * if ($var === NULL) {
  *     $sqlpart = "field is NULL";
  * } else {
  *     $sqlpart = $db->parse("field = ?s", $var);
  * }
  * $data = $db->getAll("SELECT * FROM table WHERE ?p", $bar, $sqlpart);
- *
+ * 
  */
 
 class SafeMySQL
@@ -76,7 +83,7 @@ class SafeMySQL
 		'socket'    => NULL,
 		'pconnect'  => FALSE,
 		'charset'   => 'utf8',
-		'errmode'   => 'error', //or exception
+		'errmode'   => 'exception', //or 'error'
 		'exception' => 'Exception', //Exception class name
 	);
 
@@ -89,6 +96,19 @@ class SafeMySQL
 
 		$this->emode  = $opt['errmode'];
 		$this->exname = $opt['exception'];
+
+		if (isset($opt['mysqli']))
+		{
+			if ($opt['mysqli'] instanceof mysqli)
+			{
+				$this->conn = $opt['mysqli'];
+				return;
+
+			} else {
+
+				$this->error("mysqli option must be valid instance of mysqli class");
+			}
+		}
 
 		if ($opt['pconnect'])
 		{
@@ -116,7 +136,7 @@ class SafeMySQL
 
 	/**
 	 * Conventional function to run a query with placeholders. A mysqli_query wrapper with placeholders support
-	 *
+	 * 
 	 * Examples:
 	 * $db->query("DELETE FROM table WHERE id=?i", $id);
 	 *
@@ -125,13 +145,13 @@ class SafeMySQL
 	 * @return resource|FALSE whatever mysqli_query returns
 	 */
 	public function query()
-	{
+	{	
 		return $this->rawQuery($this->prepareQuery(func_get_args()));
 	}
 
 	/**
-	 * Conventional function to fetch single row.
-	 *
+	 * Conventional function to fetch single row. 
+	 * 
 	 * @param resource $result - myqli result
 	 * @param int $mode - optional fetch mode, RESULT_ASSOC|RESULT_NUM, default RESULT_ASSOC
 	 * @return array|FALSE whatever mysqli_fetch_array returns
@@ -142,8 +162,8 @@ class SafeMySQL
 	}
 
 	/**
-	 * Conventional function to get number of affected rows.
-	 *
+	 * Conventional function to get number of affected rows. 
+	 * 
 	 * @return int whatever mysqli_affected_rows returns
 	 */
 	public function affectedRows()
@@ -152,8 +172,8 @@ class SafeMySQL
 	}
 
 	/**
-	 * Conventional function to get last insert id.
-	 *
+	 * Conventional function to get last insert id. 
+	 * 
 	 * @return int whatever mysqli_insert_id returns
 	 */
 	public function insertId()
@@ -162,8 +182,8 @@ class SafeMySQL
 	}
 
 	/**
-	 * Conventional function to get number of rows in the resultset.
-	 *
+	 * Conventional function to get number of rows in the resultset. 
+	 * 
 	 * @param resource $result - myqli result
 	 * @return int whatever mysqli_num_rows returns
 	 */
@@ -173,7 +193,7 @@ class SafeMySQL
 	}
 
 	/**
-	 * Conventional function to free the resultset.
+	 * Conventional function to free the resultset. 
 	 */
 	public function free($result)
 	{
@@ -182,7 +202,7 @@ class SafeMySQL
 
 	/**
 	 * Helper function to get scalar value right out of query and optional arguments
-	 *
+	 * 
 	 * Examples:
 	 * $name = $db->getOne("SELECT name FROM table WHERE id=1");
 	 * $name = $db->getOne("SELECT name FROM table WHERE id=?i", $id);
@@ -207,7 +227,7 @@ class SafeMySQL
 
 	/**
 	 * Helper function to get single row right out of query and optional arguments
-	 *
+	 * 
 	 * Examples:
 	 * $data = $db->getRow("SELECT * FROM table WHERE id=1");
 	 * $data = $db->getOne("SELECT * FROM table WHERE id=?i", $id);
@@ -229,7 +249,7 @@ class SafeMySQL
 
 	/**
 	 * Helper function to get single column right out of query and optional arguments
-	 *
+	 * 
 	 * Examples:
 	 * $ids = $db->getCol("SELECT id FROM table WHERE cat=1");
 	 * $ids = $db->getCol("SELECT id FROM tags WHERE tagname = ?s", $tag);
@@ -255,14 +275,14 @@ class SafeMySQL
 
 	/**
 	 * Helper function to get all the rows of resultset right out of query and optional arguments
-	 *
+	 * 
 	 * Examples:
 	 * $data = $db->getAll("SELECT * FROM table");
 	 * $data = $db->getAll("SELECT * FROM table LIMIT ?i,?i", $start, $rows);
 	 *
 	 * @param string $query - an SQL query with placeholders
 	 * @param mixed  $arg,... unlimited number of arguments to match placeholders in the query
-	 * @return array enumerated 2d array contains the resultset. Empty if no rows found.
+	 * @return array enumerated 2d array contains the resultset. Empty if no rows found. 
 	 */
 	public function getAll()
 	{
@@ -281,7 +301,7 @@ class SafeMySQL
 
 	/**
 	 * Helper function to get all the rows of resultset into indexed array right out of query and optional arguments
-	 *
+	 * 
 	 * Examples:
 	 * $data = $db->getInd("id", "SELECT * FROM table");
 	 * $data = $db->getInd("id", "SELECT * FROM table LIMIT ?i,?i", $start, $rows);
@@ -289,7 +309,7 @@ class SafeMySQL
 	 * @param string $index - name of the field which value is used to index resulting array
 	 * @param string $query - an SQL query with placeholders
 	 * @param mixed  $arg,... unlimited number of arguments to match placeholders in the query
-	 * @return array - associative 2d array contains the resultset. Empty if no rows found.
+	 * @return array - associative 2d array contains the resultset. Empty if no rows found. 
 	 */
 	public function getInd()
 	{
@@ -311,14 +331,14 @@ class SafeMySQL
 
 	/**
 	 * Helper function to get a dictionary-style array right out of query and optional arguments
-	 *
+	 * 
 	 * Examples:
 	 * $data = $db->getIndCol("name", "SELECT name, id FROM cities");
 	 *
 	 * @param string $index - name of the field which value is used to index resulting array
 	 * @param string $query - an SQL query with placeholders
 	 * @param mixed  $arg,... unlimited number of arguments to match placeholders in the query
-	 * @return array - associative array contains key=value pairs out of resultset. Empty if no rows found.
+	 * @return array - associative array contains key=value pairs out of resultset. Empty if no rows found. 
 	 */
 	public function getIndCol()
 	{
@@ -343,16 +363,16 @@ class SafeMySQL
 	/**
 	 * Function to parse placeholders either in the full query or a query part
 	 * unlike native prepared statements, allows ANY query part to be parsed
-	 *
+	 * 
 	 * useful for debug
 	 * and EXTREMELY useful for conditional query building
 	 * like adding various query parts using loops, conditions, etc.
 	 * already parsed parts have to be added via ?p placeholder
-	 *
+	 * 
 	 * Examples:
 	 * $query = $db->parse("SELECT * FROM table WHERE foo=?s AND bar=?s", $foo, $bar);
 	 * echo $query;
-	 *
+	 * 
 	 * if ($foo) {
 	 *     $qpart = $db->parse(" AND foo=?s", $foo);
 	 * }
@@ -360,7 +380,7 @@ class SafeMySQL
 	 *
 	 * @param string $query - whatever expression contains placeholders
 	 * @param mixed  $arg,... unlimited number of arguments to match placeholders in the expression
-	 * @return string - initial expression with placeholders substituted with data.
+	 * @return string - initial expression with placeholders substituted with data. 
 	 */
 	public function parse()
 	{
@@ -371,7 +391,7 @@ class SafeMySQL
 	 * function to implement whitelisting feature
 	 * sometimes we can't allow a non-validated user-supplied data to the query even through placeholder
 	 * especially if it comes down to SQL OPERATORS
-	 *
+	 * 
 	 * Example:
 	 *
 	 * $order = $db->whiteList($_GET['order'], array('name','price'));
@@ -381,7 +401,7 @@ class SafeMySQL
 	 * }
 	 * $sql  = "SELECT * FROM table ORDER BY ?p ?p LIMIT ?i,?i"
 	 * $data = $db->getArr($sql, $order, $dir, $start, $per_page);
-	 *
+	 * 
 	 * @param string $iinput   - field name to test
 	 * @param  array  $allowed - an array with allowed variants
 	 * @param  string $default - optional variable to set if no match found. Default to false.
@@ -396,15 +416,15 @@ class SafeMySQL
 	/**
 	 * function to filter out arrays, for the whitelisting purposes
 	 * useful to pass entire superglobal to the INSERT or UPDATE query
-	 * OUGHT to be used for this purpose,
+	 * OUGHT to be used for this purpose, 
 	 * as there could be fields to which user should have no access to.
-	 *
+	 * 
 	 * Example:
 	 * $allowed = array('title','url','body','rating','term','type');
 	 * $data    = $db->filterArray($_POST,$allowed);
 	 * $sql     = "INSERT INTO ?n SET ?u";
 	 * $db->query($sql,$table,$data);
-	 *
+	 * 
 	 * @param  array $input   - source array
 	 * @param  array $allowed - an array with allowed field names
 	 * @return array filtered out source array
@@ -422,8 +442,8 @@ class SafeMySQL
 	}
 
 	/**
-	 * Function to get last executed query.
-	 *
+	 * Function to get last executed query. 
+	 * 
 	 * @return string|NULL either last executed query or NULL if were none
 	 */
 	public function lastQuery()
@@ -433,8 +453,8 @@ class SafeMySQL
 	}
 
 	/**
-	 * Function to get all query statistics.
-	 *
+	 * Function to get all query statistics. 
+	 * 
 	 * @return array contains all executed queries with timings and errors
 	 */
 	public function getStats()
@@ -445,7 +465,7 @@ class SafeMySQL
 	/**
 	 * private function which actually runs a query against Mysql server.
 	 * also logs some stats like profiling info and error message
-	 *
+	 * 
 	 * @param string $query - a regular SQL query
 	 * @return mysqli result resource or FALSE on error
 	 */
@@ -463,12 +483,12 @@ class SafeMySQL
 		if (!$res)
 		{
 			$error = mysqli_error($this->conn);
-
+			
 			end($this->stats);
 			$key = key($this->stats);
 			$this->stats[$key]['error'] = $error;
 			$this->cutStats();
-
+			
 			$this->error("$error. Full query: [$query]");
 		}
 		$this->cutStats();
@@ -536,7 +556,7 @@ class SafeMySQL
 		if (is_float($value))
 		{
 			$value = number_format($value, 0, '.', ''); // may lose precision on big numbers
-		}
+		} 
 		return $value;
 	}
 

@@ -196,10 +196,11 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<select name="navStyle" class="styler">
-					<option value="">classic</option>
-					<option value="digg">digg</option>
-					<option value="extended">extended</option>
-					<option value="punbb">punbb</option>
+					<option value=""        <?if($cfg['navStyle'] == 'classic'):?> selected <?endif?>>classic</option>
+					<option value="digg"    <?if($cfg['navStyle'] == 'digg'):?> selected <?endif?>>digg</option>
+					<option value="extended"<?if($cfg['navStyle'] == 'extended'):?> selected <?endif?>>extended</option>
+					<option value="punbb"   <?if($cfg['navStyle'] == 'punbb'):?> selected <?endif?>>punbb</option>
+					<option value="arrows"  <?if($cfg['navStyle'] == 'arrows'):?> selected <?endif?>>arrows</option>
 				</select>
 			</div>
 		</div>
@@ -250,6 +251,17 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				<div class="alert alert-info">
 					<div>При включении режима афиши дни будут прибавляться, а не вычитаться.</div>
 					<div><a href="/engine/modules/base/admin/blockpro/images/days.png" title="Красным полупрозрачным блоком выделены дни, новости которых попадут в вывод." class="open-img">Пояснение по временным параметрам</a></div>
+				</div>
+			</div>
+		</div>
+		<div class="content">
+			<div class="col col-mb-12 col-5 col-dt-4 form-label">
+				Режим замены {content}
+			</div>
+			<div class="col col-mb-12 col-7 col-dt-8 form-control">
+				<input class="checkbox" type="checkbox" value="y" name="navDefaultGet" id="navDefaultGet"  <?=$navDefaultGet_checked?>> <label for="navDefaultGet"><span></span> включить (экспериментальный режим)</label>
+				<div class="alert alert-info">
+					<div>При включении режима замены {content} модуль будет брать значение текущей страницы и формировать постраничную навигацию так же как это делается в DLE. Переход между страницами новостей будет осуществляться с перезагрузкой страницы.</div>
 				</div>
 			</div>
 		</div>
@@ -385,6 +397,16 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				</select>
 			</div>
 		</div>
+
+		<div class="content">
+			<div class="col col-mb-12 col-5 col-dt-4 form-label">
+				Дополнительные колонки, отбираемые из БД
+			</div>
+			<div class="col col-mb-12 col-7 col-dt-8 form-control">
+				<input class="input" type="text" name="fields" value="<?=$cfg['fields']?>" placeholder="p.custom,e.extra">
+			</div>
+		</div>
+
 	</div> <!-- .logic-block -->
 
 	<div class="logic-block">
@@ -413,6 +435,9 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<?=showXFields('notXfilter')?>
+				<div class="alert alert-info">
+					Можно использовать <code>&amp;xfilter=this</code> и <code>&amp;notXfilter=this</code> для показа новостей, содержащих текущее 	допполе при просмотре страниц /xfsearch/
+				</div>
 			</div>
 		</div>
 
