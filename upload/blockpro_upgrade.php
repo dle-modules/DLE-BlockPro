@@ -507,12 +507,10 @@ function chasetConflict($string)
 		<div class="container pt0">
 			<div class="content">
 				<div class="col col-mb-12">
-								<hr>
-					Обратная связь и техническая поддержка: <br>
-					<a href="http://pafnuty.name/" target="_blank" title="Сайт автора">ПафНутиЙ</a> <br>
-					<a href="https://twitter.com/pafnuty_name" target="_blank" title="Twitter">@pafnuty_name</a> <br>
-					<a href="http://gplus.to/pafnuty" target="_blank" title="google+">+Павел</a> <br>
-					<a href="mailto:pafnuty10@gmail.com" title="email автора">pafnuty10@gmail.com</a>
+					<hr class="mt0">
+					Контакты для связи и техподдержки:<br>
+					<a href="https://pafnuty.omnidesk.ru/" target="_blank" title="Сайт поддержки">pafnuty.omnidesk.ru</a> — техподдержка <br>
+					<a href="http://bp.pafnuty.name/" target="_blank" title="Официальный сайт модуля">bp.pafnuty.name</a> — документация <br>
 				</div>
 			</div>
 		</div>

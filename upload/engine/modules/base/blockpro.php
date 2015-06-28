@@ -98,6 +98,9 @@ if ($isAjaxConfig) {
 	);
 }
 
+// Сбрасываем значение $cfg['cacheNameAddon'] иначе будут проблемы с ajax 
+$cfg['cacheNameAddon'] = '';
+
 // Если имеются переменные со значениями this, изменяем значение переменной cacheNameAddon
 if ($cfg['catId'] == 'this') {
 	$cfg['cacheNameAddon'] .= $category_id . 'cId_';
@@ -817,9 +820,11 @@ if (!$output) {
 
 			// Формируем имя кеш-файла с конфигом
 			$pageCahceName = $base->cfg;
+			
 			// Удаляем номер страницы для того, что бы не создавался новый кеш для каждого блока постранички
 			unset($pageCahceName['pageNum']);
 			// Сокращаем немного имя файла :)
+
 			$pageCahceName = 'bpa_' . crc32(implode('_', $pageCahceName));
 
 			// Включаем кеширование DLE принудительно

@@ -68,6 +68,7 @@ $steps = <<<HTML
 		<textarea readonly class="code" rows="1"><script src="{THEME}/blockpro/js/blockpro_new.js"></script></textarea>
 		если хотте использовать возможность навигации по стрелкам браузера при ajax-переключении страниц модуля.
 	</li>
+	<li>Открыть файл <b>/engine/data/blockpro.key</b> и вставить в него <a href="http://store.pafnuty.name/purchase/" target="_blank">полученный ключ</a>.</li>
 	<li>Выполнить установку админчасти и таблиц модуля (кнопка ниже).</li>
 </ol>
 HTML;
@@ -311,12 +312,10 @@ function chasetConflict($string)
 		<div class="container pt0">
 			<div class="content">
 				<div class="col col-mb-12">
-								<hr>
-					Обратная связь и техническая поддержка: <br>
-					<a href="http://pafnuty.name/" target="_blank" title="Сайт автора">ПафНутиЙ</a> <br>
-					<a href="https://twitter.com/pafnuty_name" target="_blank" title="Twitter">@pafnuty_name</a> <br>
-					<a href="http://gplus.to/pafnuty" target="_blank" title="google+">+Павел</a> <br>
-					<a href="mailto:pafnuty10@gmail.com" title="email автора">pafnuty10@gmail.com</a>
+					<hr class="mt0">
+					Контакты для связи и техподдержки:<br>
+					<a href="https://pafnuty.omnidesk.ru/" target="_blank" title="Сайт поддержки">pafnuty.omnidesk.ru</a> — техподдержка <br>
+					<a href="http://bp.pafnuty.name/" target="_blank" title="Официальный сайт модуля">bp.pafnuty.name</a> — документация <br>
 				</div>
 			</div>
 		</div>
