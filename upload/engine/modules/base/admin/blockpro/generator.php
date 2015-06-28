@@ -174,7 +174,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				<div class="alert alert-info">
 					<p>К примеру нужно вывести новости за прошлую неделю. Код: <code>&day=14&dayCount=7</code> выведет новости за период 14 дней с интервалом в 7 дней, что и есть прошлая неделя. </p>
 					<p>
-						<a href="/engine/modules/base/admin/blockpro/images/days.png" title="Красным полупрозрачным блоком выделены дни, новости которых попадут в вывод." class="open-img">Пояснение по временным параметрам</a>
+						<a href="engine/modules/base/admin/blockpro/images/days.png" title="Красным полупрозрачным блоком выделены дни, новости которых попадут в вывод." class="open-img">Пояснение по временным параметрам</a>
 					</p>
 				</div>
 			</div>
