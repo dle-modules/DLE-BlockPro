@@ -449,11 +449,11 @@ if (!$output) {
 		}
 
 		// Фильтрация НОВОСТЕЙ по их ID
-		if ($base->cfg['postId'] == 'this' && $_REQUEST["newsid"]) {
-			$base->cfg['postId'] = $_REQUEST["newsid"];
+		if ($base->cfg['postId'] == 'this' && $_REQUEST['newsid']) {
+			$base->cfg['postId'] = $_REQUEST['newsid'];
 		}
-		if ($base->cfg['notPostId'] == 'this' && $_REQUEST["newsid"]) {
-			$base->cfg['notPostId'] = $_REQUEST["newsid"];
+		if ($base->cfg['notPostId'] == 'this' && $_REQUEST['newsid']) {
+			$base->cfg['notPostId'] = $_REQUEST['newsid'];
 		}
 
 		if (($base->cfg['postId'] || $base->cfg['notPostId']) && $base->cfg['related'] == '') {
@@ -504,7 +504,7 @@ if (!$output) {
 				// Если в строке подключения &xfilter=this и мы просматриваем страницу допполя, то сюда уже попадёт имя этого поля
 				$wheres[] = ($_currentXfield)
 				? $ignoreXfilters . 'xfields LIKE ' . $xfiltersArr
-				: $ignoreXfilters . 'autor regexp "[[:<:]](' . str_replace(',', '|', $xfiltersArr) . ')[[:>:]]"';
+				: $ignoreXfilters . 'p.xfields regexp "[[:<:]](' . str_replace(',', '|', $xfiltersArr) . ')[[:>:]]"';
 			}
 		}
 
@@ -544,6 +544,21 @@ if (!$output) {
 			$_currentTag = true;
 		}
 
+		// Фильтрация новостей по тегам текущей новости, когда в строке подключения прописано &tags=thisNewsTags и мы просматриваем полную новость
+		if ((int)$_REQUEST['newsid'] > 0) {
+			if ($base->cfg['tags'] == 'thisNewsTags' || $base->cfg['notTags'] == 'thisNewsTags') {
+				$curTagNewsId = $base->db->getRow('SELECT tags FROM ?n WHERE id=?i', PREFIX . '_post', $_REQUEST['newsid']);
+				if (!empty($curTagNewsId['tags'])) {
+					if ($base->cfg['tags'] == 'thisNewsTags') {
+						$base->cfg['tags'] = $curTagNewsId['tags'];
+					}
+					if ($base->cfg['notTags'] == 'thisNewsTags') {
+						$base->cfg['notTags'] = $curTagNewsId['notTags'];
+					}
+				}				
+			}			
+		}
+
 		if ($base->cfg['tags'] || $base->cfg['notTags']) {
 			$ignoreTags = ($base->cfg['notTags']) ? 'NOT ' : '';
 			$tagsArr = ($base->cfg['notTags']) ? $base->cfg['notTags'] : $base->cfg['tags'];
@@ -558,7 +573,9 @@ if (!$output) {
 				$tagNews = $base->db->getCol('SELECT news_id FROM ?n  WHERE ?p', PREFIX . '_tags', $wherTag);
 				$tagNews = array_unique($tagNews);
 
-				$wheres[] = 'id ' . $ignoreTags . ' IN (' . implode(',', $tagNews) . ')';
+				if (count($tagNews)) {
+					$wheres[] = 'id ' . $ignoreTags . ' IN (' . implode(',', $tagNews) . ')';
+				}
 
 			}
 		}
@@ -588,13 +605,13 @@ if (!$output) {
 		// Если включен режим вывода похожих новостей:
 		$reltedFirstShow = false;
 		if ($base->cfg['related']) {
-			if ($base->cfg['related'] == 'this' && $_REQUEST["newsid"] == '') {
+			if ($base->cfg['related'] == 'this' && $_REQUEST['newsid'] == '') {
 				echo '<span style="color: red;">Переменная related=this работает только в полной новости и не работает с ЧПУ 3 типа.</span>';
 
 				return;
 			}
 
-			$relatedId = ($base->cfg['related'] == 'this') ? $_REQUEST["newsid"] : $base->cfg['related'];
+			$relatedId = ($base->cfg['related'] == 'this') ? $_REQUEST['newsid'] : $base->cfg['related'];
 			$relatedRows = 'title, short_story, full_story, xfields';
 			$relatedIdParsed = $base->db->parse('id = ?i', $relatedId);
 
