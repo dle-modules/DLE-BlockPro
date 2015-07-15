@@ -99,7 +99,7 @@ if ($isAjaxConfig) {
 }
 
 // Сбрасываем значение $cfg['cacheNameAddon'] иначе будут проблемы с ajax 
-$cfg['cacheNameAddon'] = '';
+// $cfg['cacheNameAddon'] = '';
 
 // Если имеются переменные со значениями this, изменяем значение переменной cacheNameAddon
 if ($cfg['catId'] == 'this') {
@@ -445,7 +445,6 @@ if (!$output) {
 				$wheres[] = $ignore . $catsGet;		
 			}
 			
-
 		}
 
 		// Фильтрация НОВОСТЕЙ по их ID
@@ -464,24 +463,22 @@ if (!$output) {
 			}
 		}
 
-		$_currentAuthor = false;
 		// Фильтрация новостей по АВТОРАМ
 		if ($base->cfg['author'] == 'this' && isset($_REQUEST["user"])) {
 			$base->cfg['author'] = $base->db->parse('?s', $_REQUEST["user"]);
-			$_currentAuthor = true;
 		}
 		if ($base->cfg['notAuthor'] == 'this' && isset($_REQUEST["user"])) {
 			$base->cfg['notAuthor'] = $base->db->parse('?s', $_REQUEST["user"]);
-			$_currentAuthor = true;
 		}
 		if ($base->cfg['author'] || $base->cfg['notAuthor']) {
 			$ignoreAuthors = ($base->cfg['notAuthor']) ? 'NOT ' : '';
 			$authorsArr = ($base->cfg['notAuthor']) ? $base->cfg['notAuthor'] : $base->cfg['author'];
 			if ($authorsArr !== 'this') {
 				// Если в строке подключения &author=this и мы просматриваем страницу юзера, то сюда уже попадёт логин пользователя
-				$wheres[] = ($_currentAuthor)
-				? $ignoreAuthors . 'autor = ' . $authorsArr
-				: $ignoreAuthors . 'autor regexp "[[:<:]](' . str_replace(',', '|', $authorsArr) . ')[[:>:]]"';
+				$authorsArr = explode(',', $authorsArr);
+				$wheres[] = (count($authorsArr) === 1)
+				? $ignoreAuthors . 'autor = ' . $authorsArr[0]
+				: $ignoreAuthors . 'autor regexp "[[:<:]](' . implode('|', $authorsArr) . ')[[:>:]]"';
 			}
 		}
 
@@ -739,6 +736,8 @@ if (!$output) {
 
 		// Делаем доступной переменную $lang в шаблоне
 		$tplArr['lang'] = $lang;
+		$tplArr['cacheName'] = $cacheName;
+		$tplArr['cfg'] = $cfg;
 		
 		// Массив для аттачей и похожих новостей.
 		$attachments = $relatedIds = array();
