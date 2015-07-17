@@ -57,6 +57,7 @@ if ($isAjaxConfig) {
 		'subcats' => !empty($subcats) ? $subcats : false, // Выводить подкатегории указанных категорий (&subcats=y), работает и с диапазонами.
 		'notCatId' => !empty($notCatId) ? $notCatId : '', // Игнорируемые категории (через запятую, или черточку)
 		'notSubcats' => !empty($notSubcats) ? $notSubcats : false, // Игнорировать подкатегории игнорируемых категорий (&notSubcats=y), работает и с диапазонами.
+		'thisCatOnly' => !empty($thisCatOnly) ? $thisCatOnly : false, // Показывать новости ТОЛЬКО из текущей категории (имеет смысл при выводе похожих новостей и использоваии мультикатегорий).
 
 		'tags' => !empty($tags) ? $tags : '', // Теги из облака тегов для показа новостей, содержащих их (через запятую)
 		'notTags' => !empty($notTags) ? $notTags : '', // Игнорируемые теги (через запятую)
@@ -214,20 +215,19 @@ if (!$output) {
 		// <-- Класс проверки лицензии
 	}
 
-	$licenseStatus = false;
 	// Проверяем лицензию.	
 		
 
-	$protect = new Protect();
-	$protect->secret_key = 'RdaDrhZFbf6cZqu';
-	$protect->use_localhost = true;
-	$protect->local_key_path = ENGINE_DIR . '/data/';
-	$protect->local_key_name = 'blockpro.lic';
-	$protect->server = 'http://api.pafnuty.name/api.php';
-	$protect->release_date = '2015-05-07'; // гггг-мм-дд
-	$protect->activation_key = @file_get_contents(ENGINE_DIR . '/data/blockpro.key');
+	$bpProtect = new Protect();
+	$bpProtect->secret_key = 'RdaDrhZFbf6cZqu';
+	$bpProtect->use_localhost = true;
+	$bpProtect->local_key_path = ENGINE_DIR . '/data/';
+	$bpProtect->local_key_name = 'blockpro.lic';
+	$bpProtect->server = 'http://api.pafnuty.name/api.php';
+	$bpProtect->release_date = '2015-05-07'; // гггг-мм-дд
+	$bpProtect->activation_key = @file_get_contents(ENGINE_DIR . '/data/blockpro.key');
 
-	$protect->status_messages = array(
+	$bpProtect->status_messages = array(
 		'status_1'                       => '<span style="color:green;">Активна</span>',
 	    'status_2'                       => '<span style="color:darkblue;">Внимание</span>, срок действия лицензии закончился.',
 	    'status_3'                       => '<span style="color:orange;">Внимание</span>, лицензия переиздана. Ожидает повторной активации.',
@@ -250,18 +250,18 @@ if (!$output) {
 	/**
 	 * Запускаем валидацию
 	 */
-	$protect->validate();
+	$bpProtect->validate();
 
-	$license = false;
+	$bpLicense = false;
 	/**
 	 * Если истина, то лицензия в боевом состоянии
 	 */
-	if($protect->status) {
-		$license = true;
+	if($bpProtect->status) {
+		$bpLicense = true;
 	}
-	if (!$license) {
+	if (!$bpLicense) {
 		// Если лицензия не проверилась - скжем об этом
-		$output = (!$protect->errors) ? '<span style="color: red;">Ошибка лицензии, обратитесь к автору модуля.</span>' : $protect->errors;
+		$output = (!$bpProtect->errors) ? '<span style="color: red;">Ошибка лицензии, обратитесь к автору модуля.</span>' : $bpProtect->errors;
 	} else {
 		// Если всё ок с лцензией - работаем.	
 
@@ -427,16 +427,16 @@ if (!$output) {
 
 		// Фильтрация КАТЕГОРИЙ по их ID
 		if ($base->cfg['catId'] == 'this' && $category_id) {
-			$base->cfg['catId'] = ($base->cfg['subcats']) ? get_sub_cats($category_id) : $category_id;
+			$base->cfg['catId'] = ($base->cfg['subcats']) ? get_sub_cats($category_id) : ($base->cfg['thisCatOnly']) ? (int)$category_id : $category_id;
 		}
 		if ($base->cfg['notCatId'] == 'this' && $category_id) {
-			$base->cfg['notCatId'] = ($base->cfg['notSubcats']) ? get_sub_cats($category_id) : $category_id;
+			$base->cfg['notCatId'] = ($base->cfg['notSubcats']) ? get_sub_cats($category_id) : ($base->cfg['thisCatOnly']) ? (int)$category_id : $category_id;
 		}
 		if ($base->cfg['catId'] || $base->cfg['notCatId']) {
 			$ignore = ($base->cfg['notCatId']) ? 'NOT ' : '';
 			$catArr = ($base->cfg['notCatId']) ? $base->getDiapazone($base->cfg['notCatId'], $base->cfg['notSubcats']) : $base->getDiapazone($base->cfg['catId'], $base->cfg['subcats']);	
 			if ($catArr[0] > 0) {
-				if ($base->dle_config['allow_multi_category']) {				
+				if ($base->dle_config['allow_multi_category'] && !$base->cfg['thisCatOnly']) {				
 					$catsGet = 'category regexp "[[:<:]](' . str_replace(',', '|', $catArr) . ')[[:>:]]"';			
 				} else {				
 					$catsGet = 'category IN (\'' . str_replace(',', "','", $catArr) . '\')';			
@@ -737,6 +737,7 @@ if (!$output) {
 		// Делаем доступной переменную $lang в шаблоне
 		$tplArr['lang'] = $lang;
 		$tplArr['cacheName'] = $cacheName;
+		$tplArr['category_id'] = $category_id;
 		$tplArr['cfg'] = $cfg;
 		
 		// Массив для аттачей и похожих новостей.

@@ -76,6 +76,8 @@ $saveRelated           = $_REQUEST['saveRelated'];
 $fields                = $_REQUEST['fields'];
 $navDefaultGet         = $_REQUEST['navDefaultGet'];
 $navDefaultGet_checked = ($navDefaultGet) ? 'checked' : '' ;
+$thisCatOnly           = $_REQUEST['thisCatOnly'];
+$thisCatOnly_checked   = ($thisCatOnly) ? 'checked' : '' ;
 
 
 
@@ -113,6 +115,7 @@ $cfg = array(
 	'subcats' => !empty($subcats) ? $subcats : false, // Выводить подкатегории указанных категорий (&subcats=y), работает и с диапазонами.
 	'notCatId' => !empty($notCatId) ? $notCatId : '', // Игнорируемые категории (через запятую, или черточку)
 	'notSubcats' => !empty($notSubcats) ? $notSubcats : false, // Игнорировать подкатегории игнорируемых категорий (&notSubcats=y), работает и с диапазонами.
+	'thisCatOnly' => !empty($thisCatOnly) ? $thisCatOnly : false, // Показывать новости ТОЛЬКО из текущей категории (имеет смысл при выводе похожих новостей и использоваии мультикатегорий).
 
 	'tags' => !empty($tags) ? $tags : '', // Теги из облака тегов для показа новостей, содержащих их (через запятую)
 	'notTags' => !empty($notTags) ? $notTags : '', // Игнорируемые теги (через запятую)
@@ -140,7 +143,9 @@ $cfg = array(
 	punbb:		1 ... 4 5 [6] 7 8 ... 15
 	arrows:	    << Назад Вперёд >>
 	 */
-	
+	/**
+	 * @todo  реализовать функционал с options и notOptions
+	 */
 	'options' => !empty($options) ? $options : false, // Опции, публикации новости для показа (Публиковать на главной, Разрешить рейтинг статьи, Разрешить комментарии, Запретить индексацию страницы для поисковиков, Зафиксировать новость) main|rating|comments|noindex
 	'notOptions' => !empty($notOptions) ? $notOptions : false, // Опции, публикации новости для исключения (Публиковать на главной, Разрешить рейтинг статьи, Разрешить комментарии, Запретить индексацию страницы для поисковиков, Зафиксировать новость) main|rating|comments|noindex
 

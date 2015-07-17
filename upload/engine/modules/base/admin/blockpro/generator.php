@@ -195,7 +195,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<input class="checkbox" type="checkbox" value="y" name="navDefaultGet" id="navDefaultGet"  <?=$navDefaultGet_checked?>> <label for="navDefaultGet"><span></span> Отслеживать стандартную навигацию DLE</label>
-				<div class="alert alert-info">При указании этого параметра модуль модуль будет брать значение текущей страницы и формировать постраничную навигацию так же как это делается в DLE. Переход между страницами новостей будет осуществляться с перезагрузкой страницы.</div>
+				<div class="alert alert-info">При указании этого параметра модуль будет брать значение текущей страницы и формировать постраничную навигацию так же как это делается в DLE. Переход между страницами новостей будет осуществляться с перезагрузкой страницы.</div>
 			</div>
 		</div>
 
@@ -330,6 +330,19 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				<br>
 				<input class="input mt10" type="text" name="notCatId[]" value="<?=$cfg['notCatId']?>" placeholder="или так: 1-10,15,18,45-150 или this"> <br>
 				<input class="checkbox" type="checkbox" value="y" name="notSubcats" id="notSubcats"  <?=$notSubcats_checked?>> <label for="notSubcats"><span></span> Игнорировать подкатегории выбранных категорий</label>
+				
+			</div>
+		</div>
+
+		<div class="content">
+			<div class="col col-mb-12 col-5 col-dt-4 form-label">
+				&nbsp;
+			</div>
+			<div class="col col-mb-12 col-7 col-dt-8 form-control">	
+				<input class="checkbox" type="checkbox" value="y" name="thisCatOnly" id="thisCatOnly"  <?=$thisCatOnly_checked?>> <label for="thisCatOnly"><span></span> Выводить/игнорировать новости только из текущей категории</label>
+				<div class="alert alert-info">
+					Вывод новостей только из текущей категории имеет смысл при выводе похожих новостей, если используются мультикатегории и если нужно вывести или исключить из вывода новости, принадлежащие только к просматриваемой категории. 
+				</div>
 			</div>
 		</div>
 
