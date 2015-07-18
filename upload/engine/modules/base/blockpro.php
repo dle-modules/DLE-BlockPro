@@ -224,7 +224,7 @@ if (!$output) {
 	$bpProtect->local_key_path = ENGINE_DIR . '/data/';
 	$bpProtect->local_key_name = 'blockpro.lic';
 	$bpProtect->server = 'http://api.pafnuty.name/api.php';
-	$bpProtect->release_date = '2015-05-07'; // гггг-мм-дд
+	$bpProtect->release_date = '2015-07-18'; // гггг-мм-дд
 	$bpProtect->activation_key = @file_get_contents(ENGINE_DIR . '/data/blockpro.key');
 
 	$bpProtect->status_messages = array(
