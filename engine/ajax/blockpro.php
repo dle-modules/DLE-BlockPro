@@ -129,8 +129,3 @@ if ($_cr) {
 } else {
 	die('cache not found');
 }
-
-
-?>
-
-

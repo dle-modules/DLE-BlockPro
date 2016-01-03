@@ -194,7 +194,13 @@ if ($_REQUEST['setPreview']) {
 
 
 function base_dle_cache($prefix, $cache_id = false, $member_prefix = false) {
-	global $config, $is_logged, $member_id;
+	global $config, $is_logged, $member_id, $mcache;
+
+	if (!$config['allow_cache']) {
+		return false;
+	}
+
+	$config['clear_cache'] = (intval($config['clear_cache']) > 1) ? intval($config['clear_cache']) : 0;
 
 	if ($is_logged) {
 		$end_file = $member_id['user_group'];
@@ -203,23 +209,55 @@ function base_dle_cache($prefix, $cache_id = false, $member_prefix = false) {
 	}
 
 	if (!$cache_id) {
+
 		$key = $prefix;
+
 	} else {
+
 		$cache_id = md5($cache_id);
+
 		if ($member_prefix) {
 			$key = $prefix . "_" . $cache_id . "_" . $end_file;
 		} else {
 			$key = $prefix . "_" . $cache_id;
 		}
+
 	}
 
-	$buffer = @file_get_contents(ENGINE_DIR . "/cache/" . $key . ".tmp");
-	
-	return $buffer;
+	if ($mcache) {
+
+		return memcache_get($mcache, md5(DBNAME . PREFIX . md5(SECURE_AUTH_KEY) . $key));
+
+	} else {
+
+		$buffer = @file_get_contents(ENGINE_DIR . "/cache/" . $key . ".tmp");
+
+		if ($buffer !== false AND $config['clear_cache']) {
+
+			$file_date = @filemtime(ENGINE_DIR . "/cache/" . $key . ".tmp");
+			$file_date = time() - $file_date;
+
+			if ($file_date > ($config['clear_cache'] * 60)) {
+				$buffer = false;
+				@unlink(ENGINE_DIR . "/cache/" . $key . ".tmp");
+			}
+
+			return $buffer;
+
+		} else {
+			return $buffer;
+		}
+
+	}
 }
 
 function base_create_cache($prefix, $cache_text, $cache_id = false, $member_prefix = false) {
-	global $config, $is_logged, $member_id;
+	global $config, $is_logged, $member_id, $mcache;
+
+	if (!$config['allow_cache']) {
+		return false;
+	}
+
 	if ($is_logged) {
 		$end_file = $member_id['user_group'];
 	} else {
@@ -239,10 +277,24 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 
 	}
 
-	file_put_contents(ENGINE_DIR . "/cache/" . $key . ".tmp", $cache_text, LOCK_EX);
+	if ($mcache) {
 
-	@chmod(ENGINE_DIR . "/cache/" . $key . ".tmp", 0666);
+		$config['clear_cache'] = (intval($config['clear_cache']) > 1) ? intval($config['clear_cache']) : 0;
 
+		if ($config['clear_cache']) {
+			$set_time = $config['clear_cache'] * 60;
+		} else {
+			$set_time = 86400;
+		}
+
+		memcache_set($mcache, md5(DBNAME . PREFIX . md5(SECURE_AUTH_KEY) . $key), $cache_text, MEMCACHE_COMPRESSED, $set_time);
+
+	} else {
+
+		file_put_contents(ENGINE_DIR . "/cache/" . $key . ".tmp", $cache_text, LOCK_EX);
+
+		@chmod(ENGINE_DIR . "/cache/" . $key . ".tmp", 0666);
+	}
 }
 
 ?>

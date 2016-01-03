@@ -39,10 +39,12 @@ if (isset($_POST['blockId']) && $_POST['widgetDelete'] == 'Y') {
 <div class="content">
 	<div class="col col-mb-12">
 		<h2>Виджеты для вывода на сторонних сайтах</h2>
-		<?if (count($arVidgets) > 0):?>
-			<?foreach ($arVidgets as $key => $vidgetItem):?>
-				<?
+		<?php if (count($arVidgets) > 0):?>
+			<?php foreach ($arVidgets as $key => $vidgetItem):?>
+				<?php 
+				
 					$params = unserialize($vidgetItem['params']);
+					echo "<pre class='dle-pre'>"; var_dump($params); echo "</pre>";
 					$vidgetModuleUrl = 'include file="engine/modules/base/blockpro.php';
 					$vidgetParamsUrl = array();
 
@@ -95,29 +97,28 @@ if (isset($_POST['blockId']) && $_POST['widgetDelete'] == 'Y') {
 		
 				<div class="widget-item content">
 					<div class="col col-mb-9">
-						<b class="text-muted">[<?=$vidgetItem['id']?>]</b> <h3 class="m0 mr10 fz20 d-ib"><a href="/blockpro.php?block=<?=$vidgetItem['block_id']?>" target="_blank"><?=$vidgetItem['name']?></a></h3> (создан <?=$vidgetItem['date']?>) <a href="?mod=blockpro&setPreview=y&<?=$vidgetModuleUrlParams?>#tab2" class="btn btn-small" title="Предпросмотр виджета или создание нового на основе текущего">Предпросмотр</a>
+						<b class="text-muted">[<?php echo $vidgetItem['id']?>]</b> <h3 class="m0 mr10 fz20 d-ib"><a href="/blockpro.php?block=<?php echo $vidgetItem['block_id']?>" target="_blank"><?php echo $vidgetItem['name']?></a></h3> (создан <?php echo $vidgetItem['date']?>) <a href="?mod=blockpro&setPreview=y&<?php echo $vidgetModuleUrlParams?>#tab2" class="btn btn-small" title="Предпросмотр виджета или создание нового на основе текущего">Предпросмотр</a>
 					</div>
 					<div class="col col-mb-3 ta-right">
-						<span class="btn btn-small delete-widget" data-widget-action="<?$PHP_SELF?>?mod=blockpro" data-widget-id="<?=$vidgetItem['id']?>" data-widget-name="<?=$vidgetItem['name']?>">удалить</span>
+						<span class="btn btn-small delete-widget" data-widget-action="<?$PHP_SELF?>?mod=blockpro" data-widget-id="<?php echo $vidgetItem['id']?>" data-widget-name="<?php echo $vidgetItem['name']?>">удалить</span>
 					</div>
 					<div class="col col-mb-12">
 						<h4>Код для вставки через javascript:</h4>
-						<textarea readonly class="input input-block-level code"><script type="text/javascript" async defer src="<?=$config['http_home_url']?>blockpro.php?block=<?=$vidgetItem['block_id']?>"></script>
-<div id="<?=$vidgetItem['block_id']?>"></div></textarea>
+						<textarea readonly class="input input-block-level code"><script type="text/javascript" async defer src="<?php echo $config['http_home_url']?>blockpro.php?block=<?php echo $vidgetItem['block_id']?>"></script>
+<div id="<?php echo $vidgetItem['block_id']?>"></div></textarea>
 						
 						<h4>Код для вывода RSS:</h4>
-						<textarea rows="1" readonly class="input input-block-level code"><?=$config['http_home_url']?>blockpro.php?channel=<?=$vidgetItem['block_id']?></textarea>
+						<textarea rows="1" readonly class="input input-block-level code"><?php echo $config['http_home_url']?>blockpro.php?channel=<?php echo $vidgetItem['block_id']?></textarea>
 
 						<h4>Строка подключения:</h4>
-						<textarea rows="1" class="input input-block-level code">{<?=$vidgetModuleUrl?>"}</textarea>	
+						<textarea rows="1" class="input input-block-level code">{<?php echo $vidgetModuleUrl?>"}</textarea>	
 										
 					</div>
 				</div>
-			<?endforeach?>
-		<?else:?>
+			<?php endforeach?>
+		<?php else:?>
 			<div class="alert alert-info">Вы пока не создали ни одного виджета. Если вы только что его создали - нажмите F5 т.к. виджет создаётся без перезагрузки страницы.</div>
-		<?endif?>
+		<?php endif?>
 	</div>
 </div> <!-- .content -->
-<?=$showDeleteInfo?>
-
+<?php echo $showDeleteInfo?>

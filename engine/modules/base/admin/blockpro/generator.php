@@ -113,7 +113,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Шаблон блока <b>blockpro/</b>
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<?=$optTemplates?>
+				<?php echo $optTemplates?>
 			</div>
 		</div>
 
@@ -122,7 +122,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Количество новостей в блоке
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input input-short mr10" type="number" name="limit" value="<?=($cfg['limit'] != 10) ? $cfg['limit'] : '';?>" placeholder="<?=$cfg['limit']?>"> начать с <input class="input input-short ml10" type="number" name="startFrom" value="<?=($cfg['startFrom'] > 0) ? $cfg['startFrom'] : '';?>" placeholder="<?=$cfg['startFrom']?>">
+				<input class="input input-short mr10" type="number" name="limit" value="<?php echo ($cfg['limit'] != 10) ? $cfg['limit'] : '';?>" placeholder="<?php echo $cfg['limit']?>"> начать с <input class="input input-short ml10" type="number" name="startFrom" value="<?php echo ($cfg['startFrom'] > 0) ? $cfg['startFrom'] : '';?>" placeholder="<?php echo $cfg['startFrom']?>">
 			</div>
 		</div>
 
@@ -133,31 +133,31 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<select name="sort" class="styler">
 					<option value="">Стандартный топ</option>
-					<option value="none"        <?if($cfg['sort'] == 'none'):?> selected <?endif?>>Без сортировки</option>
-					<option value="date"        <?if($cfg['sort'] == 'date'):?> selected <?endif?>>По дате добавления</option>
-					<option value="rating"      <?if($cfg['sort'] == 'rating'):?> selected <?endif?>>По рейтингу</option>
-					<option value="comms"       <?if($cfg['sort'] == 'comms'):?> selected <?endif?>>По кол-ву комментариев</option>
-					<option value="views"       <?if($cfg['sort'] == 'views'):?> selected <?endif?>>По кол-ву просмотов</option>
-					<option value="random"      <?if($cfg['sort'] == 'random'):?> selected <?endif?>>В случаном порядке</option>
-					<option value="randomLight" <?if($cfg['sort'] == 'randomLight'):?> selected <?endif?>>В случаном порядке (Light)</option>
-					<option value="title"       <?if($cfg['sort'] == 'title'):?> selected <?endif?>>По алфавиту</option>
-					<option value="hit"         <?if($cfg['sort'] == 'hit'):?> selected <?endif?>>Хит (Правильный топ)</option>
-					<option value="download"    <?if($cfg['sort'] == 'download'):?> selected <?endif?>>По кол-ву скачиваний</option>
-					<option value="symbol"      <?if($cfg['sort'] == 'symbol'):?> selected <?endif?>>По символьному коду</option>
-					<option value="editdate"    <?if($cfg['sort'] == 'editdate'):?> selected <?endif?>>По дате редактирования</option>
-					<?=showXFields('sort', 'xf|', true)?>
+					<option value="none"        <?php if($cfg['sort'] == 'none'):?> selected <?php endif?>>Без сортировки</option>
+					<option value="date"        <?php if($cfg['sort'] == 'date'):?> selected <?php endif?>>По дате добавления</option>
+					<option value="rating"      <?php if($cfg['sort'] == 'rating'):?> selected <?php endif?>>По рейтингу</option>
+					<option value="comms"       <?php if($cfg['sort'] == 'comms'):?> selected <?php endif?>>По кол-ву комментариев</option>
+					<option value="views"       <?php if($cfg['sort'] == 'views'):?> selected <?php endif?>>По кол-ву просмотов</option>
+					<option value="random"      <?php if($cfg['sort'] == 'random'):?> selected <?php endif?>>В случаном порядке</option>
+					<option value="randomLight" <?php if($cfg['sort'] == 'randomLight'):?> selected <?php endif?>>В случаном порядке (Light)</option>
+					<option value="title"       <?php if($cfg['sort'] == 'title'):?> selected <?php endif?>>По алфавиту</option>
+					<option value="hit"         <?php if($cfg['sort'] == 'hit'):?> selected <?php endif?>>Хит (Правильный топ)</option>
+					<option value="download"    <?php if($cfg['sort'] == 'download'):?> selected <?php endif?>>По кол-ву скачиваний</option>
+					<option value="symbol"      <?php if($cfg['sort'] == 'symbol'):?> selected <?php endif?>>По символьному коду</option>
+					<option value="editdate"    <?php if($cfg['sort'] == 'editdate'):?> selected <?php endif?>>По дате редактирования</option>
+					<?php echo showXFields('sort', 'xf|', true)?>
 				</select>
 				<p>
-					<input class="radio" id="orderNEW" type="radio" name="order" value="new" <? if($cfg['order'] != 'old'):?> checked <?endif?>>
+					<input class="radio" id="orderNEW" type="radio" name="order" value="new" <?php if($cfg['order'] != 'old'):?> checked <?php endif?>>
 					<label for="orderNEW" class="mr10"><span></span>По убыванию</label>
-					<input class="radio" id="orderOLD" type="radio" name="order" value="old" <? if($cfg['order'] == 'old'):?> checked <?endif?>>
+					<input class="radio" id="orderOLD" type="radio" name="order" value="old" <?php if($cfg['order'] == 'old'):?> checked <?php endif?>>
 					<label for="orderOLD" class="mr10"><span></span>По возрастанию</label>
-					<input class="radio" id="orderASIS" type="radio" name="order" value="asis" <? if($cfg['order'] == 'asis'):?> checked <?endif?>>
+					<input class="radio" id="orderASIS" type="radio" name="order" value="asis" <?php if($cfg['order'] == 'asis'):?> checked <?php endif?>>
 					<label for="orderASIS"><span></span>Как есть</label>
 				</p>
 				<div class="alert alert-info">Для правильной сортировки "Как есть" не забывайте указывать конкретные ID новостей (или диапазон)</div>
 				<p>
-					<input class="checkbox" id="xfSortTypeCheckbox" type="checkbox" name="xfSortType" value="string" <? if($cfg['xfSortType'] == 'string'):?> checked <?endif?>>
+					<input class="checkbox" id="xfSortTypeCheckbox" type="checkbox" name="xfSortType" value="string" <?php if($cfg['xfSortType'] == 'string'):?> checked <?php endif?>>
 					<label for="xfSortTypeCheckbox" class="mr10"><span></span>Сортировать по значению допполя как по строке</label>
 				</p>
 				<div class="alert alert-info">Опция имеет смысл только при сортировке по значению допполя и если в допполе хранится строка, а не число. К примеру фамилия режиссёра фильма, а не цена или год. <br>Так же рекомендуется добавлять в фильтрацию по именам допполей выбранное допполе для исключения из вывода новостей с пустыми полями.</div>
@@ -169,8 +169,8 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Период и интервал для отбора новостей
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				Период: <input class="input input-short mr10" type="number" name="day" value="<?=$cfg['day']?>" placeholder="day">
-				Интервал: <input class="input input-short mr10" style="width: 100px;" type="number" name="dayCount" value="<?=$cfg['dayCount']?>" placeholder="dayCount">
+				Период: <input class="input input-short mr10" type="number" name="day" value="<?php echo $cfg['day']?>" placeholder="day">
+				Интервал: <input class="input input-short mr10" style="width: 100px;" type="number" name="dayCount" value="<?php echo $cfg['dayCount']?>" placeholder="dayCount">
 				<div class="alert alert-info">
 					<p>К примеру нужно вывести новости за прошлую неделю. Код: <code>&day=14&dayCount=7</code> выведет новости за период 14 дней с интервалом в 7 дней, что и есть прошлая неделя. </p>
 					<p>
@@ -185,7 +185,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Постраничная навигация
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="checkbox" type="checkbox" value="y" name="showNav" id="showNav"  <?=$showNav_checked?>> <label for="showNav"><span></span> Выводить навигацию</label>
+				<input class="checkbox" type="checkbox" value="y" name="showNav" id="showNav"  <?php echo $showNav_checked?>> <label for="showNav"><span></span> Выводить навигацию</label>
 				<div class="alert">Добавит 1 лёгкий запрос на блок</div>
 			</div>
 		</div>
@@ -194,7 +194,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				&nbsp;
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="checkbox" type="checkbox" value="y" name="navDefaultGet" id="navDefaultGet"  <?=$navDefaultGet_checked?>> <label for="navDefaultGet"><span></span> Отслеживать стандартную навигацию DLE</label>
+				<input class="checkbox" type="checkbox" value="y" name="navDefaultGet" id="navDefaultGet"  <?php echo $navDefaultGet_checked?>> <label for="navDefaultGet"><span></span> Отслеживать стандартную навигацию DLE</label>
 				<div class="alert alert-info">При указании этого параметра модуль будет брать значение текущей страницы и формировать постраничную навигацию так же как это делается в DLE. Переход между страницами новостей будет осуществляться с перезагрузкой страницы.</div>
 			</div>
 		</div>
@@ -205,11 +205,11 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<select name="navStyle" class="styler">
-					<option value=""        <?if($cfg['navStyle'] == 'classic'):?> selected <?endif?>>classic</option>
-					<option value="digg"    <?if($cfg['navStyle'] == 'digg'):?> selected <?endif?>>digg</option>
-					<option value="extended"<?if($cfg['navStyle'] == 'extended'):?> selected <?endif?>>extended</option>
-					<option value="punbb"   <?if($cfg['navStyle'] == 'punbb'):?> selected <?endif?>>punbb</option>
-					<option value="arrows"  <?if($cfg['navStyle'] == 'arrows'):?> selected <?endif?>>arrows</option>
+					<option value=""        <?php if($cfg['navStyle'] == 'classic'):?> selected <?php endif?>>classic</option>
+					<option value="digg"    <?php if($cfg['navStyle'] == 'digg'):?> selected <?php endif?>>digg</option>
+					<option value="extended"<?php if($cfg['navStyle'] == 'extended'):?> selected <?php endif?>>extended</option>
+					<option value="punbb"   <?php if($cfg['navStyle'] == 'punbb'):?> selected <?php endif?>>punbb</option>
+					<option value="arrows"  <?php if($cfg['navStyle'] == 'arrows'):?> selected <?php endif?>>arrows</option>
 				</select>
 			</div>
 		</div>
@@ -219,7 +219,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Начальная страница в блоке
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input input-short mr10" type="number" name="pageNum" value="<?=$cfg['pageNum']?>"> (при загрузке без AJAX)
+				<input class="input input-short mr10" type="number" name="pageNum" value="<?php echo $cfg['pageNum']?>"> (при загрузке без AJAX)
 			</div>
 		</div>
 
@@ -240,9 +240,9 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Режим вывода похожих новостей
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input input-short mr10" type="text" name="related" value="<?=$cfg['related']?>"> (например this или 7)
+				<input class="input input-short mr10" type="text" name="related" value="<?php echo $cfg['related']?>"> (например this или 7)
 				<p>
-					<input class="checkbox" id="saveRelated" type="checkbox" name="saveRelated" value="y" <? if($cfg['saveRelated']):?> checked <?endif?>>
+					<input class="checkbox" id="saveRelated" type="checkbox" name="saveRelated" value="y" <?php if($cfg['saveRelated']):?> checked <?php endif?>>
 					<label for="saveRelated"><span></span>Записывать похожие новости в БД (ускоряет работу)</label>
 				</p>
 				<div class="alert alert-info">
@@ -256,7 +256,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Режим афиши
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="checkbox" type="checkbox" value="y" name="future" id="future"  <?=$future_checked?>> <label for="future"><span></span> включить</label>
+				<input class="checkbox" type="checkbox" value="y" name="future" id="future"  <?php echo $future_checked?>> <label for="future"><span></span> включить</label>
 				<div class="alert alert-info">
 					<div>При включении режима афиши дни будут прибавляться, а не вычитаться.</div>
 					<div><a href="engine/modules/base/admin/blockpro/images/days.png" title="Красным полупрозрачным блоком выделены дни, новости которых попадут в вывод." class="open-img">Пояснение по временным параметрам</a></div>
@@ -279,9 +279,9 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Время жизни кеша (мин)
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input input-short mr10" type="number" name="cacheLive" value="<?=$cfg['cacheLive']?>"> например 180 — это 3 часа
+				<input class="input input-short mr10" type="number" name="cacheLive" value="<?php echo $cfg['cacheLive']?>"> например 180 — это 3 часа
 				<p>
-					<input class="checkbox" type="checkbox" value="y" name="nocache" id="nocache"  <?=$nocache_checked?>> <label for="nocache"><span></span> отключить кеширование блока</label>
+					<input class="checkbox" type="checkbox" value="y" name="nocache" id="nocache"  <?php echo $nocache_checked?>> <label for="nocache"><span></span> отключить кеширование блока</label>
 				</p>
 				<div class="alert alert-info">Не забывайте, что шаблон модуля кешируется отдельно, поэтому на время работы с шаблоном лучше отключать кеширование блока. <br>Время жизни кеша работает только с файловым кешем.</div>
 			</div>
@@ -291,7 +291,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				&nbsp;
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="checkbox" type="checkbox" value="y" name="showstat" id="showstat"  <?=$showstat_checked?>> <label for="showstat"><span></span> Показывать статистику по блоку</label>
+				<input class="checkbox" type="checkbox" value="y" name="showstat" id="showstat"  <?php echo $showstat_checked?>> <label for="showstat"><span></span> Показывать статистику по блоку</label>
 			</div>
 		</div>
 	</div> <!-- .logic-block -->
@@ -311,11 +311,11 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<select data-placeholder="Выберите категории" name="catId[]" class="styler" multiple>
-					<?=base_get_category()?>
+					<?php echo base_get_category()?>
 				</select>
 				<br>
-				<input class="input mt10" type="text" name="catId[]" value="<?=$cfg['catId']?>" placeholder="или так: 1-10,15,18,45-150 или this"> <br>
-				<input class="checkbox" type="checkbox" value="y" name="subcats" id="subcats"  <?=$subcats_checked?>> <label for="subcats"><span></span> Выводить подкатегории выбранных категорий</label>
+				<input class="input mt10" type="text" name="catId[]" value="<?php echo $cfg['catId']?>" placeholder="или так: 1-10,15,18,45-150 или this"> <br>
+				<input class="checkbox" type="checkbox" value="y" name="subcats" id="subcats"  <?php echo $subcats_checked?>> <label for="subcats"><span></span> Выводить подкатегории выбранных категорий</label>
 			</div>
 		</div>
 
@@ -325,11 +325,11 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<select data-placeholder="Выберите категории" name="notCatId[]" class="styler" multiple>
-					<?=base_get_category()?>
+					<?php echo base_get_category()?>
 				</select>
 				<br>
-				<input class="input mt10" type="text" name="notCatId[]" value="<?=$cfg['notCatId']?>" placeholder="или так: 1-10,15,18,45-150 или this"> <br>
-				<input class="checkbox" type="checkbox" value="y" name="notSubcats" id="notSubcats"  <?=$notSubcats_checked?>> <label for="notSubcats"><span></span> Игнорировать подкатегории выбранных категорий</label>
+				<input class="input mt10" type="text" name="notCatId[]" value="<?php echo $cfg['notCatId']?>" placeholder="или так: 1-10,15,18,45-150 или this"> <br>
+				<input class="checkbox" type="checkbox" value="y" name="notSubcats" id="notSubcats"  <?php echo $notSubcats_checked?>> <label for="notSubcats"><span></span> Игнорировать подкатегории выбранных категорий</label>
 				
 			</div>
 		</div>
@@ -339,7 +339,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				&nbsp;
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">	
-				<input class="checkbox" type="checkbox" value="y" name="thisCatOnly" id="thisCatOnly"  <?=$thisCatOnly_checked?>> <label for="thisCatOnly"><span></span> Выводить/игнорировать новости только из текущей категории</label>
+				<input class="checkbox" type="checkbox" value="y" name="thisCatOnly" id="thisCatOnly"  <?php echo $thisCatOnly_checked?>> <label for="thisCatOnly"><span></span> Выводить/игнорировать новости только из текущей категории</label>
 				<div class="alert alert-info">
 					Вывод новостей только из текущей категории имеет смысл при выводе похожих новостей, если используются мультикатегории и если нужно вывести или исключить из вывода новости, принадлежащие только к просматриваемой категории. 
 				</div>
@@ -351,7 +351,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				ID новостей для вывода
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input" type="text" name="postId" value="<?=$cfg['postId']?>" placeholder="можно так: 1-10,15,18,45-150 или this">
+				<input class="input" type="text" name="postId" value="<?php echo $cfg['postId']?>" placeholder="можно так: 1-10,15,18,45-150 или this">
 			</div>
 		</div>
 
@@ -360,7 +360,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				ID игнорируемых новостей
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input" type="text" name="notPostId" value="<?=$cfg['notPostId']?>" placeholder="можно так: 1-10,15,18,45-150 или this">
+				<input class="input" type="text" name="notPostId" value="<?php echo $cfg['notPostId']?>" placeholder="можно так: 1-10,15,18,45-150 или this">
 			</div>
 		</div>
 	</div> <!-- .logic-block -->
@@ -379,7 +379,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Новости на модерации
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="checkbox" type="checkbox" value="y" name="moderate" id="moderate"  <?=$moderate_checked?>> <label for="moderate"><span></span> показывать</label>
+				<input class="checkbox" type="checkbox" value="y" name="moderate" id="moderate"  <?php echo $moderate_checked?>> <label for="moderate"><span></span> показывать</label>
 			</div>
 		</div>
 		<div class="content">
@@ -388,9 +388,9 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<select name="fixed" class="styler">
-					<option value="yes" <? if($cfg['fixed'] == 'yes'):?> selected <?endif?>>Показывать вместе с обычными</option>
-					<option value="only" <? if($cfg['fixed'] == 'only'):?> selected <?endif?> >Показывать только фиксированные</option>
-					<option value="without" <? if($cfg['fixed'] == 'without'):?> selected <?endif?> >Показывать только обычные</option>
+					<option value="yes" <?php if($cfg['fixed'] == 'yes'):?> selected <?php endif?>>Показывать вместе с обычными</option>
+					<option value="only" <?php if($cfg['fixed'] == 'only'):?> selected <?php endif?> >Показывать только фиксированные</option>
+					<option value="without" <?php if($cfg['fixed'] == 'without'):?> selected <?php endif?> >Показывать только обычные</option>
 				</select>
 			</div>
 		</div>
@@ -401,9 +401,9 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<select name="allowMain" class="styler">
-					<option value="yes" <? if($cfg['allowMain'] == 'yes'):?> selected <?endif?>>Показывать все</option>
-					<option value="only" <? if($cfg['allowMain'] == 'only'):?> selected <?endif?> >Показывать только опубликованные на главной</option>
-					<option value="without" <? if($cfg['allowMain'] == 'without'):?> selected <?endif?> >Показывать только неопубликованные на главной</option>
+					<option value="yes" <?php if($cfg['allowMain'] == 'yes'):?> selected <?php endif?>>Показывать все</option>
+					<option value="only" <?php if($cfg['allowMain'] == 'only'):?> selected <?php endif?> >Показывать только опубликованные на главной</option>
+					<option value="without" <?php if($cfg['allowMain'] == 'without'):?> selected <?php endif?> >Показывать только неопубликованные на главной</option>
 				</select>
 			</div>
 		</div>
@@ -413,7 +413,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Дополнительные колонки, отбираемые из БД
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input" type="text" name="fields" value="<?=$cfg['fields']?>" placeholder="p.custom,e.extra">
+				<input class="input" type="text" name="fields" value="<?php echo $cfg['fields']?>" placeholder="p.custom,e.extra">
 			</div>
 		</div>
 
@@ -434,7 +434,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				<small>Проверется только заполенность полей</small>
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<?=showXFields('xfilter')?>
+				<?php echo showXFields('xfilter')?>
 			</div>
 		</div>
 
@@ -444,7 +444,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				<small>Проверется только заполенность полей</small>
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<?=showXFields('notXfilter')?>
+				<?php echo showXFields('notXfilter')?>
 				<div class="alert alert-info">
 					Можно использовать <code>&amp;xfilter=this</code> и <code>&amp;notXfilter=this</code> для показа новостей, содержащих текущее 	допполе при просмотре страниц /xfsearch/
 				</div>
@@ -456,7 +456,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Данные для фильтрации по значению допполей (не зависит от настроек выше)
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input" type="text" name="xfSearch" value="<?=$cfg['xfSearch']?>" placeholder="имя_поля|значение||имя_поля|значение">
+				<input class="input" type="text" name="xfSearch" value="<?php echo $cfg['xfSearch']?>" placeholder="имя_поля|значение||имя_поля|значение">
 			</div>
 		</div>
 
@@ -465,7 +465,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Данные для исключающей фильтрации по значению допполей
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input" type="text" name="notXfSearch" value="<?=$cfg['notXfSearch']?>" placeholder="имя_поля|значение||имя_поля|значение">
+				<input class="input" type="text" name="notXfSearch" value="<?php echo $cfg['notXfSearch']?>" placeholder="имя_поля|значение||имя_поля|значение">
 			</div>
 		</div>
 
@@ -474,9 +474,9 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Логика фильтрации по значению допполей
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="radio" id="xfSearchLogicOR" type="radio" name="xfSearchLogic" <? if($cfg['xfSearchLogic'] != 'AND'):?> checked <?endif?>>
+				<input class="radio" id="xfSearchLogicOR" type="radio" name="xfSearchLogic" <?php if($cfg['xfSearchLogic'] != 'AND'):?> checked <?php endif?>>
 				<label for="xfSearchLogicOR"><span></span>ИЛИ (OR)</label>
-				<input class="radio" id="xfSearchLogicAND" type="radio" name="xfSearchLogic" value="AND" <? if($cfg['xfSearchLogic'] == 'AND'):?> checked <?endif?>>
+				<input class="radio" id="xfSearchLogicAND" type="radio" name="xfSearchLogic" value="AND" <?php if($cfg['xfSearchLogic'] == 'AND'):?> checked <?php endif?>>
 				<label for="xfSearchLogicAND" class="ml10"><span></span>И (AND)</label>
 
 			</div>
@@ -498,7 +498,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				&nbsp;
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="checkbox" type="checkbox" value="y" name="avatar" id="avatar"  <?=$avatar_checked?>> <label for="avatar"><span></span> Выводить аватарку автора новости</label>
+				<input class="checkbox" type="checkbox" value="y" name="avatar" id="avatar"  <?php echo $avatar_checked?>> <label for="avatar"><span></span> Выводить аватарку автора новости</label>
 				<div class="alert">Слегка утяжелит запрос в БД</div>
 			</div>
 		</div>
@@ -507,7 +507,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Логины авторов, для показа их новостей
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input" type="text" name="author" value="<?=$cfg['author']?>" placeholder="Иван,admin,Петр">
+				<input class="input" type="text" name="author" value="<?php echo $cfg['author']?>" placeholder="Иван,admin,Петр">
 			</div>
 		</div>
 
@@ -516,7 +516,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Логины авторов, для исключения их новостей
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input" type="text" name="notAuthor" value="<?=$cfg['notAuthor']?>" placeholder="Михаил,username">
+				<input class="input" type="text" name="notAuthor" value="<?php echo $cfg['notAuthor']?>" placeholder="Михаил,username">
 			</div>
 		</div>
 		<div class="content">
@@ -524,7 +524,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Теги из облака тегов для показа новостей, содержащих их
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input" type="text" name="tags" value="<?=$cfg['tags']?>" placeholder="tag1,tag2">
+				<input class="input" type="text" name="tags" value="<?php echo $cfg['tags']?>" placeholder="tag1,tag2">
 			</div>
 		</div>
 
@@ -533,7 +533,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Теги из облака тегов для игнорирования новостей, содержащих их
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input" type="text" name="notTags" value="<?=$cfg['notTags']?>" placeholder="tag1,tag2">
+				<input class="input" type="text" name="notTags" value="<?php echo $cfg['notTags']?>" placeholder="tag1,tag2">
 			</div>
 		</div>
 	</div> <!-- .logic-block -->
@@ -551,7 +551,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 		</div>
 		<div class="col col-mb-12 col-7 col-dt-8 form-control">
 			<button class="btn ladda-button" type="submit" data-style="expand-left"><span class="ladda-label">Применить</span></button>
-			<a class="btn btn-link" href="<?=$PHP_SELF?>?mod=blockpro">Сбросить</a>
+			<a class="btn btn-link" href="<?php echo $PHP_SELF?>?mod=blockpro">Сбросить</a>
 		</div>
 	</div>
 
