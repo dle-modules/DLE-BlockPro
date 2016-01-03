@@ -532,7 +532,7 @@ if (!$output) {
 			}
 
 			// Добавляем полученные данные (и логику) в основной массив, формирующий запрос
-			$wheres[] = implode($_xfSearchLogic, $xfWheres);
+			$wheres[] = '(' . implode($_xfSearchLogic, $xfWheres) . ')';
 		}
 
 		// Фильтрация новостей по ТЕГАМ

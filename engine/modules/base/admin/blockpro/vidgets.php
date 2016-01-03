@@ -44,7 +44,6 @@ if (isset($_POST['blockId']) && $_POST['widgetDelete'] == 'Y') {
 				<?php 
 				
 					$params = unserialize($vidgetItem['params']);
-					echo "<pre class='dle-pre'>"; var_dump($params); echo "</pre>";
 					$vidgetModuleUrl = 'include file="engine/modules/base/blockpro.php';
 					$vidgetParamsUrl = array();
 
