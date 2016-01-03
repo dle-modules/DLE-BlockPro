@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 =============================================================================
 BLockPro - основной модуль
@@ -99,8 +99,13 @@ if ($isAjaxConfig) {
 	);
 }
 
-// Сбрасываем значение $cfg['cacheNameAddon'] иначе будут проблемы с ajax 
-// $cfg['cacheNameAddon'] = '';
+/**
+ * var array $bpConfig
+ */
+include ENGINE_DIR . '/data/blockpro.php';
+
+// Объединяем массивы конфигов
+$cfg = array_merge($cfg, $bpConfig);
 
 // Если имеются переменные со значениями this, изменяем значение переменной cacheNameAddon
 if ($cfg['catId'] == 'this') {
@@ -225,7 +230,7 @@ if (!$output) {
 	$bpProtect->local_key_name = 'blockpro.lic';
 	$bpProtect->server = 'http://api.pafnuty.name/api.php';
 	$bpProtect->release_date = '2015-07-18'; // гггг-мм-дд
-	$bpProtect->activation_key = @file_get_contents(ENGINE_DIR . '/data/blockpro.key');
+	$bpProtect->activation_key = $cfg['activation_key'];
 
 	$bpProtect->status_messages = array(
 		'status_1'                       => '<span style="color:green;">Активна</span>',

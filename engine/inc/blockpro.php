@@ -155,6 +155,15 @@ $cfg = array(
 	'notSymbols' => !empty($notSymbols) ? $notSymbols : false, // Символьные коды для исключающей фильтрации по символьному каталогу. Перечисляем через запятую или пишем this для текущего символьного кода
 	'fields' => !empty($fields) ? $fields : false, // Дополнение к выборке полей из БД (p.field,e.field)
 );
+
+/**
+ * var array $bpConfig
+ */
+include ENGINE_DIR . '/data/blockpro.php';
+
+// Объединяем массивы конфигов
+$cfg = array_merge($cfg, $bpConfig);
+
 if ($_REQUEST['setPreview']) {
 	// Формируем имя кеш-файла с конфигом
 	$pageCahceName = $cfg;
@@ -240,46 +249,46 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="<?=$config['charset']?>">
+		<meta charset="<?php echo $config['charset']?>">
 		<title>BlockPro</title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link rel="stylesheet" href="engine/modules/base/admin/blockpro/css/main.css?v=<?=$moduleVersion?>">
+		<link rel="stylesheet" href="engine/modules/base/admin/blockpro/css/main.css?v=<?php echo $moduleVersion?>">
 		<script>
-			var dle_root = '<?=$config['http_home_url']?>';
-			var dle_skin = '<?=$config['skin']?>';
+			var dle_root = '<?php echo $config['http_home_url']?>';
+			var dle_skin = '<?php echo $config['skin']?>';
 		</script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/autosize.js/1.18.1/jquery.autosize.min.js"></script>
 
-		<script src="engine/modules/base/admin/blockpro/js/jquery.form.min.js?v=<?=$moduleVersion?>"></script>
-		<script src="engine/modules/base/admin/blockpro/js/jquery.ladda.min.js?v=<?=$moduleVersion?>"></script>
-		<script src="engine/modules/base/admin/blockpro/js/jquery.easyResponsiveTabs.min.js?v=<?=$moduleVersion?>"></script>
-		<script src="engine/modules/base/admin/blockpro/js/jquery.magnificpopup.min.js?v=<?=$moduleVersion?>"></script>
-		<script src="engine/modules/base/admin/blockpro/js/jquery.chosen.min.js?v=<?=$moduleVersion?>"></script>
-		<script src="engine/modules/base/admin/blockpro/js/main.js?v=<?=$moduleVersion?>"></script>
+		<script src="engine/modules/base/admin/blockpro/js/jquery.form.min.js?v=<?php echo $moduleVersion?>"></script>
+		<script src="engine/modules/base/admin/blockpro/js/jquery.ladda.min.js?v=<?php echo $moduleVersion?>"></script>
+		<script src="engine/modules/base/admin/blockpro/js/jquery.easyResponsiveTabs.min.js?v=<?php echo $moduleVersion?>"></script>
+		<script src="engine/modules/base/admin/blockpro/js/jquery.magnificpopup.min.js?v=<?php echo $moduleVersion?>"></script>
+		<script src="engine/modules/base/admin/blockpro/js/jquery.chosen.min.js?v=<?php echo $moduleVersion?>"></script>
+		<script src="engine/modules/base/admin/blockpro/js/main.js?v=<?php echo $moduleVersion?>"></script>
 	</head>
 	<body>
 		<div class="container container-blue">
 			<header class="content">
 				<div class="col col-mb-12 col-6">
-					<a href="<?=$PHP_SELF ?>?mod=main" class="btn btn-small btn-white"><?=$lang['skin_main'] ?></a>
-					<a class="btn btn-small btn-white" href="<?=$PHP_SELF ?>?mod=options&amp;action=options"
+					<a href="<?php echo $PHP_SELF ?>?mod=main" class="btn btn-small btn-white"><?php echo $lang['skin_main'] ?></a>
+					<a class="btn btn-small btn-white" href="<?php echo $PHP_SELF ?>?mod=options&amp;action=options"
 					   title="Список всех разделов">Список всех разделов</a>
-					<a href="<?=$config['http_home_url'] ?>" target="_blank"
-					   class="btn btn-small btn-white"><?=$lang['skin_view'] ?></a>
+					<a href="<?php echo $config['http_home_url'] ?>" target="_blank"
+					   class="btn btn-small btn-white"><?php echo $lang['skin_view'] ?></a>
 				</div>
 				<div class="col col-mb-12 col-6 ta-right">
-					<?=$member_id['name'] . ' <small class="hide-phone">(' . $user_group[$member_id['user_group']]['group_name'] . ')</small> ' ?>
-					<a href="<?=$PHP_SELF ?>?action=logout" class="btn btn-small btn-red"><?=$lang['skin_logout'] ?></a>
+					<?php echo $member_id['name'] . ' <small class="hide-phone">(' . $user_group[$member_id['user_group']]['group_name'] . ')</small> ' ?>
+					<a href="<?php echo $PHP_SELF ?>?action=logout" class="btn btn-small btn-red"><?php echo $lang['skin_logout'] ?></a>
 				</div>
 			</header>
 		</div>
 		<div class="container">
 			<div class="content">
 				<div class="col col-mb-12 col-12">
-					<h1 class="ta-center mb10">BlockPro <small class="text-muted fz20">(<?=$moduleVersion?>)</small> <span class="btn btn-small btn-red mfp-open-ajax" data-mfp-src="engine/ajax/base/check_updates.php?name=<?=$moduleName?>&currentVersion=<?=$moduleVersion?>">Проверить обновления</span></h1>
+					<h1 class="ta-center mb10">BlockPro <small class="text-muted fz20">(<?php echo $moduleVersion?>)</small> <span class="btn btn-small btn-red mfp-open-ajax" data-mfp-src="engine/ajax/base/check_updates.php?name=<?php echo $moduleName?>&currentVersion=<?php echo $moduleVersion?>">Проверить обновления</span></h1>
 					<div class="ta-center">Статус лицензии: <span id="licenseStatus"></span></div>
 					<hr>
 				</div> <!-- .col col-mb-12 col-12 -->
@@ -297,13 +306,13 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 
 						<div class="resp-tabs-container">
 							<div>
-								<?include(MODULE_DIR . 'generator.php');?>
+								<?php include(MODULE_DIR . 'generator.php');?>
 							</div>
 							<div>
 								<div class="content">
 									<div class="col col-mb-12">
-										<?if ($_REQUEST['setPreview']): ?>
-											<?
+										<?php if ($_REQUEST['setPreview']): ?>
+											<?php 
 												$moduleUrl = 'include file="engine/modules/base/blockpro.php';
 												$paramsUrl = array();
 
@@ -351,15 +360,15 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 												}												
 												$moduleUrl .= implode('&amp;', $paramsUrl);
 											?>
-											<h2>Ваша строка подключения: <span class="btn btn-green btn-small btn-external-save" data-mfp-src="engine/ajax/base/save_block_pro.php?blockId=<?=$pageCahceName?>">Создать виджет</span></h2>
-											<textarea rows="1" class="input input-block-level code">{<?=$moduleUrl?>"}</textarea>
+											<h2>Ваша строка подключения: <span class="btn btn-green btn-small btn-external-save" data-mfp-src="engine/ajax/base/save_block_pro.php?blockId=<?php echo $pageCahceName?>">Создать виджет</span></h2>
+											<textarea rows="1" class="input input-block-level code">{<?php echo $moduleUrl?>"}</textarea>
 											<h2>Предпросмотр блока:</h2>
 											<hr>
 											<div class="content">
 												<script>
 													jQuery(document).ready(function($) {
-														var blockId = '<?=$pageCahceName?>',
-															pageNum = '<?=$cfg['pageNum']?>',
+														var blockId = '<?php echo $pageCahceName?>',
+															pageNum = '<?php echo $cfg['pageNum']?>',
 															$block = $('#preview_tab');
 
 														$.ajax({
@@ -383,18 +392,18 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 													});
 												</script>
 											</div>
-										<?else: ?>
+										<?php else: ?>
 											<div class="alert">
 												Нужно для начала задать параметры строки подключения на предыдущей вкладке
 											</div>
-										<?endif ?>
+										<?php endif ?>
 										<div id="preview_tab">
 										</div>
 									</div>
 								</div>
 							</div>
 							<div>
-								<?include(MODULE_DIR . 'vidgets.php');?>
+								<?php include(MODULE_DIR . 'vidgets.php');?>
 							</div>
 							<div>
 							<h2>Картинки</h2>

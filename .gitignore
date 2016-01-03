@@ -4,6 +4,7 @@
 !.gitignore
 # Кроме папок и файлов модуля
 !/engine/modules/base/
+!/engine/data/blockpro.php
 !/engine/ajax/base/
 !/engine/ajax/blockpro.php
 !/engine/inc/blockpro.php

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 =============================================================================
 Проверка статуса лицензии
@@ -22,7 +22,7 @@ if(!class_exists('Protect')) {
 $licenseStatus = false;
 // Проверяем лицензию.	
 	
-
+include ENGINE_DIR . '/data/blockpro.php';
 $protect = new Protect();
 $protect->secret_key = 'RdaDrhZFbf6cZqu';
 $protect->use_localhost = true;
@@ -30,7 +30,7 @@ $protect->local_key_path = ENGINE_DIR . '/data/';
 $protect->local_key_name = 'blockpro.lic';
 $protect->server = 'http://api.pafnuty.name/api.php';
 $protect->release_date = '2015-07-18'; // гггг-мм-дд
-$protect->activation_key = @file_get_contents(ENGINE_DIR . '/data/blockpro.key');
+$protect->activation_key = $bpConfig['activation_key'];
 
 $protect->status_messages = array(
 	'status_1'                       => '<span style="color:green;">Активна</span>',

@@ -1,4 +1,4 @@
-<?
+<?php
 // Первым делом подключаем DLE_API как это ни странно, но в данном случаи это упрощает жизнь разработчика.
 include('engine/api/api.class.php');
 
@@ -463,8 +463,8 @@ function chasetConflict($string)
 	<!DOCTYPE html>
 	<html>
 	<head>
-		<meta charset="<?= $fileCharset['charset'] ?>">
-		<title><?= $cfg['moduleTitle'] ?></title>
+		<meta charset="<?php echo $fileCharset['charset'] ?>">
+		<title><?php echo $cfg['moduleTitle'] ?></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<style>
 
@@ -477,8 +477,8 @@ function chasetConflict($string)
 		<header class="container top_nav-container container-blue">
 			<div class="content">
 				<div class="col col-mb-12 ta-center">
-					<a href="/" class="logo" title="<?= $cfg['moduleTitle'] ?>">
-						<img src="http://bp.pafnuty.name/images/logo.png" alt="<?= $cfg['moduleTitle'] ?>"/>
+					<a href="/" class="logo" title="<?php echo $cfg['moduleTitle'] ?>">
+						<img src="http://bp.pafnuty.name/images/logo.png" alt="<?php echo $cfg['moduleTitle'] ?>"/>
 					</a>
 				</div>
 			</div>
@@ -486,8 +486,8 @@ function chasetConflict($string)
 		<div class="container pb0">
 			<div class="content">
 				<div class="col col-mb-12 ta-center">
-					<h1><?= $cfg['moduleTitle'] ?></big> v.<?= $cfg['moduleVersion'] ?>
-						от <?= $cfg['moduleDate'] ?></h1>
+					<h1><?php echo $cfg['moduleTitle'] ?></big> v.<?php echo $cfg['moduleVersion'] ?>
+						от <?php echo $cfg['moduleDate'] ?></h1>
 						<div class="text-red">Обновление модуля с более ранней версии</div>
 					<hr>
 				</div>
@@ -496,7 +496,7 @@ function chasetConflict($string)
 		<div class="container">
 			<div class="content">
 				<div class="col col-mb-12">
-					<?
+					<?php
 					$output = installer();
 					echo $output;
 					?>
