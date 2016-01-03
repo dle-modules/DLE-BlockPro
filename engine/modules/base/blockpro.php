@@ -569,7 +569,7 @@ if (!$output) {
 			if ($tagsArr !== 'this') {
 				// Если в строке подключения &tags=this и мы просматриваем страницу тегов, то сюда уже попадёт название тега
 				$wherTag = ($_currentTag)
-				? $ignoreTags . 'tag = ' . $tagsArr
+				? $ignoreTags . 'tag = ' . $base->db->parse('?s', $tagsArr)
 				: $ignoreTags . 'tag regexp "[[:<:]](' . str_replace(',', '|', $tagsArr) . ')[[:>:]]"';
 				// Делаем запрос на получение ID новостей, содержащих требуемые теги
 				$tagNews = $base->db->getCol('SELECT news_id FROM ?n  WHERE ?p', PREFIX . '_tags', $wherTag);

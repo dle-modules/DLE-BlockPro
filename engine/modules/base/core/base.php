@@ -139,6 +139,8 @@ class base {
 
 	public function getPostUrl($data) {
 		global $cat_info;
+		
+		$data['date'] = strtotime($data['date']);
 
 		if ($this->dle_config['allow_alt_url'] && $this->dle_config['allow_alt_url'] != 'no') {
 			if (
