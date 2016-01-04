@@ -482,7 +482,7 @@ if (!$output) {
 				// Если в строке подключения &author=this и мы просматриваем страницу юзера, то сюда уже попадёт логин пользователя
 				$authorsArr = explode(',', $authorsArr);
 				$wheres[] = (count($authorsArr) === 1)
-				? $ignoreAuthors . 'autor = ' . $authorsArr[0]
+				? $ignoreAuthors . 'autor = ' . $base->db->parse('?s', $authorsArr[0])
 				: $ignoreAuthors . 'autor regexp "[[:<:]](' . implode('|', $authorsArr) . ')[[:>:]]"';
 			}
 		}
@@ -788,7 +788,7 @@ if (!$output) {
 				if (count(explode('@', $userFoto)) == 2) {
 					$list[$key]['avatar'] = 'http://www.gravatar.com/avatar/' . md5(trim($userFoto)) . '?s=' . intval($user_group[$value['user_group']]['max_foto']);
 				} else {
-					$list[$key]['avatar'] = $base->dle_config['http_home_url'] . 'uploads/fotos/' . $userFoto;
+					$list[$key]['avatar'] = ($base->dle_config['version_id'] > '10.5') ? $userFoto : $base->dle_config['http_home_url'] . 'uploads/fotos/' . $userFoto;
 				}
 			}
 
