@@ -40,22 +40,23 @@ class bpModifiers extends base {
 	/**
 	 * Функция ресайза картинок
 	 *
-	 * @param  string  $data       Строка, из которой будем выдёргивать картинку
-	 * @param  string  $noimage    картинка-заглушка
-	 * @param  string  $imageType  Тип картинки (small/original/intext) - для получения соответствующей картинки или массива картинок
-	 * @param  integer/string $number     Номер картинки в контенте или all для вывода всех картинок
-	 * @param  string  $size       Размер картики (например 100 или 100x150)
-	 * @param  string  $quality    Качество картинки (0-100)
-	 * @param  string  $resizeType Тип ресайза (exact, portrait, landscape, auto, crop)
-	 * @param  boolean $grabRemote Грабить сторонние картинки к себе (true/false)
-	 * @param  boolean $showSmall  Обрабатывать уменьшенную копию, если есть
-	 * @param  boolean $subdir     Подпапка для картинок (иногда бывает нужно)
-	 * @param  array   $config     Массив с конфигом DLE
+	 * @param  string        	$data         Строка, из которой будем выдёргивать картинку
+	 * @param  string        	$noimage      Картинка-заглушка
+	 * @param  string        	$imageType    Тип картинки (small/original/intext) - для получения соответствующей картинки или массива картинок
+	 * @param  integer/string	$number       Номер картинки в контенте или all для вывода всех картинок
+	 * @param  string        	$size         Размер картики (например 100 или 100x150)
+	 * @param  string        	$quality      Качество картинки (0-100)
+	 * @param  string        	$resizeType   Тип ресайза (exact, portrait, landscape, auto, crop)
+	 * @param  boolean       	$grabRemote   Грабить сторонние картинки к себе (true/false)
+	 * @param  boolean       	$showSmall    Обрабатывать уменьшенную копию, если есть
+	 * @param  boolean       	$subdir       Подпапка для картинок (иногда бывает нужно)
+	 * @param  array         	$config       Массив с конфигом DLE
+	 * @param  string         	$service      Сервис, серез который будем делать ресайз (local/tinypng/kraken)
 	 *
-	 * @return string              Путь к уменьшенной или оригинальной картнке
+	 * @return string                         Путь к уменьшенной или оригинальной картнке
 	 */
 
-	public static function getImage($data, $noimage = '', $imageType = 'small', $number, $size, $quality, $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false, $config = array()) {
+	public static function getImage($data, $noimage = '', $imageType = 'small', $number, $size, $quality, $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false, $config = [], $service = 'local') {
 
 		$resizeType = ($resizeType == '' || !$resizeType) ? 'auto' : $resizeType ;
 		$quality = ($quality == '' || !$quality) ? '100' : $quality ;
@@ -155,30 +156,18 @@ class bpModifiers extends base {
 							if (!$isRemote) {
 								$imgResized = ROOT_DIR . $urlShort;
 							}
+
 							// Определяем новое имя файла
-							$fileName = $size . '_' . $resizeType . '_' . strtolower(basename($imgResized));
+							// $fileName =  md5($size . '_' . $resizeType . '_' . $imgResized) . '_' . $service . '.' . pathinfo($imgResized, PATHINFO_EXTENSION);
+							$fileName =  $size . '_' . $resizeType . '_' . md5($imgResized) . '_' . $service . '.' . pathinfo($imgResized, PATHINFO_EXTENSION);
 
 							// Если картинки нет в папке обработанных картинок
 							if(!file_exists($dir . $fileName)) {
 								// Если картинка локальная, или картинка внешняя и разрешено тянуть внешние — обработаем её.
 								if (!$isRemote || ($grabRemoteOn && $isRemote)) {
-									// Разделяем высоту и ширину
-									$imgSize = explode('x', $size);
+									$newFile = $dir . $fileName;
 
-									// Если указана только одна величина - присваиваем второй первую, будет квадрат для exact, auto и crop, иначе класс ресайза жестоко тупит, ожидая вторую переменную.
-									if (count($imgSize) == '1') {
-										$imgSize[1] = $imgSize[0];
-									}
-
-									// @TODO: по хорошему надо бы вынести ресайз в отдельный метод на случай, если понадобится другой класс для ресайза.
-									// Подрубаем класс для картинок
-									$resizeImg = new resize($imgResized);
-									$resizeImg->resizeImage( // Создание уменьшенной копии
-										$imgSize[0], // Размер картинки по ширине
-										$imgSize[1], // Размер картинки по высоте
-										$resizeType // Метод уменьшения (exact, portrait, landscape, auto, crop)
-									);
-									$resizeImg->saveImage($dir . $fileName, $quality); // Сохраняем картинку в заданную папку
+									self::getImageWith($service, $imgResized, $newFile, $size, $resizeType, $quality, $config);
 								}
 							} 
 							
@@ -217,6 +206,100 @@ class bpModifiers extends base {
 		return $arImages[$number];
 
 	}
+
+	public static function getImageWith($service = 'local', $originalFile, $newFile, $size, $method, $quality = '100', $config = []) {
+		// Разделяем высоту и ширину
+		$imgSize = explode('x', $size);
+
+		// Если указана только одна величина - присваиваем второй первую, будет квадрат для exact, auto и crop, иначе класс ресайза жестоко тупит, ожидая вторую переменную.
+		if (count($imgSize) == '1') {
+			$imgSize[1] = $imgSize[0];
+		}
+
+		switch ($service) {
+			// Тянем картинку через встроенный класс ресайза
+			case 'local':
+				// Определяемся с возможными методами уменьшения картинок.
+				$arMethods = ['exact', 'portrait', 'landscape', 'auto', 'crop'];
+				$resizeType = (in_array($method, $arMethods)) ? $method : 'auto';
+
+				// Подрубаем локальный класс для картинок
+				$resizeImg = new resize($originalFile);
+				$resizeImg->resizeImage( // Создание уменьшенной копии
+					$imgSize[0], // Размер картинки по ширине
+					$imgSize[1], // Размер картинки по высоте
+					$resizeType // Метод уменьшения (exact, portrait, landscape, auto, crop)
+				);
+				$resizeImg->saveImage($newFile, $quality); // Сохраняем картинку в заданную папку
+				break;
+
+			// Тянем картинку через tinyPNG
+			case 'tinypng':
+				
+				// Подключаем необходимые классы (да, без composer в DLE тяжело живётся).
+				require_once ENGINE_DIR . '/modules/base/resizers/tinypng/Tinify.php';
+				require_once ENGINE_DIR . '/modules/base/resizers/tinypng/Tinify/Client.php';
+				require_once ENGINE_DIR . '/modules/base/resizers/tinypng/Tinify/Exception.php';
+				require_once ENGINE_DIR . '/modules/base/resizers/tinypng/Tinify/ResultMeta.php';
+				require_once ENGINE_DIR . '/modules/base/resizers/tinypng/Tinify/Source.php';
+				require_once ENGINE_DIR . '/modules/base/resizers/tinypng/Tinify/Result.php';
+			
+				// Определяемся с возможными методами уменьшения картинок.
+				$arMethods = ['portrait', 'landscape', 'auto', 'crop'];
+				$resizeType = (in_array($method, $arMethods)) ? $method : 'auto';
+
+				// Определяемся с опциями обработки картинки
+				$imgSize[0] = (int)$imgSize[0];
+				$imgSize[1] = (int)$imgSize[1];
+
+				$arTinyOptions = [];
+
+				switch ($resizeType) {
+					case 'portrait':
+						$arTinyOptions = [
+							'method' => 'scale',
+							'height' => $imgSize[1],
+						];
+						break;
+
+					case 'landscape':
+						$arTinyOptions = [
+							'method' => 'scale',
+							'width' => $imgSize[0],
+						];
+						break;
+
+					case 'auto':
+						$arTinyOptions = [
+							'method' => 'fit',
+							'width' => $imgSize[0],
+							'height' => $imgSize[1],
+						];
+						break;
+
+					case 'crop':
+						$arTinyOptions = [
+							'method' => 'cover',
+							'width' => $imgSize[0],
+							'height' => $imgSize[1],
+						];
+						break;
+				}
+
+				// Вызываем класс и обрабатываем картинку
+				\Tinify\setKey($config['tinypng_key']);
+
+				$source = \Tinify\fromFile($originalFile);
+				$resized = $source->resize($arTinyOptions);
+				$resized->toFile($newFile);
+
+				unset($source, $resized);
+
+				break;
+		}
+	}
+
+
 
 	/**
 	 * Функция для правильного склонения слов

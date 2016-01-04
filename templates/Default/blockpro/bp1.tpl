@@ -14,11 +14,14 @@
 	В блоке {$newsCount} {$newsCount|declination:'новост|ь|и|ей'}
 	{*Пробегаем по массиву с новостями*}
 	{foreach $list as $el}
-	{* <pre><code>{$el|dump}</code></pre> *}
+
 		<div class="content content-border-bottom">
 			<div class="col col-mb-12">
 				рейтинг: {$el.showRating} {$el.showRatingCount}
+				{$el.short_story|tinypng:$noimage:'small':'1':'200x300':'':'auto':true:false:''}
+				{$el.short_story|tinypng:$noimage:'small':'all':'250':'':'crop':true:false:''}
 				<h3>
+
 					{$el.favorites}[{$el.id}] <a href="{$el.url}">{$el.title}</a> {if $el.allow_edit} <a href="#" {$el.editOnclick}>[редактировать]</a> {/if} (({$el.xfields.price}))
 				</h3>
 				<img src="{$el.avatar}" alt="{$el.name}" width="46">

@@ -18,7 +18,7 @@ use Fenom\Template;
  */
 class Fenom
 {
-    const VERSION = '2.7';
+    const VERSION = '2.8';
     const REV = 1;
     /* Actions */
     const INLINE_COMPILER = 1;
@@ -54,9 +54,11 @@ class Fenom
 
     const MAX_MACRO_RECURSIVE = 32;
 
-    const ACCESSOR_CUSTOM = null;
-    const ACCESSOR_VAR    = 'Fenom\Accessor::parserVar';
-    const ACCESSOR_CALL   = 'Fenom\Accessor::parserCall';
+    const ACCESSOR_CUSTOM   = null;
+    const ACCESSOR_VAR      = 'Fenom\Accessor::parserVar';
+    const ACCESSOR_CALL     = 'Fenom\Accessor::parserCall';
+    const ACCESSOR_PROPERTY = 'Fenom\Accessor::parserProperty';
+    const ACCESSOR_METHOD   = 'Fenom\Accessor::parserMethod';
 
     public static $charset = "UTF-8";
 
@@ -114,6 +116,11 @@ class Fenom
      * @var string compile directory
      */
     protected $_compile_dir = "/tmp";
+
+    /**
+     * @var string compile prefix ID template
+     */
+    protected $_compile_id;
 
     /**
      * @var string[] compile directory for custom provider
@@ -425,6 +432,18 @@ class Fenom
             throw new LogicException("Cache directory $dir is not writable");
         }
         $this->_compile_dir = $dir;
+        return $this;
+    }
+
+    /**
+     * Set compile prefix ID template
+     *
+     * @param string $id prefix ID to store compiled templates
+     * @return Fenom
+     */
+    public function setCompileId($id)
+    {
+        $this->_compile_id = $id;
         return $this;
     }
 
@@ -815,7 +834,7 @@ class Fenom
     /**
      * Add global accessor ($.)
      * @param string $name
-     * @param callable|string $accessor
+     * @param mixed $accessor
      * @param string $parser
      * @return Fenom
      */
@@ -944,7 +963,12 @@ class Fenom
     {
         $options |= $this->_options;
         if (is_array($template)) {
-            $key = $options . "@" . implode(",", $template);
+            if(count($template) === 1) {
+                $template = current($template);
+                $key = $options . "@" . $template;
+            } else {
+                $key = $options . "@" . implode(",", $template);
+            }
         } else {
             $key = $options . "@" . $template;
         }
@@ -956,8 +980,8 @@ class Fenom
             } else {
                 return $tpl;
             }
-        } elseif ($this->_options & self::FORCE_COMPILE) {
-            return $this->compile($template, $this->_options & self::DISABLE_CACHE & ~self::FORCE_COMPILE, $options);
+        } elseif ($this->_options & (self::FORCE_COMPILE |  self::DISABLE_CACHE)) {
+            return $this->compile($template, !($this->_options & self::DISABLE_CACHE), $options);
         } else {
             return $this->_storage[$key] = $this->_load($template, $options);
         }
@@ -1020,10 +1044,10 @@ class Fenom
             foreach ($tpl as &$t) {
                 $t = str_replace(":", "_", basename($t));
             }
-            return implode("~", $tpl) . "." . sprintf("%x.%x.php", crc32($hash), strlen($hash));
+            return $this->_compile_id . implode("~", $tpl) . "." . sprintf("%x.%x.php", crc32($hash), strlen($hash));
         } else {
             $hash = $tpl . ":" . $options;
-            return sprintf("%s.%x.%x.php", str_replace(":", "_", basename($tpl)), crc32($hash), strlen($hash));
+            return sprintf($this->_compile_id . "%s.%x.%x.php", str_replace(":", "_", basename($tpl)), crc32($hash), strlen($hash));
         }
     }
 

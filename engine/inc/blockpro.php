@@ -369,6 +369,8 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 												$paramsUrl = array();
 
 												// Удаляем значения по умолчанию за ненадобностью.
+												unset($cfg['activation_key'], $cfg['kraken_secret'], $cfg['tinypng_key'], $cfg['kraken_key']);
+
 												if ($cfg['template'] == 'blockpro/blockpro') {												
 													unset($cfg['template']);
 												}

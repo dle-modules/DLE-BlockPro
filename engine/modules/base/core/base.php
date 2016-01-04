@@ -43,6 +43,9 @@ class base {
 		// Подключаем конфиг DLE
 		$this->dle_config = $this->getDleConfig();
 
+		// Подключаем конфиг blockpro
+		$this->bpConfig = $this->getBpConfig();
+
 		// Подключаем класс для работы с БД
 		$this->db = $this->getDb();
 
@@ -77,11 +80,18 @@ class base {
 		return $config;
 	}
 
+	public static function getBpConfig() {
+		include(ENGINE_DIR . '/data/blockpro.php');
+		return $bpConfig;
+	}
+
 	public function addModifiers() {
 
 		// Добавляем свой модификатор в шаблонизатор для ограничения кол-ва символов в тексте
 		$config = $this->dle_config;
 		$db = $this->db;
+		$configForRezizer = $this->bpConfig;
+		$configForRezizer['http_home_url'] = $this->dle_config['http_home_url'];
 
 		$this->tpl->addModifier(
 			'limit', function ($data, $limit, $etc = '&hellip;', $wordcut = false) use ($config) {
@@ -91,10 +101,25 @@ class base {
 
 		// Добавляем свой модификатор в шаблонизатор для вывода картинок
 		$this->tpl->addModifier(
-			'image', function ($data, $noimage = '', $imageType = 'small', $number = 1, $size, $quality = '100', $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false) use ($config) {
-				return bpModifiers::getImage($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $config);
+			'image', function ($data, $noimage = '', $imageType = 'small', $number = 1, $size, $quality = '100', $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false) use ($configForRezizer) {
+				return bpModifiers::getImage($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $configForRezizer);
 			}
 		);
+
+		// Добавляем свой модификатор в шаблонизатор для вывода картинок через tinypng
+		$this->tpl->addModifier(
+			'tinypng', function ($data, $noimage = '', $imageType = 'small', $number = 1, $size, $quality = '100', $resizeType = 'fit', $grabRemote = true, $showSmall = false, $subdir = false) use ($configForRezizer) {
+				return bpModifiers::getImage($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $configForRezizer, 'tinypng');
+			}
+		);
+
+		// Добавляем свой модификатор в шаблонизатор для вывода картинок через craken
+		$this->tpl->addModifier(
+			'craken', function ($data, $noimage = '', $imageType = 'small', $number = 1, $size, $quality = '100', $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false) use ($configForRezizer) {
+				return bpModifiers::getImageWi($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $configForRezizer, 'craken');
+			}
+		);
+
 		// Добавляем свой модификатор в шаблонизатор для вывода print_r
 		$this->tpl->addModifier(
 			'dump', function ($data) {
