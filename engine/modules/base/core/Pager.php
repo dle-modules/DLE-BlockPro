@@ -49,18 +49,18 @@ class Pager {
 	 *
 	 * @return \Pager
 	 */
-	function __construct($config = array()) {
+	function __construct($config = []) {
 		$this->initialize($config);
 	}
 
 	/**
 	 * Sets config values.
 	 *
-	 * @param   array  configuration settings
+	 * @param   array $config configuration settings
 	 *
 	 * @return  void
 	 */
-	function initialize($config = array()) {
+	function initialize($config = []) {
 		foreach ($config as $key => $value) {
 			if (property_exists($this, $key)) {
 				$this->$key = $value;
@@ -130,7 +130,7 @@ class Pager {
 					if ($i == $this->current_page) {
 						$out .= str_replace(':name', $i, $this->current_tag) . "\n";
 					} else {
-						$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', $i, $this->url), $i), $this->link_tag) . "\n";
+						$out .= str_replace([':link', ':name'], [str_replace('{page}', $i, $this->url), $i], $this->link_tag) . "\n";
 					}
 				}
 
@@ -156,7 +156,7 @@ class Pager {
 						if ($i == $this->current_page) {
 							$out .= str_replace(':name', $i, $this->current_tag) . "\n";
 						} else {
-							$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', $i, $this->url), $i), $this->link_tag) . "\n";
+							$out .= str_replace([':link', ':name'], [str_replace('{page}', $i, $this->url), $i], $this->link_tag) . "\n";
 						}
 					}
 				} elseif ($this->current_page < 9) /* << Previous  1 2 3 4 5 6 7 8 9 10 ... 25 26  Next >> */ {
@@ -164,17 +164,17 @@ class Pager {
 						if ($i == $this->current_page) {
 							$out .= str_replace(':name', $i, $this->current_tag) . "\n";
 						} else {
-							$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', $i, $this->url), $i), $this->link_tag) . "\n";
+							$out .= str_replace([':link', ':name'], [str_replace('{page}', $i, $this->url), $i], $this->link_tag) . "\n";
 						}
 					}
 
 					$out .= '&hellip;' . "\n";
 
-					$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', $this->total_pages - 1, $this->url), $this->total_pages - 1), $this->link_tag) . "\n";
-					$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', $this->total_pages, $this->url), $this->total_pages), $this->link_tag) . "\n";
+					$out .= str_replace([':link', ':name'], [str_replace('{page}', $this->total_pages - 1, $this->url), $this->total_pages - 1], $this->link_tag) . "\n";
+					$out .= str_replace([':link', ':name'], [str_replace('{page}', $this->total_pages, $this->url), $this->total_pages], $this->link_tag) . "\n";
 				} elseif ($this->current_page > $this->total_pages - 8) /* << Previous  1 2 ... 17 18 19 20 21 22 23 24 25 26  Next >> */ {
-					$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', 1, $this->url), 1), $this->link_tag) . "\n";
-					$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', 2, $this->url), 2), $this->link_tag) . "\n";
+					$out .= str_replace([':link', ':name'], [str_replace('{page}', 1, $this->url), 1], $this->link_tag) . "\n";
+					$out .= str_replace([':link', ':name'], [str_replace('{page}', 2, $this->url), 2], $this->link_tag) . "\n";
 
 					$out .= '&hellip;' . "\n";
 
@@ -182,13 +182,13 @@ class Pager {
 						if ($i == $this->current_page) {
 							$out .= str_replace(':name', $i, $this->current_tag) . "\n";
 						} else {
-							$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', $i, $this->url), $i), $this->link_tag) . "\n";
+							$out .= str_replace([':link', ':name'], [str_replace('{page}', $i, $this->url), $i], $this->link_tag) . "\n";
 						}
 					}
 				} else /* << Previous  1 2 ... 5 6 7 8 9 10 11 12 13 14 ... 25 26  Next >> */ {
 
-					$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', 1, $this->url), 1), $this->link_tag) . "\n";
-					$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', 2, $this->url), 2), $this->link_tag) . "\n";
+					$out .= str_replace([':link', ':name'], [str_replace('{page}', 1, $this->url), 1], $this->link_tag) . "\n";
+					$out .= str_replace([':link', ':name'], [str_replace('{page}', 2, $this->url), 2], $this->link_tag) . "\n";
 
 					$out .= '&hellip;' . "\n";
 
@@ -196,14 +196,14 @@ class Pager {
 						if ($i == $this->current_page) {
 							$out .= str_replace(':name', $i, $this->current_tag) . "\n";
 						} else {
-							$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', $i, $this->url), $i), $this->link_tag) . "\n";
+							$out .= str_replace([':link', ':name'], [str_replace('{page}', $i, $this->url), $i], $this->link_tag) . "\n";
 						}
 					}
 
 					$out .= '&hellip;' . "\n";
 
-					$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', $this->total_pages - 1, $this->url), $this->total_pages - 1), $this->link_tag) . "\n";
-					$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', $this->total_pages, $this->url), $this->total_pages), $this->link_tag) . "\n";
+					$out .= str_replace([':link', ':name'], [str_replace('{page}', $this->total_pages - 1, $this->url), $this->total_pages - 1], $this->link_tag) . "\n";
+					$out .= str_replace([':link', ':name'], [str_replace('{page}', $this->total_pages, $this->url), $this->total_pages], $this->link_tag) . "\n";
 				}
 
 				if ($this->next_page) {
@@ -221,8 +221,8 @@ class Pager {
 					$out .= $this->prev_text_tag;
 				}
 
-				$out .= ' <span class="vertical">|</span> ' . str_replace(array(':current_page', ':total_pages'), array($this->current_page, $this->total_pages), $this->extended_pageof) .
-					' <span class="vertical">|</span> ' . str_replace(array(':current_first_item', ':current_last_item', ':total_items'), array($this->current_first_item, $this->current_last_item, $this->total_items), $this->extended_itemsof) .
+				$out .= ' <span class="vertical">|</span> ' . str_replace([':current_page', ':total_pages'], [$this->current_page, $this->total_pages], $this->extended_pageof) .
+					' <span class="vertical">|</span> ' . str_replace([':current_first_item', ':current_last_item', ':total_items'], [$this->current_first_item, $this->current_last_item, $this->total_items], $this->extended_itemsof) .
 					' <span class="vertical">|</span> ' . "\n";
 
 				if ($this->next_page) {
@@ -254,7 +254,7 @@ class Pager {
 			case 'punbb':
 
 				if ($this->current_page > 3) {
-					$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', 1, $this->url), 1), $this->link_tag) . "\n";
+					$out .= str_replace([':link', ':name'], [str_replace('{page}', 1, $this->url), 1], $this->link_tag) . "\n";
 					if ($this->current_page != 4) {
 						$out .= '&hellip;' . "\n";
 					}
@@ -268,7 +268,7 @@ class Pager {
 					if ($this->current_page == $i) {
 						$out .= str_replace(':name', $i, $this->current_tag) . "\n";
 					} else {
-						$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', $i, $this->url), $i), $this->link_tag) . "\n";
+						$out .= str_replace([':link', ':name'], [str_replace('{page}', $i, $this->url), $i], $this->link_tag) . "\n";
 					}
 
 				}
@@ -277,7 +277,7 @@ class Pager {
 					if ($this->current_page != $this->total_pages - 3) {
 						$out .= '&hellip;' . "\n";
 					}
-					$out .= str_replace(array(':link', ':name'), array(str_replace('{page}', $this->total_pages, $this->url), $this->total_pages), $this->link_tag) . "\n";
+					$out .= str_replace([':link', ':name'], [str_replace('{page}', $this->total_pages, $this->url), $this->total_pages], $this->link_tag) . "\n";
 				}
 
 				break;
@@ -305,7 +305,7 @@ class Pager {
 	/**
 	 * Magically gets a pagination variable.
 	 *
-	 * @param   string  variable key
+	 * @param   string $key variable key
 	 *
 	 * @return  mixed   variable value if the key is found
 	 * @return  void    if the key is not found
@@ -314,6 +314,8 @@ class Pager {
 		if (isset($this->$key)) {
 			return $this->$key;
 		}
+
+		return false;
 	}
 
 	/**
@@ -332,5 +334,3 @@ class Pager {
 	}
 
 } // End Pager Class
-
-?>

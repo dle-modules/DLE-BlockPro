@@ -1,4 +1,5 @@
 <?php
+
 /*
 =============================================================================
 BASE - базовый класс для модулей
@@ -18,12 +19,13 @@ class bpModifiers extends base {
 	 * @param        $limit
 	 * @param string $etc     - Окончание обрезанного текста
 	 * @param bool   $wordcut - жесткое ограничение символов
+	 * @param string $charset
 	 *
 	 * @return string $data - обрезанный результат
 	 */
 	public static function textLimit($data, $limit, $etc = '&hellip;', $wordcut = false, $charset = 'utf-8') {
 		$data = strip_tags($data, '<br>');
-		$data = trim(str_replace(array('<br>', '<br />'), ' ', $data));
+		$data = trim(str_replace(['<br>', '<br />'], ' ', $data));
 
 		if ($limit && dle_strlen($data, $charset) > $limit) {
 			$data = dle_substr($data, 0, $limit, $charset) . $etc;
@@ -39,27 +41,27 @@ class bpModifiers extends base {
 	/**
 	 * Функция ресайза картинок
 	 *
-	 * @param  string        	$data         Строка, из которой будем выдёргивать картинку
-	 * @param  string        	$noimage      Картинка-заглушка
-	 * @param  string        	$imageType    Тип картинки (small/original/intext) - для получения соответствующей картинки или массива картинок
-	 * @param  integer/string	$number       Номер картинки в контенте или all для вывода всех картинок
-	 * @param  string        	$size         Размер картики (например 100 или 100x150)
-	 * @param  string        	$quality      Качество картинки (0-100)
-	 * @param  string        	$resizeType   Тип ресайза (exact, portrait, landscape, auto, crop)
-	 * @param  boolean       	$grabRemote   Грабить сторонние картинки к себе (true/false)
-	 * @param  boolean       	$showSmall    Обрабатывать уменьшенную копию, если есть
-	 * @param  boolean       	$subdir       Подпапка для картинок (иногда бывает нужно)
-	 * @param  array         	$config       Массив с конфигом DLE
-	 * @param  string         	$service      Сервис, серез который будем делать ресайз (local/tinypng/kraken)
+	 * @param  string  $data       Строка, из которой будем выдёргивать картинку
+	 * @param  string  $noimage    Картинка-заглушка
+	 * @param  string  $imageType  Тип картинки (small/original/intext) - для получения соответствующей картинки или массива картинок
+	 * @param          integer     /string    $number       Номер картинки в контенте или all для вывода всех картинок
+	 * @param  string  $size       Размер картики (например 100 или 100x150)
+	 * @param  string  $quality    Качество картинки (0-100)
+	 * @param  string  $resizeType Тип ресайза (exact, portrait, landscape, auto, crop)
+	 * @param  boolean $grabRemote Грабить сторонние картинки к себе (true/false)
+	 * @param  boolean $showSmall  Обрабатывать уменьшенную копию, если есть
+	 * @param  boolean $subdir     Подпапка для картинок (иногда бывает нужно)
+	 * @param  array   $config     Массив с конфигом DLE
+	 * @param  string  $service    Сервис, серез который будем делать ресайз (local/tinypng/kraken)
 	 *
 	 * @return string                         Путь к уменьшенной или оригинальной картнке
 	 */
 
 	public static function getImage($data, $noimage = '', $imageType = 'small', $number, $size, $quality, $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false, $config = [], $service = 'local') {
 
-		$resizeType = ($resizeType == '' || !$resizeType) ? 'auto' : $resizeType ;
-		$quality = ($quality == '' || !$quality) ? '100' : $quality ;
-		$noimage = str_replace($config['http_home_url'].'/', $config['http_home_url'], $noimage);
+		$resizeType = ($resizeType == '' || !$resizeType) ? 'auto' : $resizeType;
+		$quality    = ($quality == '' || !$quality) ? '100' : $quality;
+		$noimage    = str_replace($config['http_home_url'] . '/', $config['http_home_url'], $noimage);
 
 		// Удалим из адреса сайта последний слеш.
 		$config['http_home_url'] = (substr($config['http_home_url'], -1, 1) == '/') ? substr($config['http_home_url'], 0, -1) : $config['http_home_url'];
@@ -81,42 +83,44 @@ class bpModifiers extends base {
 		$imageDir = $uploadDir . $size . '/';
 
 		$dir = ROOT_DIR . $imageDir;
-		
-		$data = stripslashes($data);
-		$arImages = array();
+
+		$data     = stripslashes($data);
+		$arImages = [];
 
 		if (preg_match_all('/<img(?:\\s[^<>]*?)?\\bsrc\\s*=\\s*(?|"([^"]*)"|\'([^\']*)\'|([^<>\'"\\s]*))[^<>]*>/i', $data, $m)) {
 
-			$i=1; // Счётчик
+			$i = 1; // Счётчик
 			// Если регулярка нашла картинку — работаем.
 			if (isset($m[1])) {
 				foreach ($m[1] as $key => $url) {
 					// Если это смайлик или спойлер — пропускаем.
 					if (stripos($url, 'dleimages') !== false || stripos($url, 'engine/data/emoticons') !== false) {
 						continue;
-					} 
+					}
 					// Если номер картинки меньше, чем требуется — проходим мимо.
 					if ($number != 'all' && $i < (int)$number) {
 						// Не забываем прибавить счётчик.
 						$i++;
 						continue;
 					}
+					/** @var string $imageItem */
+					$imageItem = $imgResized = '';
 
 					// Если в настройках вызова указано выдёргивание оригинала — отдадим оригинал.
 					if ($imageType == 'original') {
-						$imageItem = str_ireplace(array('/thumbs', '/medium'), '', $url);
+						$imageItem = str_ireplace(['/thumbs', '/medium'], '', $url);
 					}
 					// Если intext — отдадим то, что получили в тексте.
 					if ($imageType == 'intext') {
 						$imageItem = $url;
 					}
 					// Если small — то будем работать с картинкой.
-					if ($imageType == 'small') {						
+					if ($imageType == 'small') {
 						// Выдёргиваем оригинал, на случай если уменьшить надо до размеров больше, чем thumb или medium в новости и если это не запрещено в настройках.
-						$imageItem = ($showSmall) ? $url : str_ireplace(array('/thumbs', '/medium'), '', $url);
+						$imageItem = ($showSmall) ? $url : str_ireplace(['/thumbs', '/medium'], '', $url);
 
 						// Удаляем текущий домен (в т.ч. с www) из строки.
-						$urlShort = str_ireplace(array('http://' . $_SERVER['HTTP_HOST'], 'http://www.' . $_SERVER['HTTP_HOST'], 'https://' . $_SERVER['HTTP_HOST'], 'https://www.' . $_SERVER['HTTP_HOST']), '', $imageItem);
+						$urlShort = str_ireplace(['http://' . $_SERVER['HTTP_HOST'], 'http://www.' . $_SERVER['HTTP_HOST'], 'https://' . $_SERVER['HTTP_HOST'], 'https://www.' . $_SERVER['HTTP_HOST']], '', $imageItem);
 
 						// Проверяем наша картинка или чужая.
 						$isRemote = (preg_match('~^http(s)?://~', $urlShort)) ? true : false;
@@ -126,15 +130,17 @@ class bpModifiers extends base {
 
 						// Отдаём заглушку, если ничего нет.
 						if (!$urlShort) {
+							/** @var string $imageItem */
 							$imageItem = $noimage;
 							continue;
-						} 
+						}
 
 						// Если внешняя картинка и запрещего грабить картинки к себе — возвращаем её.
 						if ($isRemote && !$grabRemoteOn) {
+							/** @var string $imgResized */
 							$imgResized = $urlShort;
 							continue;
-						} 
+						}
 
 						// Работаем с картинкой
 						// Если есть параметр size — включаем ресайз картинок
@@ -157,21 +163,20 @@ class bpModifiers extends base {
 							}
 
 							// Определяем новое имя файла
-							// $fileName =  md5($size . '_' . $resizeType . '_' . $imgResized) . '_' . $service . '.' . pathinfo($imgResized, PATHINFO_EXTENSION);
-							$fileName =  $size . '_' . $resizeType . '_' . md5($imgResized) . '_' . $service . '.' . pathinfo($imgResized, PATHINFO_EXTENSION);
+							$fileName = md5($size . '_' . $resizeType . '_' . $imgResized) . '_' . $service . '.' . pathinfo($imgResized, PATHINFO_EXTENSION);
 
 							// Если картинки нет в папке обработанных картинок
-							if(!file_exists($dir . $fileName)) {
+							if (!file_exists($dir . $fileName)) {
 								// Если картинка локальная, или картинка внешняя и разрешено тянуть внешние — обработаем её.
 								if (!$isRemote || ($grabRemoteOn && $isRemote)) {
 									$newFile = $dir . $fileName;
 
 									self::getImageWith($service, $imgResized, $newFile, $size, $resizeType, $quality, $config);
 								}
-							} 
-							
-							$imgResized = $config['http_home_url'] . $imageDir . $fileName;							
- 
+							}
+
+							$imgResized = $config['http_home_url'] . $imageDir . $fileName;
+
 						} else {
 							// Если параметра imgSize нет - отдаём исходную картинку
 							$imgResized = $urlShort;
@@ -187,25 +192,34 @@ class bpModifiers extends base {
 					}
 					$i++;
 				}
-				
-			} 
 
-		} 
-		else {
+			}
+
+		} else {
 			// Если регулярка не нашла картинку - отдадим заглушку
 			$arImages[$number] = $noimage;
 		}
 
 		// Если хотим все картинки — не вопрос, получим массив.
 		if ($number == 'all') {
-		
+
 			return $arImages;
 		}
+
 		// По умолчанию возвращаем отдну картинку (понимаю, что метод должен возвращать всегда один тип данных, но это сделано из-за совместимости версий)
 		return $arImages[$number];
 
 	}
 
+	/**
+	 * @param string $service
+	 * @param        $originalFile
+	 * @param        $newFile
+	 * @param        $size
+	 * @param        $method
+	 * @param string $quality
+	 * @param array  $config
+	 */
 	public static function getImageWith($service = 'local', $originalFile, $newFile, $size, $method, $quality = '100', $config = []) {
 		// Разделяем высоту и ширину
 		$imgSize = explode('x', $size);
@@ -219,7 +233,7 @@ class bpModifiers extends base {
 			// Тянем картинку через встроенный класс ресайза
 			case 'local':
 				// Определяемся с возможными методами уменьшения картинок.
-				$arMethods = ['exact', 'portrait', 'landscape', 'auto', 'crop'];
+				$arMethods  = ['exact', 'portrait', 'landscape', 'auto', 'crop'];
 				$resizeType = (in_array($method, $arMethods)) ? $method : 'auto';
 
 				// Подрубаем локальный класс для картинок
@@ -234,7 +248,7 @@ class bpModifiers extends base {
 
 			// Тянем картинку через tinyPNG
 			case 'tinypng':
-				
+
 				// Подключаем необходимые классы (да, без composer в DLE тяжело живётся).
 				require_once ENGINE_DIR . '/modules/base/resizers/tinypng/Tinify.php';
 				require_once ENGINE_DIR . '/modules/base/resizers/tinypng/Tinify/Client.php';
@@ -242,9 +256,9 @@ class bpModifiers extends base {
 				require_once ENGINE_DIR . '/modules/base/resizers/tinypng/Tinify/ResultMeta.php';
 				require_once ENGINE_DIR . '/modules/base/resizers/tinypng/Tinify/Source.php';
 				require_once ENGINE_DIR . '/modules/base/resizers/tinypng/Tinify/Result.php';
-			
+
 				// Определяемся с возможными методами уменьшения картинок.
-				$arMethods = ['portrait', 'landscape', 'auto', 'crop'];
+				$arMethods  = ['portrait', 'landscape', 'auto', 'crop'];
 				$resizeType = (in_array($method, $arMethods)) ? $method : 'auto';
 
 				// Определяемся с опциями обработки картинки
@@ -264,14 +278,14 @@ class bpModifiers extends base {
 					case 'landscape':
 						$arTinyOptions = [
 							'method' => 'scale',
-							'width' => $imgSize[0],
+							'width'  => $imgSize[0],
 						];
 						break;
 
 					case 'auto':
 						$arTinyOptions = [
 							'method' => 'fit',
-							'width' => $imgSize[0],
+							'width'  => $imgSize[0],
 							'height' => $imgSize[1],
 						];
 						break;
@@ -279,7 +293,7 @@ class bpModifiers extends base {
 					case 'crop':
 						$arTinyOptions = [
 							'method' => 'cover',
-							'width' => $imgSize[0],
+							'width'  => $imgSize[0],
 							'height' => $imgSize[1],
 						];
 						break;
@@ -288,16 +302,90 @@ class bpModifiers extends base {
 				// Вызываем класс и обрабатываем картинку
 				\Tinify\setKey($config['tinypng_key']);
 
-				$source = \Tinify\fromFile($originalFile);
+				$source  = \Tinify\fromFile($originalFile);
 				$resized = $source->resize($arTinyOptions);
 				$resized->toFile($newFile);
 
 				unset($source, $resized);
 
 				break;
+
+			// Тянем картинку через Kraken
+			case 'kraken':
+				// Определяемся с возможными методами уменьшения картинок.
+				$arMethods  = ['exact', 'portrait', 'landscape', 'auto', 'crop'];
+				$resizeType = (in_array($method, $arMethods)) ? $method : 'auto';
+				// У Kraken есть свой метод crop, но нам нужен fit
+				if ($method == 'crop') {
+					$resizeType = 'fit';
+				}
+
+				// Подключаем класс Kraken.
+				require_once ENGINE_DIR . '/modules/base/resizers/kraken/Kraken.php';
+
+				$kraken = new Kraken($config['kraken_key'], $config['kraken_secret']);
+
+				// Проверяем наша картинка или чужая. Нужно для корректной передачи данных в kraken
+				$isRemote = (preg_match('~^http(s)?://~', $originalFile)) ? true : false;
+
+				// Параметры ресайза
+				$krakenResize = [
+					'width'    => $imgSize[0],
+					'height'   => $imgSize[1],
+					'strategy' => $resizeType,
+				];
+
+				if ($isRemote) {
+					// Если картинка сторонняя
+					$krakenParams = [
+						'url'    => $originalFile,
+						'wait'   => true,
+						'resize' => $krakenResize,
+					];
+
+					$krakenData = $kraken->url($krakenParams);
+				} else {
+					// Если картинка наша
+					$krakenParams = [
+						'file'   => $originalFile,
+						'wait'   => true,
+						'resize' => $krakenResize,
+					];
+
+					$krakenData = $kraken->upload($krakenParams);
+				}
+
+				if ($krakenData['success']) {
+					$newImg = self::curlGet($krakenData['kraked_url']);
+					file_put_contents($newFile, $newImg);
+				}
+
+				break;
+
+			// Тянем картинку через tinyPNG
 		}
 	}
 
+	public static function curlGet($url) {
+		$ch              = curl_init();
+		$default_curlopt = [
+			CURLOPT_TIMEOUT        => 15,
+			CURLOPT_RETURNTRANSFER => 1,
+			// CURLOPT_FOLLOWLOCATION => 1,
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_USERAGENT      => "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0",
+		];
+		$curlopt         = [CURLOPT_URL => $url] + $default_curlopt;
+		curl_setopt_array($ch, $curlopt);
+		$response = curl_exec($ch);
+		if ($response === false) {
+			trigger_error(curl_error($ch));
+		}
+
+		curl_close($ch);
+
+		return $response;
+	}
 
 
 	/**
@@ -317,15 +405,23 @@ class bpModifiers extends base {
 
 	/**
 	 * Функция для вывода print_r в шаблон
-	 * @param  mixed     $var входящие данные]
+	 *
+	 * @param  mixed $var входящие данные]
+	 *
 	 * @return string    print_r
 	 */
 	public static function dump($var) {
 		return print_r($var, true);
 	}
 
-	public static function getAuthors($array, $fields = false, $db)
-	{
+	/**
+	 * @param            $array
+	 * @param bool|false $fields
+	 * @param            $db
+	 *
+	 * @return mixed
+	 */
+	public static function getAuthors($array, $fields = false, $db) {
 
 		$array = array_unique($array);
 		if ($fields) {
@@ -335,7 +431,7 @@ class bpModifiers extends base {
 		}
 		if (count($array) == 1) {
 			$select = 'SELECT ?p FROM ?n WHERE name = ?s';
-			$array = $array[0];
+			$array  = $array[0];
 		} else {
 			$select = 'SELECT ?p FROM ?n WHERE name IN(?a)';
 		}
@@ -346,6 +442,8 @@ class bpModifiers extends base {
 			unset($user['password']);
 			$result[$user['name']] = $user;
 		}
+
+		/** @var array $result */
 		return $result;
 	}
 

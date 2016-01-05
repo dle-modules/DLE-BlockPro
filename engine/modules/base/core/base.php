@@ -97,6 +97,9 @@ class base {
 		return $bpConfig;
 	}
 
+	/**
+	 *
+	 */
 	public function addModifiers() {
 
 		// Добавляем свой модификатор в шаблонизатор для ограничения кол-ва символов в тексте
@@ -125,10 +128,10 @@ class base {
 		}
 		);
 
-		// Добавляем свой модификатор в шаблонизатор для вывода картинок через craken
+		// Добавляем свой модификатор в шаблонизатор для вывода картинок через kraken
 		$this->tpl->addModifier(
-			'craken', function ($data, $noimage = '', $imageType = 'small', $number = 1, $size, $quality = '100', $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false) use ($configForRezizer) {
-			return bpModifiers::getImageWi($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $configForRezizer, 'craken');
+			'kraken', function ($data, $noimage = '', $imageType = 'small', $number = 1, $size, $quality = '100', $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false) use ($configForRezizer) {
+			return bpModifiers::getImage($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $configForRezizer, 'kraken');
 		}
 		);
 
@@ -142,7 +145,7 @@ class base {
 		// Добавляем модификатор для получения списка пользователей
 		$this->tpl->addModifier(
 			'getAuthors', function ($data, $fields = false) use ($db) {
-			return bpModifiers::getAuthors($data, $fields = false, $db);
+			return bpModifiers::getAuthors($data, $fields, $db);
 		}
 		);
 
@@ -175,8 +178,6 @@ class base {
 	 */
 
 	public function getPostUrl($data) {
-		 /** @var array $cat_info */
-		global $cat_info;
 
 		$data['date'] = strtotime($data['date']);
 
@@ -322,13 +323,13 @@ class base {
 /**
  * Форматируем дату
  *
- * @param  string $date дата
- * @param bool|false    $_f
+ * @param  string    $date дата
+ * @param bool|false $_f
+ *
  * @return string        отформатированная дата
  */
 function formateDate($date, $_f = false) {
-	/** @var array $langdate */
-	global	$lang, $config, $langdate;
+	global $lang, $config;
 
 	if (!$lang['charset']) {
 		@include_once ROOT_DIR . '/language/' . $config['langs'] . '/website.lng';
@@ -513,6 +514,8 @@ HTML;
 		return $rated;
 
 	}
+
+	return true;
 }
 
 function stripSlashesInArray($data) {

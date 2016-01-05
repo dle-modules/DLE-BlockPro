@@ -15,37 +15,31 @@ $moduleName = 'BlockPro';
 include('engine/api/api.class.php');
 
 /** @var array $config */
-$arCheck = array(
-	array(
+$arCheck = [
+	[
 		'name'  => 'Версия DLE',
 		'req'   => '10.0',
 		'check' => ($config['version_id'] < 10.0) ? '<span class="red">' . $config['version_id'] . '</span>' : $config['version_id'],
-	),
-	array(
+	],
+	[
 		'name'  => 'Кодировка',
 		'req'   => 'utf-8',
 		'check' => ($config['charset'] != 'utf-8') ? '<span class="red">' . $config['charset'] . '</span>' : $config['charset'],
-	),
-	array(
+	],
+	[
 		'name'  => 'Версия php',
-		'req'   => '5.3 и выше',
-		'check' => (phpversion() < 5.3) ? '<span class="red">' . phpversion() . '</span>' : phpversion(),
-	),
-	array(
+		'req'   => '5.4 и выше',
+		'check' => (phpversion() < 5.4) ? '<span class="red">' . phpversion() . '</span>' : phpversion(),
+	],
+	[
 		'name'  => 'IonCube Loader',
-		'req'   => '4.4 и выше',
-		'check' => checkIonCube()
-	),
-	array(
-		'name'  => 'short_open_tag',
-		'req'   => 'On',
-		'check' => checkShortOpenTag()
-	),
+		'req'   => '5.0 и выше',
+		'check' => (checkIonCube() < 5.0) ? '<span class="red">' . checkIonCube() . '</span>' : checkIonCube(),
+	]
 
-);
+];
 
-function checkIonCube()
-{
+function checkIonCube() {
 	if (function_exists('ioncube_loader_version')) {
 		return ioncube_loader_version();
 	} else {
@@ -53,8 +47,7 @@ function checkIonCube()
 	}
 }
 
-function checkShortOpenTag()
-{
+function checkShortOpenTag() {
 	if (ini_get('short_open_tag')) {
 		return 'On';
 	} else {
@@ -71,38 +64,126 @@ function checkShortOpenTag()
 	<title>BlockPro Checker</title>
 	<style>
 		/*! normalize.css v3.0.2 | MIT License | git.io/normalize */
-		html { font-family: sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100% }
-		body { margin: 0; font-size: 16px; line-height: 1.5; }
-		a { background-color: transparent }
-		a:active, a:hover { outline: 0 }
-		b, strong { font-weight: 700 }
-		h1 { font-size: 2em; margin: .67em 0 }	
-		img { border: 0 }
-		svg:not(:root) { overflow: hidden }
-		hr { -moz-box-sizing: content-box; box-sizing: content-box; height: 0 }
-		table { border-collapse: collapse; border-spacing: 0 }
-		td, th { padding: 0 }
-		.content { margin: 0 auto }
-		.content:after, .content:before { content: " "; display: table }
-		.content:after { clear: both }
-		.content .content { margin-left: -10px; margin-right: -10px }
-		.col { padding-left: 10px; padding-right: 10px; min-height: 1px; float: left; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box }
-		.col-mb-12 { width: 100% }
+		html {
+			font-family: sans-serif;
+			-ms-text-size-adjust: 100%;
+			-webkit-text-size-adjust: 100%
+		}
+
+		body {
+			margin: 0;
+			font-size: 16px;
+			line-height: 1.5;
+		}
+
+		a {
+			background-color: transparent
+		}
+
+		a:active, a:hover {
+			outline: 0
+		}
+
+		b, strong {
+			font-weight: 700
+		}
+
+		h1 {
+			font-size: 2em;
+			margin: .67em 0
+		}
+
+		img {
+			border: 0
+		}
+
+		svg:not(:root) {
+			overflow: hidden
+		}
+
+		hr {
+			-moz-box-sizing: content-box;
+			box-sizing: content-box;
+			height: 0
+		}
+
+		table {
+			border-collapse: collapse;
+			border-spacing: 0
+		}
+
+		td, th {
+			padding: 0
+		}
+
+		.content {
+			margin: 0 auto
+		}
+
+		.content:after, .content:before {
+			content: " ";
+			display: table
+		}
+
+		.content:after {
+			clear: both
+		}
+
+		.content .content {
+			margin-left: -10px;
+			margin-right: -10px
+		}
+
+		.col {
+			padding-left: 10px;
+			padding-right: 10px;
+			min-height: 1px;
+			float: left;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box
+		}
+
+		.col-mb-12 {
+			width: 100%
+		}
+
 		@media (min-width: 768px) {
-			.content { max-width: 728px }
+			.content {
+				max-width: 728px
+			}
 		}
+
 		@media (min-width: 992px) {
-			.content { max-width: 952px }
+			.content {
+				max-width: 952px
+			}
 		}
-		hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0 }
+
+		hr {
+			display: block;
+			height: 1px;
+			border: 0;
+			border-top: 1px solid #ccc;
+			margin: 1em 0;
+			padding: 0
+		}
+
 		h1 {
 			font: normal 28px Arial, sns-serif;
 			text-align: center;
 			margin-top: 50px;
 			color: #666;
 		}
-		a {color: #4a9fc5;}
-		a:hover {text-decoration: none;}
+
+		a {
+			color: #4a9fc5;
+		}
+
+		a:hover {
+			text-decoration: none;
+		}
+
 		.table {
 			max-width: 100%;
 			background-color: transparent;
@@ -112,9 +193,18 @@ function checkShortOpenTag()
 			border: 1px solid #dddddd;
 			border-left: 0;
 		}
+
 		.table tr:hover td,
-		.table tr:hover th { background-color: #f5f5f5; }
-		.table th { font-weight: bold; background-color: #f9f9f9; vertical-align: bottom; }
+		.table tr:hover th {
+			background-color: #f5f5f5;
+		}
+
+		.table th {
+			font-weight: bold;
+			background-color: #f9f9f9;
+			vertical-align: bottom;
+		}
+
 		.table th,
 		.table td {
 			padding: 8px;
@@ -124,8 +214,17 @@ function checkShortOpenTag()
 			border-top: 1px solid #dddddd;
 			border-left: 1px solid #dddddd;
 		}
-		.red { color: #f00; }
-		.alert { border: 1px solid #f1c40f; background: rgba(241, 196, 15, .1); color: #796307; padding: 20px }
+
+		.red {
+			color: #f00;
+		}
+
+		.alert {
+			border: 1px solid #f1c40f;
+			background: rgba(241, 196, 15, .1);
+			color: #796307;
+			padding: 20px
+		}
 
 	</style>
 <body>
@@ -155,8 +254,10 @@ function checkShortOpenTag()
 				Если один или несколько пунктов отмечены <span class="red">красным цветом</span> &mdash; модуль не
 				запустится на вашем сайте при текущих настройках. Необходимо исправить несоответсвия.
 			</p>
+
 			<p class="alert">
-				Если всё в порядке &mdash; можно смело <a href="http://store1.pafnuty.name/15-blockpro.html" target="_blank">устанавливать модуль</a>!
+				Если всё в порядке &mdash; можно смело <a href="http://store1.pafnuty.name/15-blockpro.html"
+				                                          target="_blank">устанавливать модуль</a>!
 			</p>
 		</div>
 	</div>

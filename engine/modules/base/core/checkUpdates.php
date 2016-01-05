@@ -19,7 +19,7 @@ if (!defined('DATALIFEENGINE')) die("Go fuck yourself!");
 class checkUpdates {
 
 	public $result;
-	var $infoArray = array();
+	var $infoArray = [];
 
 	function __construct($infoArray) {
 		$this->infoArray = $infoArray;
@@ -88,4 +88,3 @@ class checkUpdates {
 	}
 
 } //checkUpdates
-?>

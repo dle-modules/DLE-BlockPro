@@ -6,7 +6,7 @@ include('engine/api/api.class.php');
  * Массив с конфигурацией установщика, ведь удобно иметь одинаковый код для разных установщиков разных модулей.
  * @var array
  */
-$cfg = array(
+$cfg = [
 	// Идентификатор модуля (для внедения в админпанель и назначение имени иконки с расширением .png)
 	'moduleName'    => 'blockpro',
 	// Название модуля - показывается как в установщике, так и в админке.
@@ -22,7 +22,7 @@ $cfg = array(
 	// ID групп, для которых доступно управление модулем в админке.
 	'allowGroups'   => '1',
 	// Массив с запросами, которые будут выполняться при установке
-	'queries'       => array(),
+	'queries'       => [],
 	// Устанавливать админку (true/false). Включает показ кнопки установки и удаления админки.
 	'installAdmin'  => true,
 	// Отображать шаги утановки модуля
@@ -30,7 +30,7 @@ $cfg = array(
 	// Показывать лицензионное соглашение?	
 	'showLicense'   => true,
 
-);
+];
 
 // Определяем кодировку.
 $fileCharset = chasetConflict($cfg);
@@ -452,7 +452,7 @@ function chasetConflict($string)
 		)+%xs', $string);
 	$stringCharset = ($detect == '1') ? 'utf-8' : 'windows-1251';
 	$config['charset'] = strtolower($config['charset']);
-	$return = array();
+	$return = [];
 	$return['conflict'] = ($stringCharset == $config['charset']) ? false : true;
 	$return['charset'] = $stringCharset;
 

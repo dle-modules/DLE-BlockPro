@@ -24,6 +24,7 @@ define('ENGINE_DIR', ROOT_DIR . '/engine');
 
 include ENGINE_DIR . '/data/config.php';
 
+/** @var array $config */
 if ($config['version_id'] > 10.2) {
 	date_default_timezone_set($config['date_adjust']);
 	$_TIME = time();
@@ -50,7 +51,7 @@ if (function_exists('dle_session')) {
 }
 
 $is_logged = false;
-$member_id = array();
+$member_id = [];
 
 if ($config['allow_registration']) {
 	require_once ENGINE_DIR . '/modules/sitelogin.php';
@@ -68,24 +69,24 @@ if (!$cat_info) {
 $blockId = $isJs = $isRSS = false;
 if (isset($_REQUEST['block'])) {
 	$blockId = $_REQUEST['block'];
-	$isJs = true;
+	$isJs    = true;
 }
 if (isset($_REQUEST['channel'])) {
 	$blockId = $_REQUEST['channel'];
-	$isRSS = true;
+	$isRSS   = true;
 }
 $blockId = $db->safesql($blockId);
 
 $_cr = false;
 if ($blockId) {
 	$arCr = $db->super_query("SELECT params FROM " . PREFIX . "_blockpro_blocks WHERE block_id='{$blockId}'");
-	$_cr = $arCr['params'];
+	$_cr  = $arCr['params'];
 }
 $externalOutput = '';
 
 if ($_cr) {
 	// Если запись существует — работаем.
-	$isAjaxConfig = true;
+	$isAjaxConfig  = true;
 	$ajaxConfigArr = unserialize($_cr);
 
 	if ($ajaxConfigArr['cacheLive']) {
@@ -102,11 +103,11 @@ if ($_cr) {
 	// Если установлено время жизни кеша
 	if ($ajaxConfigArr['cacheLive']) {
 		// Формируем имя кеш-файла в соответствии с правилами формирования тагового стандартными средствами DLE, для последующей проверки на существование этого файла.
-		$_end_file = (!$ajaxConfigArr['cacheSuffixOff']) ? ($is_logged) ? '_' . $member_id['user_group'] : '_0':false;
-		$filedate = ENGINE_DIR . '/cache/' . $ajaxConfigArr['cachePrefix'] . '_' . md5($cacheName) . $_end_file . '.tmp';
+		$_end_file = (!$ajaxConfigArr['cacheSuffixOff']) ? ($is_logged) ? '_' . $member_id['user_group'] : '_0' : false;
+		$filedate  = ENGINE_DIR . '/cache/' . $ajaxConfigArr['cachePrefix'] . '_' . md5($cacheName) . $_end_file . '.tmp';
 
 		if (@file_exists($filedate)) {
-			$cache_time = time()-@filemtime($filedate);
+			$cache_time = time() - @filemtime($filedate);
 		} else {
 			$cache_time = $ajaxConfigArr['cacheLive'] * 60;
 		}
@@ -122,7 +123,8 @@ if ($_cr) {
 	if ($isJs) {
 		header("Content-type: text/javascript; charset=" . $config['charset']);
 		// Подготавливаем контент к выводу
-		$result = prepereBlock($output);
+		/** @var string $output */
+		$result         = prepereBlock($output);
 		$externalOutput = '\'' . $result . '\'';
 
 		// Подсчитаем время выполнения скрипта и добавим данные об этом в вывод.
@@ -138,7 +140,7 @@ if ($_cr) {
 		header("Content-type: application/xml; charset=" . $config['charset']);
 		// Подготавливаем контент к выводу
 		// $result = prepereBlock($output);
-		
+
 		$printOutput = $output;
 	}
 
@@ -151,7 +153,7 @@ if ($_cr) {
 		// Если запись не найдена - выведем предупреждением в консоли, чтобы не захламлять сайт.
 		$consoleLog = 'console.warn(\'[blockpro]: no content to show\');';
 	}
-	
+
 	if ($isRSS) {
 		// Если запись не найдена - выведем предупреждением в консоли, чтобы не захламлять сайт.
 		$consoleLog = 'console.warn(\'[blockpro]: no content to show\');';
@@ -160,8 +162,9 @@ if ($_cr) {
 }
 
 function prepereBlock($text) {
-	$search = array("\n", "\t");
-	$text = str_replace($search, '', $text);
-	$text = addslashes($text);
+	$search = ["\n", "\t"];
+	$text   = str_replace($search, '', $text);
+	$text   = addslashes($text);
+
 	return $text;
 }

@@ -920,6 +920,7 @@ if (!$output) {
 
 		// Записываем в БД id похожих новостей, если требуется
 		if ($reltedFirstShow && $saveRelated) {
+			/** @var integer $relatedId */
 			$base->db->query("UPDATE ?n SET related_ids=?s WHERE news_id=?i", PREFIX . '_post_extras', implode(',', $relatedIds), $relatedId);
 		}
 
@@ -968,5 +969,6 @@ if ($cfg['showstat'] && $user_group[$member_id['user_group']]['allow_all_edit'])
 	// Информация об оперативке
 	$mem_usg = (function_exists("memory_get_peak_usage")) ? '<br>Расход памяти: <b>' . round(memory_get_peak_usage() / (1024 * 1024), 2) . 'Мб </b>' : '';
 	// Вывод статистики
-	echo '<div class="bp-statistics" style="border: solid 1px red; padding: 5px; margin: 5pxx 0;">' . $dbStat . 'Время выполнения скрипта: <b>' . round((microtime(true) - $start), 6) . '</b> c.' . $mem_usg . '</div>';
+	/** @var integer $start */
+	echo '<div class="bp-statistics" style="border: solid 1px red; padding: 5px; margin: 5px 0;">' . $dbStat . 'Время выполнения скрипта: <b>' . round((microtime(true) - $start), 6) . '</b> c.' . $mem_usg . '</div>';
 }
