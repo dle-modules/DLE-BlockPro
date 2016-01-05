@@ -162,20 +162,26 @@ class bpModifiers extends base {
 								$imgResized = ROOT_DIR . $urlShort;
 							}
 
+							if ($service == 'tinypng' && $config['tinypng_key'] == '') {
+								$service = 'local';
+							}
+							if ($service == 'kraken' && $config['kraken_key'] == '') {
+								$service = 'local';
+							}
+
 							// Определяем новое имя файла
 							$fileName = md5($size . '_' . $resizeType . '_' . $imgResized) . '_' . $service . '.' . pathinfo($imgResized, PATHINFO_EXTENSION);
 
-							// Если картинки нет в папке обработанных картинок
-							if (!file_exists($dir . $fileName)) {
-								// Если картинка локальная, или картинка внешняя и разрешено тянуть внешние — обработаем её.
+							$newFile = $dir . $fileName;
+							// Если картинки нет в папке обработанных картинок, то попробуем её получить.
+							if (!file_exists($newFile)) {
+								// Если картинка локальная, или картинка внешняя, но разрешено её стянуть — работаем.
 								if (!$isRemote || ($grabRemoteOn && $isRemote)) {
-									$newFile = $dir . $fileName;
-
 									self::getImageWith($service, $imgResized, $newFile, $size, $resizeType, $quality, $config);
 								}
 							}
 
-							$imgResized = $config['http_home_url'] . $imageDir . $fileName;
+							$imgResized = (file_exists($newFile)) ? $config['http_home_url'] . $imageDir . $fileName : $noimage;
 
 						} else {
 							// Если параметра imgSize нет - отдаём исходную картинку

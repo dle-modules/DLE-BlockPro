@@ -21,7 +21,7 @@ if ($member_id['user_group'] != '1') {
 define('MODULE_DIR', ENGINE_DIR . '/modules/base/admin/blockpro/');
 
 $moduleName    = 'blockpro';
-$moduleVersion = '4.6.3';
+$moduleVersion = '4.7.0';
 
 $moderate              = $_REQUEST['moderate'];
 $moderate_checked      = ($moderate) ? 'checked' : '';
@@ -359,6 +359,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 					<li>Результат</li>
 					<li>Виджеты</li>
 					<li>Хелперы</li>
+					<li>Настройки</li>
 					<li>Документация и техподдержка</li>
 				</ul>
 
@@ -423,8 +424,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 									<h2>Ваша строка подключения: <span class="btn btn-green btn-small btn-external-save"
 									                                   data-mfp-src="engine/ajax/base/save_block_pro.php?blockId=<?php echo $pageCahceName ?>">Создать виджет</span>
 									</h2>
-									<textarea rows="1" class="input input-block-level code">{<?php echo $moduleUrl ?>
-										"}</textarea>
+									<textarea rows="1" class="input input-block-level code">{<?php echo $moduleUrl ?>"}</textarea>
 									<h2>Предпросмотр блока:</h2>
 									<hr>
 									<div class="content">
@@ -433,7 +433,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 												var blockId = '<?php echo $pageCahceName?>',
 													pageNum = '<?php echo $cfg['pageNum']?>',
 													$block = $('#preview_tab');
-
+												$block.addClass('base-loader loading');
 												$.ajax({
 														url: dle_root + 'engine/ajax/blockpro.php',
 														dataType: 'html',
@@ -444,13 +444,12 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 													})
 													.done(function (data) {
 														$block.html(data);
-														console.log('done');
 													})
 													.fail(function () {
-														console.log("error");
+														console.error("error");
 													})
 													.always(function () {
-														console.log('always');
+														$block.removeClass('base-loader loading');
 													});
 											});
 										</script>
@@ -652,6 +651,9 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 						</div>
 
 
+					</div>
+					<div>
+						<?php include(MODULE_DIR . 'config.php'); ?>
 					</div>
 					<div>
 						<div class="content">

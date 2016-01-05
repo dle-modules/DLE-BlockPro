@@ -29,7 +29,7 @@ $protect->use_localhost = true;
 $protect->local_key_path = ENGINE_DIR . '/data/';
 $protect->local_key_name = 'blockpro.lic';
 $protect->server = 'http://api.pafnuty.name/api.php';
-$protect->release_date = '2015-07-18'; // гггг-мм-дд
+$protect->release_date = '2016-01-10'; // гггг-мм-дд
 $protect->activation_key = $bpConfig['activation_key'];
 
 $protect->status_messages = [

@@ -18,10 +18,11 @@
 		<div class="content content-border-bottom">
 			<div class="col col-mb-12">
 				рейтинг: {$el.showRating} {$el.showRatingCount}
-				{* {$el.short_story|tinypng:$noimage:'small':'1':'200x300':'':'auto'} *}
-				{* {$el.short_story|tinypng:$noimage:'small':'all':'250':'':'crop'} *}
+
+				{$el.short_story|image:$noimage:'small':'all':'250':'':'crop'}
+				{$el.short_story|tinypng:$noimage:'small':'all':'250':'':'crop'}
 				{$el.short_story|kraken:$noimage:'small':'all':'250':'':'crop'}
-				{$el.short_story|kraken:$noimage:'small':'2':'250':'':'auto'}
+
 				<h3>
 
 					{$el.favorites}[{$el.id}] <a href="{$el.url}">{$el.title}</a> {if $el.allow_edit} <a href="#" {$el.editOnclick}>[редактировать]</a> {/if} (({$el.xfields.price}))
