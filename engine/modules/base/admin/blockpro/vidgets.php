@@ -14,7 +14,9 @@ email:   pafnuty10@gmail.com
 if (!defined('DATALIFEENGINE') OR !defined('LOGGED_IN')) {
 	die("Hacking attempt!");
 }
+/** @var array $member_id */
 if ($member_id['user_group'] != '1') {
+	/** @var array $lang */
 	msg("error", $lang['index_denied'], $lang['index_denied']);
 }
 $arVidgets = $db->super_query("SELECT * FROM " . PREFIX ."_blockpro_blocks ORDER BY id ASC", true);
@@ -45,7 +47,7 @@ if (isset($_POST['blockId']) && $_POST['widgetDelete'] == 'Y') {
 				
 					$params = unserialize($vidgetItem['params']);
 					$vidgetModuleUrl = 'include file="engine/modules/base/blockpro.php';
-					$vidgetParamsUrl = array();
+					$vidgetParamsUrl = [];
 
 					// Удаляем значения по умолчанию за ненадобностью.
 					if ($params['template'] == 'blockpro/blockpro') {												
@@ -86,7 +88,7 @@ if (isset($_POST['blockId']) && $_POST['widgetDelete'] == 'Y') {
 					if (count($filteredparams) > 0) {
 						$vidgetModuleUrl .='?';
 					}
-					foreach (array_filter($params) as $key => $value) {
+					foreach (array_filter($params) as $value) {
 						$vidgetParamsUrl[] = $key . '=' . $value;
 					}
 					$vidgetModuleUrlParams = implode('&amp;', $vidgetParamsUrl);

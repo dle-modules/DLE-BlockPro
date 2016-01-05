@@ -1,7 +1,7 @@
 <?php
 /*
 =============================================================================
-DLE Yandex Maps
+BlockPro
 =============================================================================
 Автор:   ПафНутиЙ
 URL:     http://pafnuty.name/
@@ -28,21 +28,22 @@ include ENGINE_DIR . '/data/config.php';
 require_once ENGINE_DIR . '/classes/mysql.php';
 require_once ENGINE_DIR . '/data/dbconfig.php';
 require_once ENGINE_DIR . '/modules/functions.php';
+/** @var array $config */
 if ($config['version_id'] > 9.6) {
 	dle_session();
-}
-else {
+} else {
 	@session_start();
 }
 
 
 $user_group = get_vars("usergroup");
 if (!$user_group) {
-	$user_group = array();
-	$db->query("SELECT * FROM " . USERPREFIX . "_usergroups ORDER BY id ASC");
+	$user_group = [];
+	$db->query("SELECT * FROM " . USERPREFIX . "_usergroups ORDER BY `id` ASC");
 	while ($row = $db->get_row()) {
-		$user_group[$row['id']] = array();
-		foreach ($row as $key => $value) $user_group[$row['id']][$key] = stripslashes($value);
+		$user_group[$row['id']] = [];
+		foreach ($row as $key => $value)
+			$user_group[$row['id']][$key] = stripslashes($value);
 	}
 	set_vars("usergroup", $user_group);
 	$db->free();
@@ -54,12 +55,11 @@ require_once ENGINE_DIR . '/modules/base/admin/blockpro/checkLicenseStatus.php';
 /**
  * Основной код файла
  */
+/** @var array $member_id */
 if ($member_id['user_group'] == '1') {
 
 	die ($licenseStatus);
-	
+
 } else {
 	die ('Access denied');
 }
-?>
-

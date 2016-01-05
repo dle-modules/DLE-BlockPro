@@ -21,13 +21,13 @@ if ($member_id['user_group'] != '1') {
 function getTemplatesList($dir) {
 	global $cfg, $template;
 
-	$tplFiles = array();
+	$tplFiles = [];
 	$tplFiles[] = '<option value="">Выберите шаблон</option>';
 	$f = scandir($dir);
 	foreach ($f as $file){
 		$filename = str_replace('.tpl', '', $file);
 		$act = (('blockpro/' . $filename) == $template) ? 'selected' : '' ;
-		
+
 		if(preg_match('/\.(tpl)/', $file)){
 			$tplFiles[] = '<option '.$act.' value="blockpro/'.$filename.'">'. $filename.'</option>';
 		}
@@ -44,7 +44,7 @@ function getTemplatesList($dir) {
 function base_get_category($categoryid = 0, $parentid = 0, $nocat = TRUE, $returnstring = '') {
 	global $cat_info;
 
-	$root_category = array ();
+	$root_category = [];
 
 	if( $parentid == 0 ) {
 		// if( $nocat ) $returnstring .= '<option value="">Выберите категории</option>';
@@ -72,7 +72,7 @@ function base_get_category($categoryid = 0, $parentid = 0, $nocat = TRUE, $retur
 function showXFields($configname, $prefix = false, $inOptGroup = false) {
 	global $cfg;
 	$arr = xfieldsload();
-	$feldsArr = array();
+	$feldsArr = [];
 
 	foreach ($arr as $field) {
 		

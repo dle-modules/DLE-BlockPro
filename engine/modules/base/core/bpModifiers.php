@@ -19,7 +19,6 @@ class bpModifiers extends base {
 	 * @param string $etc     - Окончание обрезанного текста
 	 * @param bool   $wordcut - жесткое ограничение символов
 	 *
-	 * @internal param $length - максимальный размер возвращаемого контента
 	 * @return string $data - обрезанный результат
 	 */
 	public static function textLimit($data, $limit, $etc = '&hellip;', $wordcut = false, $charset = 'utf-8') {

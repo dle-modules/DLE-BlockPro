@@ -23,6 +23,7 @@ define('ROOT_DIR', substr(dirname(__FILE__), 0, -17));
 define('ENGINE_DIR', ROOT_DIR . '/engine');
 
 include ENGINE_DIR . '/data/config.php';
+/** @var array $config */
 if ($config['http_home_url'] == "") {
 	$config['http_home_url'] = explode("engine/ajax/base/save_block_pro.php", $_SERVER['PHP_SELF']);
 	$config['http_home_url'] = reset($config['http_home_url']);
@@ -40,10 +41,10 @@ else {
 
 $user_group = get_vars("usergroup");
 if (!$user_group) {
-	$user_group = array();
+	$user_group = [];
 	$db->query("SELECT * FROM " . USERPREFIX . "_usergroups ORDER BY id ASC");
 	while ($row = $db->get_row()) {
-		$user_group[$row['id']] = array();
+		$user_group[$row['id']] = [];
 		foreach ($row as $key => $value) $user_group[$row['id']][$key] = stripslashes($value);
 	}
 	set_vars("usergroup", $user_group);
@@ -54,6 +55,7 @@ require_once ENGINE_DIR . '/modules/sitelogin.php';
 /**
  * Основной код файла
  */
+/** @var array $member_id */
 if ($member_id['user_group'] == '1') {
 	if ($_REQUEST['blockId']) {
 		if ($_REQUEST['saveBlock'] == 'Y') {
@@ -161,4 +163,3 @@ if ($member_id['user_group'] == '1') {
 else {
 	die ('Access denied');
 }
-?>

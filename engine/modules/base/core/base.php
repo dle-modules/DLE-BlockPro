@@ -29,9 +29,9 @@ class base {
 
 	public $result;
 
-	public $dle_config = array();
-	public $cfg = array();
-	public $tplOptions = array();
+	public $dle_config = [];
+	public $cfg = [];
+	public $tplOptions = [];
 	public $tpl;
 	public $db;
 	const ROOT_DIR = ROOT_DIR;
@@ -52,13 +52,15 @@ class base {
 	}
 
 	public static function getDb() {
-		return SafeMySQL::getInstanse(array(
-			'host'    => DBHOST,
-			'user'    => DBUSER,
-			'pass'    => DBPASS,
-			'db'      => DBNAME,
-			'charset' => COLLATE,
-		));
+		return SafeMySQL::getInstanse(
+			[
+				'host'    => DBHOST,
+				'user'    => DBUSER,
+				'pass'    => DBPASS,
+				'db'      => DBNAME,
+				'charset' => COLLATE,
+			]
+		);
 	}
 
 	public function getTemplater($tplOptions) {
@@ -71,88 +73,98 @@ class base {
 		$this->addModifiers();
 	}
 
-	public function setConfig($cfg = array()) {
+	public function setConfig($cfg = []) {
 		return $cfg;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public static function getDleConfig() {
 		include(ENGINE_DIR . '/data/config.php');
+
+		/** @var array $config */
 		return $config;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public static function getBpConfig() {
 		include(ENGINE_DIR . '/data/blockpro.php');
+
+		/** @var array $bpConfig */
 		return $bpConfig;
 	}
 
 	public function addModifiers() {
 
 		// Добавляем свой модификатор в шаблонизатор для ограничения кол-ва символов в тексте
-		$config = $this->dle_config;
-		$db = $this->db;
-		$configForRezizer = $this->bpConfig;
+		$config                            = $this->dle_config;
+		$db                                = $this->db;
+		$configForRezizer                  = $this->bpConfig;
 		$configForRezizer['http_home_url'] = $this->dle_config['http_home_url'];
 
 		$this->tpl->addModifier(
 			'limit', function ($data, $limit, $etc = '&hellip;', $wordcut = false) use ($config) {
-				return bpModifiers::textLimit($data, $limit, $etc, $wordcut, $config['charset']);
-			}
+			return bpModifiers::textLimit($data, $limit, $etc, $wordcut, $config['charset']);
+		}
 		);
 
 		// Добавляем свой модификатор в шаблонизатор для вывода картинок
 		$this->tpl->addModifier(
 			'image', function ($data, $noimage = '', $imageType = 'small', $number = 1, $size, $quality = '100', $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false) use ($configForRezizer) {
-				return bpModifiers::getImage($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $configForRezizer);
-			}
+			return bpModifiers::getImage($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $configForRezizer);
+		}
 		);
 
 		// Добавляем свой модификатор в шаблонизатор для вывода картинок через tinypng
 		$this->tpl->addModifier(
 			'tinypng', function ($data, $noimage = '', $imageType = 'small', $number = 1, $size, $quality = '100', $resizeType = 'fit', $grabRemote = true, $showSmall = false, $subdir = false) use ($configForRezizer) {
-				return bpModifiers::getImage($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $configForRezizer, 'tinypng');
-			}
+			return bpModifiers::getImage($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $configForRezizer, 'tinypng');
+		}
 		);
 
 		// Добавляем свой модификатор в шаблонизатор для вывода картинок через craken
 		$this->tpl->addModifier(
 			'craken', function ($data, $noimage = '', $imageType = 'small', $number = 1, $size, $quality = '100', $resizeType = 'auto', $grabRemote = true, $showSmall = false, $subdir = false) use ($configForRezizer) {
-				return bpModifiers::getImageWi($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $configForRezizer, 'craken');
-			}
+			return bpModifiers::getImageWi($data, $noimage, $imageType, $number, $size, $quality, $resizeType, $grabRemote, $showSmall, $subdir, $configForRezizer, 'craken');
+		}
 		);
 
 		// Добавляем свой модификатор в шаблонизатор для вывода print_r
 		$this->tpl->addModifier(
 			'dump', function ($data) {
-				return bpModifiers::dump($data);
-			}
+			return bpModifiers::dump($data);
+		}
 		);
 
 		// Добавляем модификатор для получения списка пользователей
 		$this->tpl->addModifier(
 			'getAuthors', function ($data, $fields = false) use ($db) {
-				return bpModifiers::getAuthors($data, $fields = false, $db);
-			}
+			return bpModifiers::getAuthors($data, $fields = false, $db);
+		}
 		);
 
 		// Добавляем свой модификатор в шаблонизатор для вывода картинок
 		$this->tpl->addModifier(
 			'declination', function ($n, $word) {
-				return bpModifiers::declinationWords($n, $word);
-			}
+			return bpModifiers::declinationWords($n, $word);
+		}
 		);
 
 		// Добавляем свой модификатор в шаблонизатор для вывода форматированной даты
 		$this->tpl->addModifier(
 			'dateformat', function ($data, $_f = false) {
-				return formateDate($data, $_f);
-			}
+			return formateDate($data, $_f);
+		}
 		);
 
 		// Добавляем свой модификатор в шаблонизатор для вывода форматированной даты
 		$this->tpl->addModifier(
 			'catinfo', function ($data, $info = false, $noicon = false) {
-				return getCatInfo($data, $info, $noicon);
-			}
+			return getCatInfo($data, $info, $noicon);
+		}
 		);
 	}
 
@@ -163,8 +175,9 @@ class base {
 	 */
 
 	public function getPostUrl($data) {
+		 /** @var array $cat_info */
 		global $cat_info;
-		
+
 		$data['date'] = strtotime($data['date']);
 
 		if ($this->dle_config['allow_alt_url'] && $this->dle_config['allow_alt_url'] != 'no') {
@@ -194,7 +207,6 @@ class base {
 	 * @param bool $diapazone
 	 * @param bool $subcats
 	 *
-	 * @internal param string $diapasone
 	 * @return string
 	 * @author   Elkhan I. Isaev <elhan.isaev@gmail.com>
 	 */
@@ -205,30 +217,30 @@ class base {
 
 			if (strpos($diapazone, ',') !== false) {
 				$diapazoneArray = explode(',', $diapazone);
-				$diapazoneArray = array_diff($diapazoneArray, array(NULL));
+				$diapazoneArray = array_diff($diapazoneArray, [NULL]);
 
 				foreach ($diapazoneArray as $v) {
 					if (strpos($v, '-') !== false) {
 						preg_match("#(\d+)-(\d+)#i", $v, $test);
 
 						$diapazone = !empty($diapazone) && is_array($diapazone) ?
-							array_merge($diapazone, (!empty ($test) ? range($test[1], $test[2]) : array()))
-							: (!empty ($test) ? range($test[1], $test[2]) : array());
+							array_merge($diapazone, (!empty ($test) ? range($test[1], $test[2]) : []))
+							: (!empty ($test) ? range($test[1], $test[2]) : []);
 
 					} else {
 						$diapazone = !empty($diapazone) && is_array($diapazone) ?
-							array_merge($diapazone, (!empty ($v) ? array((int)$v) : array()))
-							: (!empty ($v) ? array((int)$v) : array());
+							array_merge($diapazone, (!empty ($v) ? [(int)$v] : []))
+							: (!empty ($v) ? [(int)$v] : []);
 					}
 				}
 
 			} elseif (strpos($diapazone, '-') !== false) {
 
 				preg_match("#(\d+)-(\d+)#i", $diapazone, $test);
-				$diapazone = !empty ($test) ? range($test[1], $test[2]) : array();
+				$diapazone = !empty ($test) ? range($test[1], $test[2]) : [];
 
 			} else {
-				$diapazone = array((int)$diapazone);
+				$diapazone = [(int)$diapazone];
 			}
 			if (!empty($diapazone)) {
 				if ($subcats && function_exists('get_sub_cats')) {
@@ -241,7 +253,7 @@ class base {
 				}
 				$diapazone = array_unique($diapazone);
 			} else {
-				$diapazone = array();
+				$diapazone = [];
 			}
 
 			$diapazone = implode(',', $diapazone);
@@ -262,7 +274,7 @@ class base {
 	public function tagsLink($tags) {
 		$showTags = '';
 		if ($this->dle_config['allow_tags'] && $tags) {
-			$showTagsArr = array();
+			$showTagsArr = [];
 			$tags        = explode(",", $tags);
 
 			foreach ($tags as $value) {
@@ -282,23 +294,24 @@ class base {
 
 	/**
 	 * Получаем несколько уникальных случайных чисел в заданном диапазоне
-	 * 
+	 *
 	 * @param  integer $from  от
 	 * @param  integer $to    до
 	 * @param  integer $count кол-во чисел
-	 * 
+	 *
 	 * @return array          массив с числами
 	 */
 	public function getRand($from = 1, $to = 2000, $count = 15) {
-		$arNumbers = $tmp = array();
+		$arNumbers = $tmp = [];
 		for ($i = 0; $i < $count; $i++) {
 			do {
 				$a = mt_rand($from, $to);
 			} while (isset($tmp[$a]));
-			$tmp[$a] = $from;
+			$tmp[$a]     = $from;
 			$arNumbers[] = $a;
 		}
 		unset($tmp);
+
 		return $arNumbers;
 	}
 
@@ -306,20 +319,16 @@ class base {
 } // base Class
 
 
-
 /**
  * Форматируем дату
  *
  * @param  string $date дата
- * @param bool $_f
- *
- * @internal param bool $_f если false - форматирует в соответствии с настройками движка
- *
+ * @param bool|false    $_f
  * @return string        отформатированная дата
  */
 function formateDate($date, $_f = false) {
-
-	global $lang, $config, $langdate;
+	/** @var array $langdate */
+	global	$lang, $config, $langdate;
 
 	if (!$lang['charset']) {
 		@include_once ROOT_DIR . '/language/' . $config['langs'] . '/website.lng';
@@ -352,11 +361,11 @@ function formateDate($date, $_f = false) {
  */
 function getCatInfo($category, $info = false, $noicon = false) {
 	global $cat_info, $config;
-	
-	$my_cat      = array();
-	$my_cat_icon = array();
-	$my_cat_link = array();
-	$cat_return  = array();
+
+	$my_cat      = [];
+	$my_cat_icon = [];
+	$my_cat_link = [];
+	$cat_return  = [];
 
 	$separator = ($config['category_separator']) ? $config['category_separator'] : ', ';
 
@@ -410,38 +419,36 @@ function getCatInfo($category, $info = false, $noicon = false) {
 
 }
 
-/**
- * @return mixed
- */
-function getNormalHomeHttp() {
-	$config['http_home_url'] = str_replace('http://' . $_SERVER['HTTP_HOST'], '', $config['http_home_url']);
-
-	return $config['http_home_url'];
-}
-
 
 /**
  * Показ рейтинга через модуль. Функция переписана из стандартной т.к. стандартная имела ID, конфликтующие с самими собой.
- * @param  integer  $id       ID новости
- * @param  integer  $rating   значение рейтинга
- * @param  integer  $vote_num кол-во голосов
- * @param  boolean  $allow    доступность рейтинга для юзера
+ *
+ * @param  integer $id       ID новости
+ * @param  integer $rating   значение рейтинга
+ * @param  integer $vote_num кол-во голосов
+ * @param  boolean $allow    доступность рейтинга для юзера
+ *
  * @return mixed
  */
 function baseShowRating($id, $rating, $vote_num, $allow = true) {
 	global $lang, $config;
 
-	if( !$config['rating_type'] ) {
-		
-		if( $rating AND $vote_num ) $rating = round( ($rating / $vote_num), 0 );
-		else $rating = 0;
-		
-		if ($rating < 0 ) $rating = 0;
+	if (!$config['rating_type']) {
+
+		if ($rating AND $vote_num) {
+			$rating = round(($rating / $vote_num), 0);
+		} else {
+			$rating = 0;
+		}
+
+		if ($rating < 0) {
+			$rating = 0;
+		}
 
 		$rating = $rating * 20;
-	
-		if( !$allow ) {
-		
+
+		if (!$allow) {
+
 			$rated = <<<HTML
 <div class="rating">
 	<ul class="unit-rating">
@@ -449,10 +456,10 @@ function baseShowRating($id, $rating, $vote_num, $allow = true) {
 	</ul>
 </div>
 HTML;
-		
+
 			return $rated;
 		}
-	
+
 		$rated = <<<HTML
 <div data-rating-layer="{$id}">
 	<div class="rating">
@@ -467,41 +474,49 @@ HTML;
 	</div>
 </div>
 HTML;
-	
+
 		return $rated;
 
 	} elseif ($config['rating_type'] == "1") {
-		
-		if( $rating < 0 ) $rating = 0;
-		
-		if( $allow ) $rated = "<span data-rating-layer=\"{$id}\" class=\"ignore-select\" ><span class=\"ratingtypeplus ignore-select\" >{$rating}</span></span>";
-		else $rated = "<span class=\"ratingtypeplus ignore-select\" >{$rating}</span>";
-		
+
+		if ($rating < 0) {
+			$rating = 0;
+		}
+
+		if ($allow) {
+			$rated = "<span data-rating-layer=\"{$id}\" class=\"ignore-select\" ><span class=\"ratingtypeplus ignore-select\" >{$rating}</span></span>";
+		} else {
+			$rated = "<span class=\"ratingtypeplus ignore-select\" >{$rating}</span>";
+		}
+
 		return $rated;
-	
+
 	} elseif ($config['rating_type'] == "2") {
-		
+
 		$extraclass = "ratingzero";
-		
-		if( $rating < 0 ) {
+
+		if ($rating < 0) {
 			$extraclass = "ratingminus";
 		}
-		
-		if( $rating > 0 ) {
+
+		if ($rating > 0) {
 			$extraclass = "ratingplus";
-			$rating = "+".$rating;
+			$rating     = "+" . $rating;
 		}
-		
-		if( $allow ) $rated = "<span data-rating-layer=\"{$id}\" class=\"ignore-select\" ><span class=\"ratingtypeplusminus ignore-select {$extraclass}\" >{$rating}</span></span>";
-		else $rated = "<span class=\"ratingtypeplusminus ignore-select {$extraclass}\" >{$rating}</span>";
-		
+
+		if ($allow) {
+			$rated = "<span data-rating-layer=\"{$id}\" class=\"ignore-select\" ><span class=\"ratingtypeplusminus ignore-select {$extraclass}\" >{$rating}</span></span>";
+		} else {
+			$rated = "<span class=\"ratingtypeplusminus ignore-select {$extraclass}\" >{$rating}</span>";
+		}
+
 		return $rated;
-		
+
 	}
 }
 
 function stripSlashesInArray($data) {
-	if(is_array($data)) {
+	if (is_array($data)) {
 		$data = array_map('stripSlashesInArray', $data);
 	} else {
 		$data = stripslashes($data);
@@ -509,5 +524,3 @@ function stripSlashesInArray($data) {
 
 	return $data;
 }
-
-?>

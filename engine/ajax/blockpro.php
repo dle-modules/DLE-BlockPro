@@ -23,6 +23,7 @@ define('ENGINE_DIR', ROOT_DIR . '/engine');
 
 include ENGINE_DIR . '/data/config.php';
 
+/** @var array $config */
 if ($config['version_id'] > 10.2) {
 	date_default_timezone_set($config['date_adjust']);
 	$_TIME = time();
@@ -47,14 +48,15 @@ if (function_exists('dle_session')) {
 }
 
 $is_logged = false;
-$member_id = array();
+$member_id = [];
 
 if ($config['allow_registration']) {
 	require_once ENGINE_DIR . '/modules/sitelogin.php';
 }
-if(!$is_logged) {
+if (!$is_logged) {
 	$member_id['user_group'] = 5;
 }
+/** @var array $user_group */
 if (!$user_group) {
 	$user_group = get_vars("usergroup");
 }
@@ -65,13 +67,13 @@ if (!$cat_info) {
 $pageNum = (isset($_REQUEST['pageNum'])) ? (int)$_REQUEST['pageNum'] : 1;
 $blockId = (isset($_REQUEST['blockId'])) ? $_REQUEST['blockId'] : false;
 
-$cashe_tmp = $config['allow_cache'];
+$cashe_tmp             = $config['allow_cache'];
 $config['allow_cache'] = 'yes'; // 'yes' для совместимости со старыми версиями dle, т.к. там проверяется значение, а не наличие значения переменной.
-$_cr = dle_cache($blockId);
+$_cr                   = dle_cache($blockId);
 $config['allow_cache'] = $cashe_tmp;
 
 if ($_cr) {
-	
+
 	$isAjaxConfig             = true;
 	$ajaxConfigArr            = unserialize($_cr);
 	$ajaxConfigArr['pageNum'] = $pageNum;
@@ -90,7 +92,7 @@ if ($_cr) {
 	// Формируем имя кеш-файла в соответствии с правилами формирования тагового стандартными средствами DLE, для последующей проверки на существование этого файла.
 	$_end_file = (!$ajaxConfigArr['cacheSuffixOff']) ? ($is_logged) ? '_' . $member_id['user_group'] : '_0' : false;
 	$filedate  = ENGINE_DIR . '/cache/' . $ajaxConfigArr['cachePrefix'] . '_' . md5($cacheName) . $_end_file . '.tmp';
-	
+
 	// Если установлено время жизни кеша
 	if ($ajaxConfigArr['cacheLive']) {
 
@@ -102,15 +104,15 @@ if ($_cr) {
 		if ($cache_time >= $ajaxConfigArr['cacheLive'] * 60) {
 			$clear_time_cache = true;
 		}
-	}	
+	}
 
 	$seconds = 172800; // 2 дня для кеша в браузере
-	
+
 	header("Content-type: text/html; charset=" . $config['charset']);
 	header('Cache-Control: public, max-age=' . $seconds);
 
 	if (file_exists($filedate)) {
-		$etag = md5_file($filedate);
+		$etag         = md5_file($filedate);
 		$lastModified = filemtime($filedate);
 
 		header("Expires: " . gmdate("D, d M Y H:i:s", $lastModified + $seconds) . " GMT");
@@ -118,7 +120,8 @@ if ($_cr) {
 
 		header("Etag: $etag");
 		if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $lastModified ||
-			@trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) {
+			@trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag
+		) {
 			header("HTTP/1.1 304 Not Modified");
 			exit;
 		}
