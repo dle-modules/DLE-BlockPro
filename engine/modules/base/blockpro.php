@@ -97,6 +97,7 @@ if ($isAjaxConfig) {
 		'symbols' => !empty($symbols) ? $symbols : false, // Символьные коды для фильтрации по символьному каталогу. Перечисляем через запятую.
 		'notSymbols' => !empty($notSymbols) ? $notSymbols : false, // Символьные коды для исключающей фильтрации по символьному каталогу. Перечисляем через запятую или пишем this для текущего символьного кода
 		'fields' => !empty($fields) ? $fields : false, // Дополнение к выборке полей из БД (p.field,e.field)
+		'setFilter' => !empty($setFilter) ? $setFilter : '', // Собственная фильтрация полей БД
 	];
 }
 
@@ -320,6 +321,59 @@ if (!$output) {
 
 		// Условие для отображения только постов, прошедших модерацию или находящихся на модерации
 		$wheres[] = ($base->cfg['moderate']) ? 'approve = 0' : 'approve';
+
+		// Добавляем пользовательскую фильтрацию
+		if ($base->cfg['setFilter'] != '') {
+			
+			$arFilter = [];
+
+			if(strpos($base->cfg['setFilter'], '||')) {
+				$arFilter = explode('||', $base->cfg['setFilter']);
+			} else {
+				$arFilter[] = $base->cfg['setFilter'];
+			}
+
+			if (!empty($arFilter)) {
+				foreach ($arFilter as $strItem) {
+					$arFItem = explode('|', $strItem);
+
+					$field = $arFItem[0];
+					
+					// Т.к. DLE не позволяет передавать напрямую символы '>' и '<', приходится изобретать собственный велосипед. 
+					switch ($arFItem[1]) {
+						case '-':
+							$operator = ' < ';
+							break;
+
+						case '+':
+							$operator = ' > ';
+							break;
+
+						case '=':
+							$operator = ' = ';
+							break;
+
+						case '+=':
+							$operator = ' >= ';
+							break;
+
+						case '-=':
+							$operator = ' <= ';
+							break;
+
+						case '+-': 
+						case '-+':
+							$operator = ' != ';
+							break;
+					}
+
+					$_op = (is_numeric($arFItem[2])) ? '?i' : '?s';
+					$itemVal = $base->db->parse($_op, $arFItem[2]);
+
+					$wheres[] = $field . $operator . $itemVal;
+				}
+			}
+		}	
 
 		// Определяем в какую сторону направлена сортировка
 		$ordering = ($base->cfg['order'] == 'new') ? 'DESC' : 'ASC';

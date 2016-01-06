@@ -78,6 +78,7 @@ $navDefaultGet         = $_REQUEST['navDefaultGet'];
 $navDefaultGet_checked = ($navDefaultGet) ? 'checked' : '';
 $thisCatOnly           = $_REQUEST['thisCatOnly'];
 $thisCatOnly_checked   = ($thisCatOnly) ? 'checked' : '';
+$setFilter                 = $_REQUEST['setFilter'];
 
 
 $cfg = [
@@ -153,6 +154,7 @@ $cfg = [
 	'symbols'    => !empty($symbols) ? $symbols : false, // Символьные коды для фильтрации по символьному каталогу. Перечисляем через запятую.
 	'notSymbols' => !empty($notSymbols) ? $notSymbols : false, // Символьные коды для исключающей фильтрации по символьному каталогу. Перечисляем через запятую или пишем this для текущего символьного кода
 	'fields'     => !empty($fields) ? $fields : false, // Дополнение к выборке полей из БД (p.field,e.field)
+	'setFilter' => !empty($setFilter) ? $setFilter : '', // Собственная фильтрация полей БД
 ];
 
 /**

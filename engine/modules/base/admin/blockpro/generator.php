@@ -408,15 +408,6 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 			</div>
 		</div>
 
-		<div class="content">
-			<div class="col col-mb-12 col-5 col-dt-4 form-label">
-				Дополнительные колонки, отбираемые из БД
-			</div>
-			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input" type="text" name="fields" value="<?php echo $cfg['fields']?>" placeholder="p.custom,e.extra">
-			</div>
-		</div>
-
 	</div> <!-- .logic-block -->
 
 	<div class="logic-block">
@@ -536,6 +527,40 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				<input class="input" type="text" name="notTags" value="<?php echo $cfg['notTags']?>" placeholder="tag1,tag2">
 			</div>
 		</div>
+	</div> <!-- .logic-block -->
+
+	<div class="logic-block">
+		<div class="content">
+			<div class="col col-mb-12 col-5 col-dt-4 form-label">
+				&nbsp;
+			</div>
+			<div class="col col-mb-12 col-7 col-dt-8 form-control">
+				<h3 class="mb0 h2 text-muted">Собственная фильтрация и колонки БД</h3>
+			</div>
+		</div>
+
+		<div class="content">
+			<div class="col col-mb-12 col-5 col-dt-4 form-label">
+				Дополнительные колонки, отбираемые из БД
+			</div>
+			<div class="col col-mb-12 col-7 col-dt-8 form-control">
+				<input class="input" type="text" name="fields" value="<?php echo $cfg['fields']?>" placeholder="p.custom,e.extra">
+			</div>
+		</div>
+
+		<div class="content">
+			<div class="col col-mb-12 col-5 col-dt-4 form-label">
+				Собственные словия фильтрации
+			</div>
+			<div class="col col-mb-12 col-7 col-dt-8 form-control">
+				<input class="input" type="text" name="setFilter" value="<?php echo $cfg['setFilter']?>" placeholder="e.news_read|>100||p.comm_num|>20">
+				<p class="alert">
+					<b>ВНИМАНИЕ!</b> Корректность фильтрации не проверяется.
+				</p>
+				<p class="alert alert-info">Для удаления ненужных стандартных параметров фильтрации рекомендуется выбирать параметр сортировки "без сортировки".</p>
+			</div>
+		</div>
+
 	</div> <!-- .logic-block -->
 
 
