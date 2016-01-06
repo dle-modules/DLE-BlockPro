@@ -2,7 +2,6 @@
 	$block_id - это уникальный идентификатор блока (у блоков с разными настройками он разный) для того, что бы правильно организовать постраничную навигацию на ajax.
 *}
 <div id="{$block_id}">
-	{$totalCount}
 	{$pages}
 
 	{*
@@ -19,9 +18,9 @@
 			<div class="col col-mb-12">
 				рейтинг: {$el.showRating} {$el.showRatingCount}
 
-				{$el.short_story|image:$noimage:'small':'all':'250':'':'crop'}
-				{$el.short_story|tinypng:$noimage:'small':'all':'250':'':'crop'}
-				{$el.short_story|kraken:$noimage:'small':'all':'250':'':'crop'}
+				{* {$el.short_story|image:$noimage:'small':'all':'250':'':'crop'} *}
+				{* {$el.short_story|tinypng:$noimage:'small':'all':'250':'':'crop'} *}
+				{* {$el.short_story|kraken:$noimage:'small':'all':'250':'':'crop'} *}
 
 				<h3>
 

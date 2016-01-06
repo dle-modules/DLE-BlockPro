@@ -404,7 +404,7 @@ class bpModifiers extends base {
 	 */
 	public static function declinationWords($n = 0, $words) {
 		$words = explode('|', $words);
-		$n     = intval($n);
+		$n     = abs((int) $n); // abs на случай отрицательного значения
 
 		return $n % 10 == 1 && $n % 100 != 11 ? $words[0] . $words[1] : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? $words[0] . $words[2] : $words[0] . $words[3]);
 	}

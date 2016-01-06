@@ -755,78 +755,78 @@ if (!$output) {
 		$attachments = $relatedIds = [];
 
 		// Обрабатываем данные в массиве.
-		foreach ($list as $key => $value) {
+		foreach ($list as $key => &$newsItem) {
 			// Плучаем обработанные допполя.
-			$list[$key]['xfields'] = stripSlashesInArray(xfieldsdataload($value['xfields']));
+			$newsItem['xfields'] = stripSlashesInArray(xfieldsdataload($newsItem['xfields']));
 			
 			// Собираем массив вложений
-			$attachments[] = $relatedIds[] = $value['id'];
+			$attachments[] = $relatedIds[] = $newsItem['id'];
 
 			// Массив данных для формирования ЧПУ
 			$urlArr = [
-				'category' => $value['category'],
-				'id' => $value['id'],
-				'alt_name' => $value['alt_name'],
-				'date' => $value['date'],
+				'category' => $newsItem['category'],
+				'id' => $newsItem['id'],
+				'alt_name' => $newsItem['alt_name'],
+				'date' => $newsItem['date'],
 			];
 			// Записываем сформированный URL статьи в массив
-			$list[$key]['url'] = $base->getPostUrl($urlArr);
+			$newsItem['url'] = $base->getPostUrl($urlArr);
 
 			// Добавляем тег edit
 			/** @var array $user_group */
-			if ($is_logged and (($member_id['name'] == $value['autor'] and $user_group[$member_id['user_group']]['allow_edit']) or $user_group[$member_id['user_group']]['allow_all_edit'])) {
+			if ($is_logged and (($member_id['name'] == $newsItem['autor'] and $user_group[$member_id['user_group']]['allow_edit']) or $user_group[$member_id['user_group']]['allow_all_edit'])) {
 				$_SESSION['referrer'] = $_SERVER['REQUEST_URI'];
-				$list[$key]['allow_edit'] = true;
-				$list[$key]['editOnclick'] = 'onclick="return dropdownmenu(this, event, MenuNewsBuild(\'' . $value['id'] . '\', \'short\'), \'170px\')"';
+				$newsItem['allow_edit'] = true;
+				$newsItem['editOnclick'] = 'onclick="return dropdownmenu(this, event, MenuNewsBuild(\'' . $newsItem['id'] . '\', \'short\'), \'170px\')"';
 
 			} else {
-				$list[$key]['allow_edit'] = false;
-				$list[$key]['editOnclick'] = '';
+				$newsItem['allow_edit'] = false;
+				$newsItem['editOnclick'] = '';
 			}
 
 			// Записываем сформированные теги в массив
-			$list[$key]['tags'] = $base->tagsLink($value['tags']);
+			$newsItem['tags'] = $base->tagsLink($newsItem['tags']);
 
 			// Записываем в массив ссылку на аватар
-			$list[$key]['avatar'] = $tplArr['theme'] . '/dleimages/noavatar.png';
+			$newsItem['avatar'] = $tplArr['theme'] . '/dleimages/noavatar.png';
 			// А если у юзера есть фотка - выводим её, или граватар.
-			if ($value['foto']) {
-				$userFoto = $value['foto'];
+			if ($newsItem['foto']) {
+				$userFoto = $newsItem['foto'];
 				if (count(explode('@', $userFoto)) == 2) {
-					$list[$key]['avatar'] = 'http://www.gravatar.com/avatar/' . md5(trim($userFoto)) . '?s=' . intval($user_group[$value['user_group']]['max_foto']);
+					$newsItem['avatar'] = 'http://www.gravatar.com/avatar/' . md5(trim($userFoto)) . '?s=' . intval($user_group[$newsItem['user_group']]['max_foto']);
 				} else {
-					$list[$key]['avatar'] = ($base->dle_config['version_id'] > '10.5') ? $userFoto : $base->dle_config['http_home_url'] . 'uploads/fotos/' . $userFoto;
+					$newsItem['avatar'] = ($base->dle_config['version_id'] > '10.5') ? $userFoto : $base->dle_config['http_home_url'] . 'uploads/fotos/' . $userFoto;
 				}
 			}
 
 			// Разбираемся с рейтингом
-			$list[$key]['showRating'] = '';
-			$list[$key]['showRatingCount'] = '';
-			if ($value['allow_rate']) {
-				$list[$key]['showRatingCount'] = '<span class="ignore-select" data-vote-num-id="' . $value['id'] . '">' . $value['vote_num'] . '</span>';
+			$newsItem['showRating'] = '';
+			$newsItem['showRatingCount'] = '';
+			if ($newsItem['allow_rate']) {
+				$newsItem['showRatingCount'] = '<span class="ignore-select" data-vote-num-id="' . $newsItem['id'] . '">' . $newsItem['vote_num'] . '</span>';
 
 				if ($base->dle_config['short_rating'] and $user_group[$member_id['user_group']]['allow_rating']) {
-					$list[$key]['showRating'] = baseShowRating($value['id'], $value['rating'], $value['vote_num'], 1);
+					$newsItem['showRating'] = baseShowRating($newsItem['id'], $newsItem['rating'], $newsItem['vote_num'], 1);
 
-					$list[$key]['ratingOnclickPlus'] = 'onclick="base_rate(\'plus\', \'' . $value['id'] . '\'); return false;"';
-					$list[$key]['ratingOnclickMinus'] = 'onclick="base_rate(\'minus\', \'' . $value['id'] . '\'); return false;"';
+					$newsItem['ratingOnclickPlus'] = 'onclick="base_rate(\'plus\', \'' . $newsItem['id'] . '\'); return false;"';
+					$newsItem['ratingOnclickMinus'] = 'onclick="base_rate(\'minus\', \'' . $newsItem['id'] . '\'); return false;"';
 
 				} else {
-					$list[$key]['showRating'] = baseShowRating($value['id'], $value['rating'], $value['vote_num'], 0);
+					$newsItem['showRating'] = baseShowRating($newsItem['id'], $newsItem['rating'], $newsItem['vote_num'], 0);
 
-					$list[$key]['ratingOnclickPlus'] = '';
-					$list[$key]['ratingOnclickMinus'] = '';
+					$newsItem['ratingOnclickPlus'] = '';
+					$newsItem['ratingOnclickMinus'] = '';
 				}
 			}
 			// Разбираемся с избранным
-			$list[$key]['favorites'] = '';
+			$newsItem['favorites'] = '';
 			if ($is_logged) {
 				$fav_arr = explode(',', $member_id['favorites']);
 
-				if (!in_array($value['id'], $fav_arr) || $base->dle_config['allow_cache']) {
-					$list[$key]['favorites'] = '<img data-favorite-id="' . $value['id'] . '" data-action="plus" src="' . $tplArr['theme'] . '/dleimages/plus_fav.gif"  title="Добавить в свои закладки на сайте" alt="Добавить в свои закладки на сайте" />';
+				if (!in_array($newsItem['id'], $fav_arr) || $base->dle_config['allow_cache']) {
+					$newsItem['favorites'] = '<img data-favorite-id="' . $newsItem['id'] . '" data-action="plus" src="' . $tplArr['theme'] . '/dleimages/plus_fav.gif"  title="Добавить в свои закладки на сайте" alt="Добавить в свои закладки на сайте" />';
 				} else {
-					$list[$key]['favorites'] = '<img data-favorite-id="' . $value['id'] . '" data-action="minus" src="' . $tplArr['theme'] . '/dleimages/minus_fav.gif"  title="Удалить из закладок" alt="Удалить из закладок" />';
+					$newsItem['favorites'] = '<img data-favorite-id="' . $newsItem['id'] . '" data-action="minus" src="' . $tplArr['theme'] . '/dleimages/minus_fav.gif"  title="Удалить из закладок" alt="Удалить из закладок" />';
 				}
 			}
 		}
