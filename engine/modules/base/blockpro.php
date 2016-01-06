@@ -748,6 +748,7 @@ if (!$output) {
 		/** @var array $lang */
 		$tplArr['lang']        = $lang;
 		$tplArr['cacheName']   = $cacheName;
+		/** @var array $category_id */
 		$tplArr['category_id'] = $category_id;
 		$tplArr['cfg']         = $cfg;
 		
@@ -857,8 +858,8 @@ if (!$output) {
 			
 			// Удаляем номер страницы для того, что бы не создавался новый кеш для каждого блока постранички
 			unset($pageCahceName['pageNum']);
-			// Сокращаем немного имя файла :)
 
+			// Сокращаем немного имя файла :)
 			$pageCahceName = 'bpa_' . crc32(implode('_', $pageCahceName));
 
 			// Включаем кеширование DLE принудительно
