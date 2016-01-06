@@ -105,7 +105,8 @@ doc
 	.on('keyup input change', '[data-setimage]', function(event) {
 		event.preventDefault();
 		var $arr = ($('[data-setimage]')),
-			prefix = '{$el.short_story|image:',
+			service = 'image',
+			prefix = '{$el.short_story|',
 			suffix = '}',
 			returnArr = [],
 			text;
@@ -117,6 +118,10 @@ doc
 						returnArr.push('true');
 					} else {
 						returnArr.push('false');
+					}
+				} else if ($(this).hasClass('radio')) {
+					if ($(this).is(':checked')) {
+						service = $(this).val();
 					}
 				} else if ($(this).data('id') == 'img_defImage') {
 					returnArr.push($(this).val());
@@ -130,7 +135,7 @@ doc
 		});
 		text = returnArr.join(':');
 
-		$('#img_code2').val(prefix + text + suffix);
+		$('#img_code2').val(prefix + service + ':' + text + suffix);
 	})
 	.on('keyup input change', '[data-settext]', function(event) {
 		event.preventDefault();

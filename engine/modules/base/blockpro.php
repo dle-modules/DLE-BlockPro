@@ -839,6 +839,8 @@ if (!$output) {
 
 		// Устанавливаем пустое значение для постранички по умолчанию.
 		$tplArr['pages'] = '';
+		// Общее кол-во новостей без постранички.
+		$tplArr['totalCount'] = count($list);
 
 		if ($base->cfg['showNav']) {
 			
@@ -846,6 +848,9 @@ if (!$output) {
 			$totalCount = $base->db->getOne('SELECT COUNT(*) as count FROM ?n as p LEFT JOIN ?n e ON (p.id=e.news_id) ?p', PREFIX . '_post', PREFIX . '_post_extras', $where);
 			// Вычитаем переменную startFrom для корректного значения кол-ва новостей
 			$totalCount = $totalCount - $base->cfg['startFrom'];
+
+			// Общее кол-во новостей с постраничкой.
+			$tplArr['totalCount'] = $totalCount;
 
 			// Формируем имя кеш-файла с конфигом
 			$pageCahceName = $base->cfg;

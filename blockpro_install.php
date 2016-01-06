@@ -67,7 +67,7 @@ $steps = <<<HTML
 		<textarea readonly class="code" rows="1"><script src="{THEME}/blockpro/js/blockpro.js"></script></textarea>
 		или
 		<textarea readonly class="code" rows="1"><script src="{THEME}/blockpro/js/blockpro_new.js"></script></textarea>
-		если хотте использовать возможность навигации по стрелкам браузера при ajax-переключении страниц модуля.
+		если хотите использовать возможность навигации по стрелкам браузера при ajax-переключении страниц модуля.
 	</li>
 	<li>Открыть файл <b>/engine/data/blockpro.key</b> и вставить в него <a href="http://store.pafnuty.name/purchase/" target="_blank">полученный ключ</a>.</li>
 	<li>Выполнить установку админчасти и таблиц модуля (кнопка ниже).</li>

@@ -472,6 +472,25 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 
 						<div class="content">
 							<div class="col col-mb-12 col-5 col-dt-4 form-label">
+								Сервис для обработки картинок <br>
+								<small>
+									Для корректной работы сервисов необходима их <a href="?mod=blockpro#tab5">настройка</a>
+								</small>
+							</div>
+							<div class="col col-mb-12 col-7 col-dt-8 form-control">
+								<input class="radio" type="radio" name="service" value="image" id="service_local" checked data-setimage >
+								<label for="service_local"><span></span>Встроенный механизм</label>
+								<br>
+								<input class="radio" type="radio" name="service" value="tinypng" id="service_tinypng" data-setimage >
+								<label for="service_tinypng"><span></span>TinyPNG</label>
+								<br>
+								<input class="radio" type="radio" name="service" value="kraken" id="service_kraken" data-setimage >
+								<label for="service_kraken"><span></span>Kraken.io</label>
+							</div>
+						</div>
+
+						<div class="content">
+							<div class="col col-mb-12 col-5 col-dt-4 form-label">
 								Название переменной для картинки-заглушки
 							</div>
 							<div class="col col-mb-12 col-7 col-dt-8 form-control">
@@ -618,7 +637,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 								<span class="text-red">Не забывайте сменить short_story на нужное поле</span>
 							</div>
 							<div class="col col-mb-12 col-7 col-dt-8 form-control">
-								<textarea id="txt_code" class="input code">{$el.short_story|limit:'150'}</textarea>
+								<textarea id="txt_code" rows="1" class="input code">{$el.short_story|limit:'150'}</textarea>
 							</div>
 						</div>
 						<hr>
@@ -646,7 +665,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 								Код для вставки в шаблон (внутрь цикла) <br>
 							</div>
 							<div class="col col-mb-12 col-7 col-dt-8 form-control">
-								<textarea id="cat_code" class="input code">{$el.category|catinfo}</textarea>
+								<textarea id="cat_code" rows="1" class="input code">{$el.category|catinfo}</textarea>
 							</div>
 						</div>
 
