@@ -550,7 +550,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 
 		<div class="content">
 			<div class="col col-mb-12 col-5 col-dt-4 form-label">
-				Собственные словия фильтрации
+				Собственные условия фильтрации
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<input class="input" type="text" name="setFilter" value="<?php echo $cfg['setFilter']?>" placeholder="e.news_read|>100||p.comm_num|>20">
