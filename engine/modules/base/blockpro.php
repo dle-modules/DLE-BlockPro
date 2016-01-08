@@ -698,24 +698,37 @@ if (!$output) {
 		$bDay = (int) $base->cfg['day'];
 		$bDayCount = (int) $base->cfg['dayCount'];
 
-		// Если future задан, то интервал не вычитаем, а прибавляем к текущему началу дня
-		$intervalOperator = ($base->cfg['future']) ? ' + ' : ' - ';
+		// Если в bDay и bDayCount передано '-1', значит требуется вывести новости только за сегодня.
+		// Это обработка случая, когда включен вывод новостей на ненаступившую дату и надо вывести за сегодня
+		// https://pafnuty.omnidesk.ru/staff/cases/record/181-466935/
+		if ($bDay === -1 && $bDayCount === -1) {
+			// Формируем вывод новостей только за сегодня
+			$wheres[] = 'p.date >= "' . $today . '" - INTERVAL 1 DAY';
+			$wheres[] = 'p.date < "' . $today . '"';
+			
+		} else {	
+			// Если future задан, то интервал не вычитаем, а прибавляем к текущему началу дня
+			$intervalOperator = ($base->cfg['future']) ? ' + ' : ' - ';
 
-		// Если режим афиши включен - выводим новости, дата которых ещё не наступила.
-		if ($base->cfg['future']) {
-			$wheres[] = 'p.date > "' . $rightNow . '"';
+			// Если режим афиши включен - выводим новости, дата которых ещё не наступила.
+			if ($base->cfg['future'] && (!$bDay && !$bDayCount)) {
+				$wheres[] = 'p.date > "' . $rightNow . '"';
+			}
+			// Разбираемся с временными рамками отбора новостей, если кол-во дней указано - ограничиваем выборку, если нет - выводим без ограничения даты
+			if ($bDay) {
+				$wheres[] = 'p.date >= "' . $today . '" ' . $intervalOperator . ' INTERVAL ' . (($base->cfg['future']) ? ($bDay - $bDayCount) : $bDay) . ' DAY';
+			}
+			// Если задана переменная dayCount и day, а так же day больше dayCount - отбираем новости за указанный интервал от указанного периода
+			if ($bDay && $bDayCount && ($bDayCount <= $bDay)) {
+				$wheres[] = 'p.date < "' . $today . '" ' . $intervalOperator . ' INTERVAL ' . (($base->cfg['future']) ? $bDay : ($bDay - $bDayCount)) . ' DAY';
+			} else {
+				// Условие для отображения только тех постов, дата публикации которых уже наступила
+				$wheres[] = ($base->dle_config['no_date'] && !$base->dle_config['news_future'] && !$base->cfg['future']) ? 'p.date < "' . $rightNow . '"' : '';
+			}
+
 		}
-		// Разбираемся с временными рамками отбора новостей, если кол-во дней указано - ограничиваем выборку, если нет - выводим без ограничения даты
-		if ($bDay) {
-			$wheres[] = 'p.date >= "' . $today . '" ' . $intervalOperator . ' INTERVAL ' . (($base->cfg['future']) ? ($bDay - $bDayCount) : $bDay) . ' DAY';
-		}
-		// Если задана переменная dayCount и day, а так же day больше dayCount - отбираем новости за указанный интервал от указанного периода
-		if ($bDay && $bDayCount && ($bDayCount < $bDay)) {
-			$wheres[] = 'p.date < "' . $today . '" ' . $intervalOperator . ' INTERVAL ' . (($base->cfg['future']) ? $bDay : ($bDay - $bDayCount)) . ' DAY';
-		} else {
-			// Условие для отображения только тех постов, дата публикации которых уже наступила
-			$wheres[] = ($base->dle_config['no_date'] && !$base->dle_config['news_future'] && !$base->cfg['future']) ? 'p.date < "' . $rightNow . '"' : '';
-		}
+
+		
 
 		// Подчистим массив от пустых значений
 		$wheres = array_filter($wheres);
