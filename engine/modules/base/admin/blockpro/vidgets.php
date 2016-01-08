@@ -68,6 +68,9 @@ if (isset($_POST['blockId']) && $_POST['widgetDelete'] == 'Y') {
 					if ($params['xfSearchLogic'] == 'on') {												
 						unset($params['xfSearchLogic']);
 					}
+					if ($params['xfSearchLogic'] == 'OR') {												
+						unset($params['xfSearchLogic']);
+					}
 					if ($params['sort'] == 'top') {												
 						unset($params['sort']);
 					}
@@ -84,11 +87,13 @@ if (isset($_POST['blockId']) && $_POST['widgetDelete'] == 'Y') {
 						unset($params['xfSortType']);
 					}
 
+					unset($params['activation_key'], $params['kraken_secret'], $params['tinypng_key'], $params['kraken_key']);
+
 					$filteredparams = array_filter($params);
 					if (count($filteredparams) > 0) {
 						$vidgetModuleUrl .='?';
 					}
-					foreach (array_filter($params) as $value) {
+					foreach (array_filter($params) as $key=>$value) {
 						$vidgetParamsUrl[] = $key . '=' . $value;
 					}
 					$vidgetModuleUrlParams = implode('&amp;', $vidgetParamsUrl);

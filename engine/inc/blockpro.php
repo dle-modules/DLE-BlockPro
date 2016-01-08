@@ -21,7 +21,7 @@ if ($member_id['user_group'] != '1') {
 define('MODULE_DIR', ENGINE_DIR . '/modules/base/admin/blockpro/');
 
 $moduleName    = 'blockpro';
-$moduleVersion = '4.7.0';
+$moduleVersion = '4.7.1';
 
 $moderate              = $_REQUEST['moderate'];
 $moderate_checked      = ($moderate) ? 'checked' : '';
@@ -396,6 +396,9 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 										unset($cfg['allowMain']);
 									}
 									if ($cfg['xfSearchLogic'] == 'on') {
+										unset($cfg['xfSearchLogic']);
+									}
+									if ($cfg['xfSearchLogic'] == 'OR') {
 										unset($cfg['xfSearchLogic']);
 									}
 									if ($cfg['sort'] == 'top') {
