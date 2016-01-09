@@ -863,15 +863,12 @@ if (!$output) {
 				if (count(explode('@', $userFoto)) == 2) {
 					$newsItem['avatar'] = '//www.gravatar.com/avatar/' . md5(trim($userFoto)) . '?s=' . intval($user_group[$newsItem['user_group']]['max_foto']);
 				} else {
-					// Не совсем понятно назначение конструкции, но это было в DLE
-					if(strpos($userFoto, "//") === 0) {
-						$userFotoWHost = 'http:' . $userFoto;
-					}					
-					$arUserFoto = @parse_url($userFotoWHost);					
+					$userFotoWHost = (strpos($userFoto, "//") === 0) ? 'http:' . $userFoto : $userFoto;					
+					$arUserFoto = parse_url($userFotoWHost);					
 					if ($arUserFoto['host']) {
 						$newsItem['avatar'] = $userFoto;
 					} else {
-						$base->dle_config['http_home_url'] . 'uploads/fotos/' . $userFoto;
+						$newsItem['avatar'] = $base->dle_config['http_home_url'] . 'uploads/fotos/' . $userFoto;
 					}
 					unset($arUserFoto, $userFotoWHost);
 				}
