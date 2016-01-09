@@ -329,7 +329,7 @@ class base {
  * @return string        отформатированная дата
  */
 function formateDate($date, $_f = false) {
-	global $lang, $config;
+	global $lang, $config, $langdate;
 
 	if (!$lang['charset']) {
 		@include_once ROOT_DIR . '/language/' . $config['langs'] . '/website.lng';

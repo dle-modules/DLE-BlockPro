@@ -123,7 +123,7 @@ $cfg = [
 	'day'        => !empty($day) ? $day : false, // Временной период для отбора новостей
 	'dayCount'   => !empty($dayCount) ? $dayCount : false, // Интервал для отбора (т.е. к примеру выбираем новости за прошлую недею так: &day=14&dayCount=7 )
 	'sort'       => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title, hit, random, randomLight, download, symbol, editdate или xf|xfieldname где xfieldname - имя дополнительного поля)
-	'xfSortType' => !empty($xfSortType) ? $xfSortType : 'int', // Тип сортировки по допполю (string, int) - для корректной сортировки по строки используем `string`, по умолчанию сортируется как число (для цен полезно).
+	'xfSortType' => !empty($xfSortType) ? $xfSortType : 'int', // Тип сортировки по допполю (string, int) - для корректной сортировки по строке используем string, по умолчанию сортируется как число (для цен полезно).
 	'order'      => !empty($order) ? $order : 'new', // Направление сортировки (new, old, asis)
 
 	'avatar' => !empty($avatar) ? $avatar : false, // Вывод аватарки пользователя (немного усложнит запрос).

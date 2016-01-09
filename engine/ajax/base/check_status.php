@@ -39,7 +39,7 @@ if ($config['version_id'] > 9.6) {
 $user_group = get_vars("usergroup");
 if (!$user_group) {
 	$user_group = [];
-	$db->query("SELECT * FROM " . USERPREFIX . "_usergroups ORDER BY `id` ASC");
+	$db->query("SELECT * FROM " . USERPREFIX . "_usergroups ORDER BY id ASC");
 	while ($row = $db->get_row()) {
 		$user_group[$row['id']] = [];
 		foreach ($row as $key => $value)

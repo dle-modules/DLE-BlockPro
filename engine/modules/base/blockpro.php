@@ -66,7 +66,7 @@ if ($isAjaxConfig) {
 		'day' => !empty($day) ? $day : false, // Временной период для отбора новостей
 		'dayCount' => !empty($dayCount) ? $dayCount : false, // Интервал для отбора (т.е. к примеру выбираем новости за прошлую недею так: &day=14&dayCount=7 )
 		'sort' => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title, hit, random, randomLight, download, symbol, editdate или xf|xfieldname где xfieldname - имя дополнительного поля)
-		'xfSortType' => !empty($xfSortType) ? $xfSortType : 'int', // Тип сортировки по допполю (string, int) - для корректной сортировки по строки используем `string`, по умолчанию сортируется как число (для цен полезно).
+		'xfSortType' => !empty($xfSortType) ? $xfSortType : 'int', // Тип сортировки по допполю (string, int) - для корректной сортировки по строке используем string, по умолчанию сортируется как число (для цен полезно).
 		'order' => !empty($order) ? $order : 'new', // Направление сортировки (new, old, asis)
 
 		'avatar' => !empty($avatar) ? $avatar : false, // Вывод аватарки пользователя (немного усложнит запрос).
@@ -803,7 +803,7 @@ if (!$output) {
 		$list = stripSlashesInArray($list);
 
 		// Путь к папке с текущим шаблоном
-		$tplArr['theme'] = $base->dle_config['http_home_url'] . '/templates/' . $base->dle_config['skin'];
+		$tplArr['theme'] = $base->dle_config['http_home_url'] . 'templates/' . $base->dle_config['skin'];
 
 		// Делаем доступным конфиг DLE внутри шаблона
 		$tplArr['dleConfig'] = $base->dle_config;
@@ -861,9 +861,19 @@ if (!$output) {
 			if ($newsItem['foto']) {
 				$userFoto = $newsItem['foto'];
 				if (count(explode('@', $userFoto)) == 2) {
-					$newsItem['avatar'] = 'http://www.gravatar.com/avatar/' . md5(trim($userFoto)) . '?s=' . intval($user_group[$newsItem['user_group']]['max_foto']);
+					$newsItem['avatar'] = '//www.gravatar.com/avatar/' . md5(trim($userFoto)) . '?s=' . intval($user_group[$newsItem['user_group']]['max_foto']);
 				} else {
-					$newsItem['avatar'] = ($base->dle_config['version_id'] > '10.5') ? $userFoto : $base->dle_config['http_home_url'] . 'uploads/fotos/' . $userFoto;
+					// Не совсем понятно назначение конструкции, но это было в DLE
+					if(strpos($userFoto, "//") === 0) {
+						$userFotoWHost = 'http:' . $userFoto;
+					}					
+					$arUserFoto = @parse_url($userFotoWHost);					
+					if ($arUserFoto['host']) {
+						$newsItem['avatar'] = $userFoto;
+					} else {
+						$base->dle_config['http_home_url'] . 'uploads/fotos/' . $userFoto;
+					}
+					unset($arUserFoto, $userFotoWHost);
 				}
 			}
 
