@@ -902,9 +902,9 @@ if (!$output) {
 				$fav_arr = explode(',', $member_id['favorites']);
 
 				if (!in_array($newsItem['id'], $fav_arr) || $base->dle_config['allow_cache']) {
-					$newsItem['favorites'] = '<img data-favorite-id="' . $newsItem['id'] . '" data-action="plus" src="' . $tplArr['theme'] . '/dleimages/plus_fav.gif"  title="Добавить в свои закладки на сайте" alt="Добавить в свои закладки на сайте" />';
+					$newsItem['favorites'] = '<img data-favorite-id="' . $newsItem['id'] . '" data-action="plus" src="' . $tplArr['theme'] . '/dleimages/plus_fav.gif"  title="Добавить в свои закладки на сайте" alt="Добавить в свои закладки на сайте">';
 				} else {
-					$newsItem['favorites'] = '<img data-favorite-id="' . $newsItem['id'] . '" data-action="minus" src="' . $tplArr['theme'] . '/dleimages/minus_fav.gif"  title="Удалить из закладок" alt="Удалить из закладок" />';
+					$newsItem['favorites'] = '<img data-favorite-id="' . $newsItem['id'] . '" data-action="minus" src="' . $tplArr['theme'] . '/dleimages/minus_fav.gif"  title="Удалить из закладок" alt="Удалить из закладок">';
 				}
 			}
 		}
