@@ -161,6 +161,8 @@ $cfg = [
  * var array $bpConfig
  */
 include ENGINE_DIR . '/data/blockpro.php';
+// Лиц. ключ для передачи в обращение в техподдержку (для более эффективного оказания ТП).
+$od_activation_key = $bpConfig['activation_key'];
 
 // Объединяем массивы конфигов
 $cfg = array_merge($cfg, $bpConfig);
@@ -702,16 +704,19 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 							</div>
 							<div class="col col-mb-12 mb10">
 								<div class="alert">
-									<p class="mt0">Если Вы скачали этот модуль не с сайта <b>store.pafnuty.name</b>,
-										техподдержка оказана не будет и скорее всего у вас взломанная версия модуля.</p>
-
-									<p>Начиная с версии 4.6.0 техническая поддержка клиентов осуществляется через
+									<p>
+										Начиная с версии 4.6.0 техническая поддержка клиентов осуществляется только через
 										систему обращений. Это удобнее и гораздо эффективнее, чем email-переписка или
-										переписка в различных месседжерах.</p>
+										переписка в различных месседжерах.
+									</p>
+									<p>
+										При создании обращения из админки модуля втиккет автоматически передаётся лицензионный ключ, версия модуля и адрес сайта, это улучшает эффективность оказания техподдержки.
+									</p>
 								</div>
-								<p>Для получения техподдержки или решения иных вопросов, связанных с модулем просто <a
-										href="https://pafnuty.omnidesk.ru/" target="_blank" class="btn btn-small">создайте
-										бращение</a></p>
+								<p>
+									Для получения техподдержки или решения иных вопросов, связанных с модулем воспользуйтесь кнопкой создания обращения ниже или в нижнем правом углу страницы. 
+								</p>
+									<span class="btn omni-email-widget">Создать обращение</span>
 
 								<p>Если вопрос связан с выводм новостей — не забывайте указать строку подключения и
 									прикреплять файл шаблона модуля, если он отличается от стандартного.</p>
@@ -736,6 +741,33 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 		</div>
 	</div>
 </div>
+<?php 
+		
+?>
+<!-- Start of Omnidesk Widget script -->
+<script>
+	!function(e,o){window.omni=o;o.g_config={widget_id:"16-u6z46pw1"}; o.email_widget=o.email_widget||{};var w=o.email_widget;w.readyQueue=[];o.config=function(e){ this.g_config.user=e};w.ready=function(e){this.readyQueue.push(e)};var r=e.getElementsByTagName("script")[0];c=e.createElement("script");c.type="text/javascript",c.async=!0;c.src="https://omnidesk.ru/bundles/acmesite/js/cwidget.js";r.parentNode.insertBefore(c,r)}(document,window.omni||{});
+	
+	omni.config({
+		diplay_button: true
+	});
+
+	omni.email_widget.ready(function () {
+		omni.email_widget.identify = {
+			<?php if(isset($member_id['fullname']) && $member_id['fullname'] !== ''): ?>
+			user_full_name: '<?php echo $member_id['fullname']; ?>',
+			<?php endif; ?>
+			user_email: '<?php echo $member_id['email']; ?>',
+			'Версия': '<?php echo $moduleVersion ?>', 
+			<?php if (isset($od_activation_key) && $od_activation_key != ''): ?>
+			'Ключ': '<?php echo $od_activation_key ?>', 
+			<?php endif; ?>
+			'Адрес сайта': '<?php echo $config['http_home_url']; ?>'
+		};
+	});
+
+</script>
+<!-- End of Omnidesk Widget script -->
 
 </body>
 </html>
