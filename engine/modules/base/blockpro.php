@@ -714,6 +714,13 @@ if (!$output) {
 			if ($base->cfg['future'] && (!$bDay && !$bDayCount)) {
 				$wheres[] = 'p.date > "' . $rightNow . '"';
 			}
+
+			// Если включен вывод новостей на ненаступившую дату в настройках DLE 
+			// и режим афиши не используется, то нельзя выводить новости дата которых не наступила до текущей секунды
+			if (!$base->cfg['future'] && ($base->dle_config['news_future'] && $base->dle_config['news_future'] !== 'no')) {
+				$wheres[] = 'p.date <= "' . $rightNow . '"';
+			}
+
 			// Разбираемся с временными рамками отбора новостей, если кол-во дней указано - ограничиваем выборку, если нет - выводим без ограничения даты
 			if ($bDay) {
 				$wheres[] = 'p.date >= "' . $today . '" ' . $intervalOperator . ' INTERVAL ' . (($base->cfg['future']) ? ($bDay - $bDayCount) : $bDay) . ' DAY';
