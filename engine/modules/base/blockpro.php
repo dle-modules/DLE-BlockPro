@@ -609,10 +609,12 @@ if (!$output) {
 				$curTagNewsId = $base->db->getRow('SELECT tags FROM ?n WHERE id=?i', PREFIX . '_post', $_REQUEST['newsid']);
 				if (!empty($curTagNewsId['tags'])) {
 					if ($base->cfg['tags'] == 'thisNewsTags') {
-						$base->cfg['tags'] = $curTagNewsId['tags'];
+						// Заменяем запятую и пробел на просто запятую, иначе будет ошибка.
+						$base->cfg['tags'] = str_replace(', ', ',', $curTagNewsId['tags']);
 					}
 					if ($base->cfg['notTags'] == 'thisNewsTags') {
-						$base->cfg['notTags'] = $curTagNewsId['notTags'];
+						// Заменяем запятую и пробел на просто запятую, иначе будет ошибка.
+						$base->cfg['notTags'] = str_replace(', ', ',', $curTagNewsId['notTags']);
 					}
 				}				
 			}			
