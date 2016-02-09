@@ -581,11 +581,12 @@ if (!$output) {
 			$notXfSearchArray = ($base->cfg['notXfSearch']) ? explode('||', $base->cfg['notXfSearch']) : [];
 
 			// Пробегаем по сформированным массивам
+			// str_replace('|', '|%', $xf) необходимо для случаев, когда значение допполя идёт не первым в списке 
 			foreach ($xfSearchArray as $xf) {
-				$xfWheres[] = $base->db->parse('p.xfields LIKE ?s', '%' . $xf . '%');
+				$xfWheres[] = $base->db->parse('p.xfields LIKE ?s', '%' . str_replace('|', '|%', $xf) . '%');
 			}
 			foreach ($notXfSearchArray as $xf) {
-				$xfWheres[] = $base->db->parse('p.xfields NOT LIKE ?s', '%' . $xf . '%');
+				$xfWheres[] = $base->db->parse('p.xfields NOT LIKE ?s', '%' . str_replace('|', '|%', $xf) . '%');
 			}
 
 			// Добавляем полученные данные (и логику) в основной массив, формирующий запрос
