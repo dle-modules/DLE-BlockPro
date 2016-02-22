@@ -1,6 +1,8 @@
 # 4.7.3
 - Исправлена ошибка, когда в новости несколько тегов и используется параметр `&tags=thisNewsTags`. (https://pafnuty.omnidesk.ru/staff/cases/record/522-577973/)
 - Исправлена ошибка https://github.com/pafnuty/BlockPro/issues/69
+- Исправлена ошибка https://github.com/pafnuty/BlockPro/issues/74
+- Code Style
 
 # 4.7.2
 - Исправлено некорректное отображение картинок добавления и удаления из-закладок при выводе блока на главной странице.

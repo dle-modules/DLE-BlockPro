@@ -12,7 +12,7 @@ email:   pafnuty10@gmail.com
  */
 
 if (!defined('DATALIFEENGINE')) {
-	die("Go fuck yourself!");
+	die('Go fuck yourself!');
 }
 
 /** @var bool $showstat */
@@ -299,11 +299,11 @@ if (!$output) {
 		// Определяем начало сегодняшнего дня и дату "прямо вот сейчас".
 		if ($base->dle_config['version_id'] > 10.2) {
 			date_default_timezone_set($base->dle_config['date_adjust']);
-			$today = date("Y-m-d H:i:s", (mktime(0, 0, 0) + 86400));
-			$rightNow = date("Y-m-d H:i:s", time());
+			$today = date('Y-m-d H:i:s', (mktime(0, 0, 0) + 86400));
+			$rightNow = date('Y-m-d H:i:s', time());
 		} else {
-			$today = date("Y-m-d H:i:s", (mktime(0, 0, 0) + 86400 + $base->dle_config['date_adjust'] * 60));
-			$rightNow = date("Y-m-d H:i:s", (time() + $base->dle_config['date_adjust'] * 60));
+			$today = date('Y-m-d H:i:s', (mktime(0, 0, 0) + 86400 + $base->dle_config['date_adjust'] * 60));
+			$rightNow = date('Y-m-d H:i:s', (time() + $base->dle_config['date_adjust'] * 60));
 		}
 
 		if ($base->cfg['navDefaultGet']) {
@@ -526,11 +526,11 @@ if (!$output) {
 		}
 
 		// Фильтрация новостей по АВТОРАМ
-		if ($base->cfg['author'] == 'this' && isset($_REQUEST["user"])) {
-			$base->cfg['author'] = $base->db->parse('?s', $_REQUEST["user"]);
+		if ($base->cfg['author'] == 'this' && isset($_REQUEST['user'])) {
+			$base->cfg['author'] = $_REQUEST['user'];
 		}
-		if ($base->cfg['notAuthor'] == 'this' && isset($_REQUEST["user"])) {
-			$base->cfg['notAuthor'] = $base->db->parse('?s', $_REQUEST["user"]);
+		if ($base->cfg['notAuthor'] == 'this' && isset($_REQUEST['user'])) {
+			$base->cfg['notAuthor'] = $_REQUEST['user'];
 		}
 		if ($base->cfg['author'] || $base->cfg['notAuthor']) {
 			$ignoreAuthors = ($base->cfg['notAuthor']) ? 'NOT ' : '';
@@ -546,12 +546,12 @@ if (!$output) {
 
 		// Фильтрация новостей по ДОПОЛНИТЕЛЬНЫМ ПОЛЯМ (проверяется только на заполненность)
 		$_currentXfield = false;
-		if ($base->cfg['xfilter'] == 'this' && isset($_REQUEST["xf"])) {
-			$base->cfg['xfilter'] = $base->db->parse('?s', '%' . $_REQUEST["xf"] . '%');
+		if ($base->cfg['xfilter'] == 'this' && isset($_REQUEST['xf'])) {
+			$base->cfg['xfilter'] = $base->db->parse('?s', '%' . $_REQUEST['xf'] . '%');
 			$_currentXfield = true;
 		}
-		if ($base->cfg['notXfilter'] == 'this' && isset($_REQUEST["xf"])) {
-			$base->cfg['notXfilter'] = $base->db->parse('?s', '%' . $_REQUEST["xf"] . '%');
+		if ($base->cfg['notXfilter'] == 'this' && isset($_REQUEST['xf'])) {
+			$base->cfg['notXfilter'] = $base->db->parse('?s', '%' . $_REQUEST['xf'] . '%');
 			$_currentXfield = true;
 		}
 
@@ -596,11 +596,11 @@ if (!$output) {
 		// Фильтрация новостей по ТЕГАМ
 		$_currentTag = false;
 		if ($base->cfg['tags'] == 'this' && isset($_REQUEST['tag']) && $_REQUEST['tag'] != '') {
-			$base->cfg['tags'] = $base->db->parse('?s', $_REQUEST["tag"]);
+			$base->cfg['tags'] = $base->db->parse('?s', $_REQUEST['tag']);
 			$_currentTag = true;
 		}
 		if ($base->cfg['notTags'] == 'this' && isset($_REQUEST['tag']) && $_REQUEST['tag'] != '') {
-			$base->cfg['notTags'] = $base->db->parse('?s', $_REQUEST["tag"]);
+			$base->cfg['notTags'] = $base->db->parse('?s', $_REQUEST['tag']);
 			$_currentTag = true;
 		}
 
@@ -644,12 +644,12 @@ if (!$output) {
 
 		// Фильтрация новостей по символьным кодам
 		$_currentSymbol = false;
-		if ($base->cfg['symbols'] == 'this' && isset($_REQUEST["catalog"])) {
-			$base->cfg['symbols'] = $base->db->parse('?s', $_REQUEST["catalog"]);
+		if ($base->cfg['symbols'] == 'this' && isset($_REQUEST['catalog'])) {
+			$base->cfg['symbols'] = $base->db->parse('?s', $_REQUEST['catalog']);
 			$_currentSymbol = true;
 		}
-		if ($base->cfg['notSymbols'] == 'this' && isset($_REQUEST["catalog"])) {
-			$base->cfg['notSymbols'] = $base->db->parse('?s', $_REQUEST["catalog"]);
+		if ($base->cfg['notSymbols'] == 'this' && isset($_REQUEST['catalog'])) {
+			$base->cfg['notSymbols'] = $base->db->parse('?s', $_REQUEST['catalog']);
 			$_currentSymbol = true;
 		}
 
@@ -689,7 +689,7 @@ if (!$output) {
 				// Если похожие новости не записывались — отберём их.
 				$reltedFirstShow = true;
 				$bodyToRelated = (strlen($relatedBody['full_story']) < strlen($relatedBody['short_story'])) ? $relatedBody['short_story'] : $relatedBody['full_story'];
-				$bodyToRelated = $base->db->parse('?s', strip_tags($relatedBody['title'] . " " . $bodyToRelated));
+				$bodyToRelated = $base->db->parse('?s', strip_tags($relatedBody['title'] . ' ' . $bodyToRelated));
 
 				$wheres[] = 'MATCH (' . $relatedRows . ') AGAINST (' . $bodyToRelated . ') AND id !=' . $relatedBody['id'];
 			}
@@ -873,7 +873,7 @@ if (!$output) {
 				if (count(explode('@', $userFoto)) == 2) {
 					$newsItem['avatar'] = '//www.gravatar.com/avatar/' . md5(trim($userFoto)) . '?s=' . intval($user_group[$newsItem['user_group']]['max_foto']);
 				} else {
-					$userFotoWHost = (strpos($userFoto, "//") === 0) ? 'http:' . $userFoto : $userFoto;					
+					$userFotoWHost = (strpos($userFoto, '//') === 0) ? 'http:' . $userFoto : $userFoto;					
 					$arUserFoto = parse_url($userFotoWHost);					
 					if ($arUserFoto['host']) {
 						$newsItem['avatar'] = $userFoto;
@@ -1011,7 +1011,7 @@ if (!$output) {
 		// Записываем в БД id похожих новостей, если требуется
 		if ($reltedFirstShow && $saveRelated) {
 			/** @var integer $relatedId */
-			$base->db->query("UPDATE ?n SET related_ids=?s WHERE news_id=?i", PREFIX . '_post_extras', implode(',', $relatedIds), $relatedId);
+			$base->db->query('UPDATE ?n SET related_ids=?s WHERE news_id=?i', PREFIX . '_post_extras', implode(',', $relatedIds), $relatedId);
 		}
 
 		// Формируем данные о запросах для статистики, если требуется
@@ -1035,7 +1035,7 @@ if (!$output) {
 
 // Обрабатываем вложения
 if ($base->dle_config['files_allow']) {
-	if (strpos($output, "[attachment=") !== false) {
+	if (strpos($output, '[attachment=') !== false) {
 		$output = show_attach($output, $attachments);
 	}
 } else {
@@ -1057,7 +1057,7 @@ if (!$external) {
 // Показываем стстаистику выполнения скрипта, если требуется
 if ($cfg['showstat'] && $user_group[$member_id['user_group']]['allow_all_edit']) {
 	// Информация об оперативке
-	$mem_usg = (function_exists("memory_get_peak_usage")) ? '<br>Расход памяти: <b>' . round(memory_get_peak_usage() / (1024 * 1024), 2) . 'Мб </b>' : '';
+	$mem_usg = (function_exists('memory_get_peak_usage')) ? '<br>Расход памяти: <b>' . round(memory_get_peak_usage() / (1024 * 1024), 2) . 'Мб </b>' : '';
 	// Вывод статистики
 	/** @var integer $start */
 	echo '<div class="bp-statistics" style="border: solid 1px red; padding: 5px; margin: 5px 0;">' . $dbStat . 'Время выполнения скрипта: <b>' . round((microtime(true) - $start), 6) . '</b> c.' . $mem_usg . '</div>';
