@@ -65,7 +65,7 @@ if ($isAjaxConfig) {
 
 		'day' => !empty($day) ? $day : false, // Временной период для отбора новостей
 		'dayCount' => !empty($dayCount) ? $dayCount : false, // Интервал для отбора (т.е. к примеру выбираем новости за прошлую недею так: &day=14&dayCount=7 )
-		'sort' => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title, hit, random, randomLight, download, symbol, editdate или xf|xfieldname где xfieldname - имя дополнительного поля)
+		'sort' => !empty($sort) ? $sort : 'top', // Сортировка (top, date, comms, rating, views, title, hit, random, randomLight, download, symbol, editdate или xf|xfieldname где xfieldname - имя дополнительного поля, field|p.name где p.name — кастомное поле)
 		'xfSortType' => !empty($xfSortType) ? $xfSortType : 'int', // Тип сортировки по допполю (string, int) - для корректной сортировки по строке используем string, по умолчанию сортируется как число (для цен полезно).
 		'order' => !empty($order) ? $order : 'new', // Направление сортировки (new, old, asis)
 
@@ -342,33 +342,46 @@ if (!$output) {
 					// Т.к. DLE не позволяет передавать напрямую символы '>' и '<', приходится изобретать собственный велосипед. 
 					switch ($arFItem[1]) {
 						case '-':
+						case 'lt':
 							$operator = ' < ';
 							break;
 
 						case '+':
+						case 'gt':
 							$operator = ' > ';
 							break;
 
 						case '=':
+						case 'eq':
 							$operator = ' = ';
 							break;
 
 						case '+=':
+						case 'gte':
 							$operator = ' >= ';
 							break;
 
 						case '-=':
+						case 'lte':
 							$operator = ' <= ';
 							break;
 
 						case '+-': 
 						case '-+':
+						case 'not':
 							$operator = ' != ';
 							break;
 					}
 
-					$_op = (is_numeric($arFItem[2])) ? '?i' : '?s';
-					$itemVal = $base->db->parse($_op, $arFItem[2]);
+
+					if ($arFItem[2] == 'NOW()') {
+						// Если нужно отобрать "сейчас"
+						$itemVal = 'NOW()';
+					} else {
+						// В противном случае фильтруем.
+						$_op = (is_numeric($arFItem[2])) ? '?i' : '?s';
+						$itemVal = $base->db->parse($_op, $arFItem[2]);
+					}
 
 					$wheres[] = $field . $operator . $itemVal;
 				}
@@ -422,6 +435,14 @@ if (!$output) {
 			// Если задана сортировка по значению допполя - то присвоим переменной имя этого поля и подкорректируем данные для swich
 			$base->cfg['sort'] = str_replace('xf|', '', $base->cfg['sort']);
 			$xfSortName = $base->cfg['sort'];
+		}
+
+		$fieldSortName = 'blockpro_undefined_sort_field';
+
+		if (strpos($base->cfg['sort'], 'field|') !== false) {
+			// Если задана сортировка по кастомном полю - то присвоим переменной имя этого поля и подкорректируем данные для swich
+			$base->cfg['sort'] = str_replace('field|', '', $base->cfg['sort']);
+			$fieldSortName = $base->cfg['sort'];
 		}
 
 		// Определяем тип сортировки
@@ -485,6 +506,11 @@ if (!$output) {
 				}
 				$ext_query_fields .= ", SUBSTRING_INDEX(SUBSTRING_INDEX(p.xfields,  '{$xfSortName}|', -1 ) ,  '||', 1 ) as sort_xfield ";
 				break;
+
+			case $fieldSortName: // Сортировка по кастомному полю
+				$orderArr[] = $fieldSortName . ' ' . $ordering;
+				break;
+
 		}
 
 		// Фильтрация КАТЕГОРИЙ по их ID
