@@ -408,6 +408,10 @@ if (!$output) {
 				$wheres[] = 'fixed = 0';
 				break;
 
+			case 'ignore':
+				$wheres[] = '';
+				break;
+
 			default:
 				if ($base->cfg['sort'] != 'random' && $base->cfg['sort'] != 'randomLight' && $base->cfg['sort'] != 'none' && $base->cfg['sort'] != 'editdate') {
 					$orderArr[] = 'fixed ' . $ordering;
@@ -433,16 +437,14 @@ if (!$output) {
 		$xfSortName = 'blockpro_undefined_sort_xfields';
 		if (strpos($base->cfg['sort'], 'xf|') !== false) {
 			// Если задана сортировка по значению допполя - то присвоим переменной имя этого поля и подкорректируем данные для swich
-			$base->cfg['sort'] = str_replace('xf|', '', $base->cfg['sort']);
-			$xfSortName = $base->cfg['sort'];
+			$xfSortName = str_replace('xf|', '', $base->cfg['sort']);
 		}
 
 		$fieldSortName = 'blockpro_undefined_sort_field';
 
 		if (strpos($base->cfg['sort'], 'field|') !== false) {
 			// Если задана сортировка по кастомном полю - то присвоим переменной имя этого поля и подкорректируем данные для swich
-			$base->cfg['sort'] = str_replace('field|', '', $base->cfg['sort']);
-			$fieldSortName = $base->cfg['sort'];
+			$fieldSortName = str_replace('field|', '', $base->cfg['sort']);
 		}
 
 		// Определяем тип сортировки
@@ -498,7 +500,7 @@ if (!$output) {
 				$wheres[] = 'e.editdate > 0';
 				break;
 
-			case $xfSortName:	// Сортировка по значению дополнительного поля
+			case 'xf|' . $xfSortName:	// Сортировка по значению дополнительного поля
 				if ($base->cfg['xfSortType'] == 'string') {
 					$orderArr[] = 'sort_xfield ' . $ordering;
 				} else {
@@ -507,7 +509,7 @@ if (!$output) {
 				$ext_query_fields .= ", SUBSTRING_INDEX(SUBSTRING_INDEX(p.xfields,  '{$xfSortName}|', -1 ) ,  '||', 1 ) as sort_xfield ";
 				break;
 
-			case $fieldSortName: // Сортировка по кастомному полю
+			case 'field|' . $fieldSortName: // Сортировка по кастомному полю
 				$orderArr[] = $fieldSortName . ' ' . $ordering;
 				break;
 
