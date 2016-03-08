@@ -98,6 +98,7 @@ if ($isAjaxConfig) {
 		'notSymbols' => !empty($notSymbols) ? $notSymbols : false, // Символьные коды для исключающей фильтрации по символьному каталогу. Перечисляем через запятую или пишем this для текущего символьного кода
 		'fields' => !empty($fields) ? $fields : false, // Дополнение к выборке полей из БД (p.field,e.field)
 		'setFilter' => !empty($setFilter) ? $setFilter : '', // Собственная фильтрация полей БД
+		'experiment' => !empty($experiment) ? $experiment : false, // Включить экспериментальные функции
 	];
 }
 
@@ -178,9 +179,22 @@ if ($cfg['cacheLive']) {
 	$cfg['cachePrefix'] = 'base';
 }
 
+// Определяемся с шаблоном сайта
+// Проверим куку пользователя и налочие параметра skin в реквесте.
+$currentSiteSkin = (isset($_COOKIE['dle_skin'])) ? trim(totranslit($_COOKIE['dle_skin'], false, false)) : (isset($_REQUEST['skin'])) ? trim(totranslit($_REQUEST['skin'], false, false)) : $config['skin'];
+
+// Если  итоге пусто — назначим опять шаблон из конфига. 
+if ($currentSiteSkin == '') {
+	$currentSiteSkin = $config['skin'];
+}
+// Если парки с шаблоном нет — дальше не работаем.
+if (!@is_dir(ROOT_DIR . '/templates/' . $currentSiteSkin)) {
+	die('no_skin');
+}
+
 // Формируем имя кеша
 /** @var array $config */
-$cacheName = implode('_', $cfg) . $config['skin'];
+$cacheName = implode('_', $cfg) . $currentSiteSkin;
 
 // Определяем необходимость создания кеша для разных групп
 $cacheSuffix = ($cfg['cacheSuffixOff']) ? false : true;
@@ -283,6 +297,9 @@ if (!$output) {
 		// Назначаем конфиг модуля
 		$base->cfg = $base->setConfig($cfg);
 
+		// Назначаем текущий шаблон сайта
+		$base->dle_config['skin'] = $currentSiteSkin;
+
 		// Пустой массив для конфга шаблонизатора.
 		$tplOptions = [];
 
@@ -335,9 +352,10 @@ if (!$output) {
 
 			if (!empty($arFilter)) {
 				foreach ($arFilter as $strItem) {
-					$arFItem = explode('|', $strItem);
+					$arFItem = explode('|', $strItem, 3);
 
 					$field = $arFItem[0];
+					$operator = '';
 					
 					// Т.к. DLE не позволяет передавать напрямую символы '>' и '<', приходится изобретать собственный велосипед. 
 					switch ($arFItem[1]) {
@@ -371,19 +389,32 @@ if (!$output) {
 						case 'not':
 							$operator = ' != ';
 							break;
-					}
 
+						case 'SEARCH': 
+							$operator = ' LIKE ';
+							break;
+
+						case 'NOT_SEARCH': 
+							$operator = ' NOT LIKE ';
+							break;
+					}
 
 					if ($arFItem[2] == 'NOW()') {
 						// Если нужно отобрать "сейчас"
 						$itemVal = 'NOW()';
+					} elseif ($arFItem[1] == 'SEARCH' || $arFItem[1] == 'NOT_SEARCH') {
+						// Реализация поиска
+						$itemVal = $base->db->parse('?s', '%' . $arFItem[2] . '%');
 					} else {
 						// В противном случае фильтруем.
 						$_op = (is_numeric($arFItem[2])) ? '?i' : '?s';
 						$itemVal = $base->db->parse($_op, $arFItem[2]);
 					}
 
-					$wheres[] = $field . $operator . $itemVal;
+					if ($operator !== '') {
+						$wheres[] = $field . $operator . $itemVal;
+					}
+
 				}
 			}
 		}	
@@ -608,17 +639,53 @@ if (!$output) {
 			$xfSearchArray = ($base->cfg['xfSearch']) ? explode('||', $base->cfg['xfSearch']) : [];
 			$notXfSearchArray = ($base->cfg['notXfSearch']) ? explode('||', $base->cfg['notXfSearch']) : [];
 
-			// Пробегаем по сформированным массивам
-			// str_replace('|', '|%', $xf) необходимо для случаев, когда значение допполя идёт не первым в списке 
-			foreach ($xfSearchArray as $xf) {
-				$xfWheres[] = $base->db->parse('p.xfields LIKE ?s', '%' . str_replace('|', '|%', $xf) . '%');
-			}
-			foreach ($notXfSearchArray as $xf) {
-				$xfWheres[] = $base->db->parse('p.xfields NOT LIKE ?s', '%' . str_replace('|', '|%', $xf) . '%');
+			$bXfNotResult = true;
+			if ($base->dle_config['version_id'] >= '11' && $base->cfg['experiment']) {
+				// Если версия DLE 11 и более и включена экспериментальная функция, то для увеличения скорости выборки запросим данные по допполям из отдельной таблицы.
+				
+				// Пробегаем по сформированным массивам
+				foreach ($xfSearchArray as $xf) {
+					$_xf = explode('|', $xf);					
+					$xfWheres[] = $base->db->parse('(tagname=?s AND tagvalue=?s)', $_xf[0], $_xf[1]);
+				}
+				foreach ($notXfSearchArray as $xf) {
+					$_xf = explode('|', $xf);					
+					$xfWheres[] = $base->db->parse('(tagname=?s AND NOT tagvalue=?s)', $_xf[0], $_xf[1]);
+				}
+				
+				// Подготавливаем запрос.
+				$xfSearchQuery = implode($_xfSearchLogic, $xfWheres);
+
+				// Получаем ID новостей
+				$xfSearchIDs = $base->db->getCol('SELECT news_id FROM ?n  WHERE ?p', PREFIX . '_xfsearch', $xfSearchQuery);
+				// Если запрос вернул ID новостей — работаем.
+				if (count($xfSearchIDs)) {
+					// Оставляем только уникальные
+					$xfSearchIDs = array_unique($xfSearchIDs);
+	
+					// Добавляем полученные данные в основной массив, формирующий запрос
+					$wheres[] = 'p.id IN (' . implode(',', $xfSearchIDs) . ')';
+
+					$bXfNotResult = false;
+				} else {
+					// Если ничего не найдено — сбросим массив с условиями т.к. строка подключения возможно содержит дополнительные условия выборки.
+					$xfWheres = [];
+				}
 			}
 
-			// Добавляем полученные данные (и логику) в основной массив, формирующий запрос
-			$wheres[] = '(' . implode($_xfSearchLogic, $xfWheres) . ')';
+			if($bXfNotResult) {
+				// Пробегаем по сформированным массивам
+				// str_replace('|', '|%', $xf) необходимо для случаев, когда значение допполя идёт не первым в списке 
+				foreach ($xfSearchArray as $xf) {
+					$xfWheres[] = $base->db->parse('p.xfields LIKE ?s', '%' . str_replace('|', '|%', $xf) . '%');
+				}
+				foreach ($notXfSearchArray as $xf) {
+					$xfWheres[] = $base->db->parse('p.xfields NOT LIKE ?s', '%' . str_replace('|', '|%', $xf) . '%');
+				}
+
+				// Добавляем полученные данные (и логику) в основной массив, формирующий запрос
+				$wheres[] = '(' . implode($_xfSearchLogic, $xfWheres) . ')';
+			}
 		}
 
 		// Фильтрация новостей по ТЕГАМ
