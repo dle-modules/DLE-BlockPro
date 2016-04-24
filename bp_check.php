@@ -15,29 +15,29 @@ $moduleName = 'BlockPro';
 include('engine/api/api.class.php');
 
 /** @var array $config */
-$arCheck = [
-	[
+$arCheck = array(
+	array(
 		'name'  => 'Версия DLE',
 		'req'   => '10.0',
 		'check' => ($config['version_id'] < 10.0) ? '<span class="red">' . $config['version_id'] . '</span>' : $config['version_id'],
-	],
-	[
+	),
+	array(
 		'name'  => 'Кодировка',
 		'req'   => 'utf-8',
 		'check' => ($config['charset'] != 'utf-8') ? '<span class="red">' . $config['charset'] . '</span>' : $config['charset'],
-	],
-	[
+	),
+	array(
 		'name'  => 'Версия php',
 		'req'   => '5.4 и выше',
 		'check' => (phpversion() < 5.4) ? '<span class="red">' . phpversion() . '</span>' : phpversion(),
-	],
-	[
+	),
+	array(
 		'name'  => 'IonCube Loader',
 		'req'   => '5.0 и выше',
 		'check' => (checkIonCube() < 5.0) ? '<span class="red">' . checkIonCube() . '</span>' : checkIonCube(),
-	]
+	)
 
-];
+);
 
 function checkIonCube() {
 	if (function_exists('ioncube_loader_version')) {
@@ -256,8 +256,7 @@ function checkShortOpenTag() {
 			</p>
 
 			<p class="alert">
-				Если всё в порядке &mdash; можно смело <a href="http://store1.pafnuty.name/15-blockpro.html"
-				                                          target="_blank">устанавливать модуль</a>!
+				Если всё в порядке &mdash; можно смело <a href="http://store.pafnuty.name/15-blockpro.html" target="_blank">устанавливать модуль</a>!
 			</p>
 		</div>
 	</div>

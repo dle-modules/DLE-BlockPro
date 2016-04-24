@@ -169,6 +169,15 @@ class base {
 			return getCatInfo($data, $info, $noicon);
 		}
 		);
+
+		// Добавляем свой модификатор в шаблонизатор для реализации preg_match_all
+		$this->tpl->addModifier(
+			'ematch_all', function ($data, $pattern) {
+			preg_match_all($pattern, $data, $arReturn);
+			$arReturn = array_filter($arReturn);
+			return $arReturn;
+		}
+		);
 	}
 
 	/**
