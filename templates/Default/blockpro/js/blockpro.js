@@ -116,7 +116,9 @@ function base_rate(rate, id) {
 
 			$("#ratig-layer-" + id).html(rating);
 			$("#vote-num-id-" + id).html(data.votenum);
-		}
+		} else if (data.error) {
+			DLEalert(data.errorinfo, dle_info);
+		};
 
 	}, "json");
 };
