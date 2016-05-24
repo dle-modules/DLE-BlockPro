@@ -163,7 +163,7 @@ class base {
 		}
 		);
 
-		// Добавляем свой модификатор в шаблонизатор для вывода форматированной даты
+		// Добавляем свой модификатор в шаблонизатор для вывода информации о категории новости
 		$this->tpl->addModifier(
 			'catinfo', function ($data, $info = false, $noicon = false) {
 			return getCatInfo($data, $info, $noicon);
@@ -176,6 +176,13 @@ class base {
 			preg_match_all($pattern, $data, $arReturn);
 			$arReturn = array_filter($arReturn);
 			return $arReturn;
+		}
+		);
+
+		// Добавляем свой модификатор в шаблонизатор для вывода даты в формате "time ago".
+		$this->tpl->addModifier(
+			'timeago', function ($data, $precision = 2) {
+			return bpModifiers::timeAgo($data, $precision);
 		}
 		);
 	}

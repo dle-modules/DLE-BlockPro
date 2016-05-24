@@ -412,7 +412,7 @@ class bpModifiers extends base {
 	/**
 	 * Функция для вывода print_r в шаблон
 	 *
-	 * @param  mixed $var входящие данные]
+	 * @param  mixed $var входящие данные
 	 *
 	 * @return string    print_r
 	 */
@@ -451,6 +451,65 @@ class bpModifiers extends base {
 
 		/** @var array $result */
 		return $result;
+	}
+
+	/**
+	 * Функция для вывода даты в формате "time ago"
+	 *
+	 *
+	 * @param      string   $date       Дата новости
+	 * @param      integer  $precision  Кол-во частей
+	 *
+	 * @return     string   отформатированная строка
+	 */
+	public static function timeAgo($date, $precision = 2) {
+		$precision = ($precision === 0 || $precision === 1) ? 1 : $precision;
+		$times     = [
+			31536000 => '|год|года|лет',
+			2592000  => 'месяц||а|ев',
+			604800   => 'недел|ю|и|ь',
+			86400    => '|день|дня|дней',
+			3600     => 'час||а|ов',
+			60       => 'минут|у|ы|',
+		];
+
+		$timeDiff = time() - strtotime($date);
+
+		if ($timeDiff < 60) {
+			$output = 'меньше минуты';
+		} else {
+			$output = [];
+			$precisionCount   = 0;
+
+			foreach ($times as $period => $name) {
+
+				if ($precisionCount >= $precision || ($precisionCount > 0 && $period < 1)) {
+					break;
+				}
+				$result = floor($timeDiff / $period);
+
+				if ($result > 0) {
+					$output[] = $result . ' ' . self::declinationWords($result, $name);
+
+					$timeDiff -= $result * $period;
+					$precisionCount++;
+				} else {
+					if ($precisionCount > 0) {
+						$precisionCount++;
+					}
+				}
+			}
+
+			$last            = array_slice($output, -1);
+			$first           = join(', ', array_slice($output, 0, -1));
+			$both            = array_filter(array_merge([$first], $last), 'strlen');
+			$outputFormatted = join(' и ', $both);
+
+
+			$output = $outputFormatted;
+		}
+
+		return $output . ' назад';
 	}
 
 
