@@ -218,6 +218,12 @@ if ($cfg['cacheLive']) {
 
 $output = false;
 
+// Массив для записи возникающих ошибок
+$outputLog = [
+	'errors' => [],
+	'info' => []
+];
+
 // Если nocache не установлен - пытаемся вывести данные из кеша.
 if (!$cfg['nocache']) {
 	$output = dle_cache($cfg['cachePrefix'], $cacheName, $cacheSuffix);
@@ -247,7 +253,7 @@ if (!$output) {
 	$bpProtect->local_key_path = ENGINE_DIR . '/data/';
 	$bpProtect->local_key_name = 'blockpro.lic';
 	$bpProtect->server = 'http://api.pafnuty.name/api.php';
-	$bpProtect->release_date = '2016-04-24'; // гггг-мм-дд
+	$bpProtect->release_date = '2016-08-28'; // гггг-мм-дд
 	$bpProtect->activation_key = $cfg['activation_key'];
 
 	$bpProtect->status_messages = [
@@ -763,31 +769,43 @@ if (!$output) {
 		$reltedFirstShow = false;
 		if ($base->cfg['related']) {
 			if ($base->cfg['related'] == 'this' && $_REQUEST['newsid'] == '') {
-				echo '<span style="color: red;">Переменная related=this работает только в полной новости и не работает с ЧПУ 3 типа.</span>';
-
-				return;
-			}
-
-			$relatedId = ($base->cfg['related'] == 'this') ? $_REQUEST['newsid'] : $base->cfg['related'];
-			$relatedRows = 'title, short_story, full_story, xfields';
-			$relatedIdParsed = $base->db->parse('id = ?i', $relatedId);
-
-			$relatedBody = $base->db->getRow('SELECT id, ?p FROM ?n p LEFT JOIN ?n e ON (p.id=e.news_id) WHERE ?p', 'p.title, p.short_story, p.full_story, p.xfields, e.related_ids', PREFIX . '_post', PREFIX . '_post_extras', $relatedIdParsed);
-
-			/** @var bool $saveRelated */
-			if ($relatedBody['related_ids'] && $saveRelated) {
-				// Если есть запись id похожих новостей — добавим в условие запроса эти новости.
-				$wheres[] = 'id IN(' . $relatedBody['related_ids'] . ')';
-				// Отсортируем новости в том порядке, в котором они записаны в БД
-				$orderArr = ['FIELD (p.id, ' . $relatedBody['related_ids'] . ')'];
+				$outputLog['errors'][] = 'Переменная related=this работает только в полной новости и не работает с ЧПУ 3 типа.';
 			} else {
-				// Если похожие новости не записывались — отберём их.
-				$reltedFirstShow = true;
-				$bodyToRelated = (strlen($relatedBody['full_story']) < strlen($relatedBody['short_story'])) ? $relatedBody['short_story'] : $relatedBody['full_story'];
-				$bodyToRelated = $base->db->parse('?s', strip_tags($relatedBody['title'] . ' ' . $bodyToRelated));
 
-				$wheres[] = 'MATCH (' . $relatedRows . ') AGAINST (' . $bodyToRelated . ') AND id !=' . $relatedBody['id'];
+				$relatedId = ($base->cfg['related'] == 'this') ? $_REQUEST['newsid'] : $base->cfg['related'];
+				$relatedRows = 'title, short_story, full_story, xfields';
+				$relatedIdParsed = $base->db->parse('id = ?i', $relatedId);
+
+				$relatedBody = $base->db->getRow('SELECT id, ?p FROM ?n p LEFT JOIN ?n e ON (p.id=e.news_id) WHERE ?p', 'p.title, p.short_story, p.full_story, p.xfields, e.related_ids', PREFIX . '_post', PREFIX . '_post_extras', $relatedIdParsed);
+				
+				// Фикс https://github.com/pafnuty/BlockPro/issues/78
+				if ($relatedBody['id']) {
+					/** @var bool $saveRelated */
+					if ($relatedBody['related_ids'] && $saveRelated) {
+						// Если есть запись id похожих новостей — добавим в условие запроса эти новости.
+						$wheres[] = 'id IN(' . $relatedBody['related_ids'] . ')';
+						// Отсортируем новости в том порядке, в котором они записаны в БД
+						$orderArr = ['FIELD (p.id, ' . $relatedBody['related_ids'] . ')'];
+					} else {
+						// Если похожие новости не записывались — отберём их.
+						$reltedFirstShow = true;
+						$bodyToRelated = (dle_strlen($relatedBody['full_story']) < dle_strlen($relatedBody['short_story'])) ? $relatedBody['short_story'] : $relatedBody['full_story'];
+
+						// Фикс для https://github.com/pafnuty/BlockPro/issues/79
+						// @see /engine/modules/show.full.php
+						if(dle_strlen($bodyToRelated, $base->dle_config['charset']) > 1000) {
+							$bodyToRelated = dle_substr($bodyToRelated, 0, 1000, $base->dle_config['charset']);
+						}
+
+						$bodyToRelated = $base->db->parse('?s', strip_tags($relatedBody['title'] . ' ' . $bodyToRelated));
+
+						$wheres[] = 'MATCH (' . $relatedRows . ') AGAINST (' . $bodyToRelated . ') AND id !=' . $relatedBody['id'];
+					}
+				} else {
+					$outputLog['errors'][] = 'Новость с ID ' . $relatedIdParsed . ' не найдена в базе данных.';			
+				}
 			}
+
 
 
 		}
@@ -1099,7 +1117,7 @@ if (!$output) {
 		try {
 			$output = $base->tpl->fetch($base->cfg['template'] . '.tpl', $tplArr);
 		} catch (Exception $e) {
-			$output = '<div style="color: red;">' . $e->getMessage() . '</div>';
+			$outputLog['errors'][] = $e->getMessage();
 			$base->cfg['nocache'] = true;
 		}
 
@@ -1107,6 +1125,11 @@ if (!$output) {
 		if ($reltedFirstShow && $saveRelated) {
 			/** @var integer $relatedId */
 			$base->db->query('UPDATE ?n SET related_ids=?s WHERE news_id=?i', PREFIX . '_post_extras', implode(',', $relatedIds), $relatedId);
+		}
+
+		// Если есть ошбки и включен вывод статистики — оключаем кеш.
+		if (count($outputLog['errors']) > 0 && $cfg['showstat']) {
+			$base->cfg['nocache'] = true;
 		}
 
 		// Формируем данные о запросах для статистики, если требуется
@@ -1119,6 +1142,8 @@ if (!$output) {
 				$statQ['t'] += $q['timer'];
 			}
 			$dbStat = 'Запрос(ы): ' . $statQ['q'] . '<br>Время выполнения запросов: <b>' . $statQ['t'] . '</b><br>';
+
+			unset($stat);
 		}
 		// Создаём кеш, если требуется
 		if (!$base->cfg['nocache']) {
@@ -1146,11 +1171,28 @@ if ($user_group[$member_id['user_group']]['allow_hide']) {
 // Результат работы модуля
 if (!$external) {
 	// Если блок не является внешним - выводим на печать
-	echo $output;
+	if (count($outputLog['errors']) > 0) {
+		// Выводим ошибки, если они есть
+		$outputErrors = [];
+		$outputErrors[] = '<ul class="bp-errors" style="border: solid 1px red; padding: 5px; margin: 5px 0; list-style: none; background: rgba(255,0,0,0.2)">';
+
+		foreach ($outputLog['errors'] as $errorText) {
+			$outputErrors[] = '<li>' . $errorText . '</li>';
+		}
+		$outputErrors[] = '</ul>';
+
+		$outputErrors = implode('', $outputErrors);
+
+		echo $outputErrors;
+	} else {
+		// Если нет ошибок - выводим результат аботы модуля
+		echo $output;
+	}
 }
 
 // Показываем стстаистику выполнения скрипта, если требуется
 if ($cfg['showstat'] && $user_group[$member_id['user_group']]['allow_all_edit']) {
+
 	// Информация об оперативке
 	$mem_usg = (function_exists('memory_get_peak_usage')) ? '<br>Расход памяти: <b>' . round(memory_get_peak_usage() / (1024 * 1024), 2) . 'Мб </b>' : '';
 	// Вывод статистики
