@@ -75,6 +75,7 @@ if ($member_id['user_group'] == '1') {
 				if ($block) {
 					$insertCode = '<script type="text/javascript" async defer src="' . $config['http_home_url'] . 'blockpro.php?block=' . $block_id . '"></script><div id="' . $block_id . '"></div>';
 					$insertRssCode = $config['http_home_url'] . 'blockpro.php?channel=' . $block_id;
+					$insertIframeCode = '<iframe src="' . $config['http_home_url'] . 'blockpro.php?frame=' . $block_id . '" frameborder="0"></iframe>';
 					$modal = '<div class="content">
 						<div class="modal-white">
 							<span class="modal-close popup-modal-dismiss">&times;</span>
@@ -89,6 +90,10 @@ if ($member_id['user_group'] == '1') {
 								<div class="clearfix">
 									<div class="fz18 text-blue">Код для вывода через RSS:</div>
 									<textarea rows="1" readonly class="input input-block-level code">' . $insertRssCode . '</textarea>
+								</div>
+								<div class="clearfix">
+									<div class="fz18 text-blue">Код для вывода через iframe:</div>
+									<textarea readonly class="input input-block-level code">' . $insertIframeCode . '</textarea>
 								</div>	
 								<div class="alert alert-info">Созданный виджет так же будет доступен на вкладке "Виджеты".</div>								
 								<div class="ta-center mb10 mt20">

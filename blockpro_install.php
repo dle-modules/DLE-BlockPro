@@ -186,7 +186,9 @@ HTML;
 				</form>
 			</div>
 			<div class="queries clearfix hide">
-				$queriesTxt
+				<div class="content">
+					$queriesTxt
+				</div>
 			</div>
 HTML;
 			} // Выводим кнопку установки админчасти модуля

@@ -116,6 +116,9 @@ if (isset($_POST['blockId']) && $_POST['widgetDelete'] == 'Y') {
 						<h4>Код для вывода RSS:</h4>
 						<textarea rows="1" readonly class="input input-block-level code"><?php echo $config['http_home_url']?>blockpro.php?channel=<?php echo $vidgetItem['block_id']?></textarea>
 
+						<h4>Код для вывода через iframe:</h4>
+						<textarea rows="1" readonly class="input input-block-level code"><iframe src="<?php echo $config['http_home_url']?>blockpro.php?frame=<?php echo $vidgetItem['block_id']?>" frameborder="0"></iframe></textarea>
+
 						<h4>Строка подключения:</h4>
 						<textarea rows="1" class="input input-block-level code">{<?php echo $vidgetModuleUrl?>"}</textarea>	
 										

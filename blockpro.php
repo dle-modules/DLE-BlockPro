@@ -32,10 +32,10 @@ if ($config['version_id'] > 10.2) {
 	$_TIME = time() + ($config['date_adjust'] * 60);
 }
 
-if ($config['http_home_url'] == "") {
-	$config['http_home_url'] = explode("blockpro.php", $_SERVER['PHP_SELF']);
+if ($config['http_home_url'] == '') {
+	$config['http_home_url'] = explode('blockpro.php', $_SERVER['PHP_SELF']);
 	$config['http_home_url'] = reset($config['http_home_url']);
-	$config['http_home_url'] = "http://" . $_SERVER['HTTP_HOST'] . $config['http_home_url'];
+	$config['http_home_url'] = 'http://' . $_SERVER['HTTP_HOST'] . $config['http_home_url'];
 }
 
 require_once ENGINE_DIR . '/classes/mysql.php';
@@ -60,13 +60,13 @@ if (!$is_logged) {
 	$member_id['user_group'] = 5;
 }
 if (!$cat_info) {
-	$user_group = get_vars("usergroup");
+	$user_group = get_vars('usergroup');
 }
 if (!$cat_info) {
 	$cat_info = get_vars("category");
 }
 
-$blockId = $isJs = $isRSS = false;
+$blockId = $isJs = $isRSS = $isIframe = false;
 if (isset($_REQUEST['block'])) {
 	$blockId = $_REQUEST['block'];
 	$isJs    = true;
@@ -74,6 +74,10 @@ if (isset($_REQUEST['block'])) {
 if (isset($_REQUEST['channel'])) {
 	$blockId = $_REQUEST['channel'];
 	$isRSS   = true;
+}
+if (isset($_REQUEST['frame'])) {
+	$blockId = $_REQUEST['frame'];
+	$isIframe   = true;
 }
 $blockId = $db->safesql($blockId);
 
@@ -124,7 +128,7 @@ if ($_cr) {
 		header("Content-type: text/javascript; charset=" . $config['charset']);
 		// Подготавливаем контент к выводу
 		/** @var string $output */
-		$result         = prepereBlock($output);
+		$result         = prepareBlock($output);
 		$externalOutput = '\'' . $result . '\'';
 
 		// Подсчитаем время выполнения скрипта и добавим данные об этом в вывод.
@@ -138,8 +142,12 @@ if ($_cr) {
 	}
 	if ($isRSS) {
 		header("Content-type: application/xml; charset=" . $config['charset']);
-		// Подготавливаем контент к выводу
-		// $result = prepereBlock($output);
+
+		$printOutput = $output;
+	}
+
+	if ($isIframe) {
+		header("Content-type: text/html; charset=" . $config['charset']);
 
 		$printOutput = $output;
 	}
@@ -150,18 +158,14 @@ if ($_cr) {
 
 } else {
 	if ($isJs) {
-		// Если запись не найдена - выведем предупреждением в консоли, чтобы не захламлять сайт.
-		$consoleLog = 'console.warn(\'[blockpro]: no content to show\');';
+		$noData = 'console.warn(\'[blockpro]: no content to show\');';
+	} else {
+		$noData = 'no content to show';
 	}
-
-	if ($isRSS) {
-		// Если запись не найдена - выведем предупреждением в консоли, чтобы не захламлять сайт.
-		$consoleLog = 'console.warn(\'[blockpro]: no content to show\');';
-	}
-	echo $consoleLog;
+	echo $noData;
 }
 
-function prepereBlock($text) {
+function prepareBlock($text) {
 	$search = ["\n", "\t"];
 	$text   = str_replace($search, '', $text);
 	$text   = addslashes($text);
