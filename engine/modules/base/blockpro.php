@@ -15,13 +15,25 @@ if (!defined('DATALIFEENGINE')) {
 	die('Go fuck yourself!');
 }
 
+/**
+ * @global array $config
+ * @global array $member_id
+ * @global array $lang
+ * @global array $category_id
+ * @global array $user_group
+ */
+
 /** @var bool $showstat */
 if ($showstat) {
 	$start = microtime(true);
 	$dbStat = '';
 }
-// Конфиг модуля
+/**
+ * Конфиг модуля
+ * @global array $isAjaxConfig
+ */
 if ($isAjaxConfig) {
+	/** @var array $ajaxConfigArr */
 	$cfg = $ajaxConfigArr;
 } else {
 	$cfg = [
@@ -193,16 +205,14 @@ if (!@is_dir(ROOT_DIR . '/templates/' . $currentSiteSkin)) {
 }
 
 // Формируем имя кеша
-/** @var array $config */
 $cacheName = implode('_', $cfg) . $currentSiteSkin;
 
 // Определяем необходимость создания кеша для разных групп
 $cacheSuffix = ($cfg['cacheSuffixOff']) ? false : true;
-
+$clear_time_cache = false;
 // Если установлено время жизни кеша
 if ($cfg['cacheLive']) {
 	// Формируем имя кеш-файла в соответствии с правилами формирования тагового стандартными средствами DLE, для последующей проверки на существование этого файла.
-	/** @var array $member_id */
 	$_end_file = (!$cfg['cacheSuffixOff']) ? ($is_logged) ? '_' . $member_id['user_group'] : '_0':false;
 	$filedate  = ENGINE_DIR . '/cache/' . $cfg['cachePrefix'] . '_' . md5($cacheName) . $_end_file . '.tmp';
 
@@ -235,7 +245,7 @@ if ($clear_time_cache) {
 
 if (!$output) {
 
-	// Проверяем лицензию.	
+	// Проверяем лицензию.
 	if(!class_exists('Protect')) {
 		// Класс проверки лицензии -->
 
@@ -244,8 +254,7 @@ if (!$output) {
 		// <-- Класс проверки лицензии
 	}
 
-	// Проверяем лицензию.	
-		
+	// Проверяем лицензию.
 
 	$bpProtect = new Protect();
 	$bpProtect->secret_key = 'RdaDrhZFbf6cZqu';
@@ -253,7 +262,7 @@ if (!$output) {
 	$bpProtect->local_key_path = ENGINE_DIR . '/data/';
 	$bpProtect->local_key_name = 'blockpro.lic';
 	$bpProtect->server = 'http://api.pafnuty.name/api.php';
-	$bpProtect->release_date = '2016-08-28'; // гггг-мм-дд
+	$bpProtect->release_date = '2017-02-04'; // гггг-мм-дд
 	$bpProtect->activation_key = $cfg['activation_key'];
 
 	$bpProtect->status_messages = [
@@ -292,7 +301,7 @@ if (!$output) {
 		// Если лицензия не проверилась - скжем об этом
 		$output = (!$bpProtect->errors) ? '<span style="color: red;">Ошибка лицензии, обратитесь к автору модуля.</span>' : $bpProtect->errors;
 	} else {
-		// Если всё ок с лцензией - работаем.	
+		// Если всё ок с лцензией - работаем.
 
 		// Подключаем всё необходимое
 		include_once 'core/base.php';
@@ -651,14 +660,13 @@ if (!$output) {
 				
 				// Пробегаем по сформированным массивам
 				foreach ($xfSearchArray as $xf) {
-					$_xf = explode('|', $xf);					
+					$_xf = explode('|', $xf);
 					$xfWheres[] = $base->db->parse('(tagname=?s AND tagvalue=?s)', $_xf[0], $_xf[1]);
 				}
 				foreach ($notXfSearchArray as $xf) {
-					$_xf = explode('|', $xf);					
+					$_xf = explode('|', $xf);
 					$xfWheres[] = $base->db->parse('(tagname=?s AND NOT tagvalue=?s)', $_xf[0], $_xf[1]);
 				}
-				
 				// Подготавливаем запрос.
 				$xfSearchQuery = implode($_xfSearchLogic, $xfWheres);
 
@@ -668,7 +676,7 @@ if (!$output) {
 				if (count($xfSearchIDs)) {
 					// Оставляем только уникальные
 					$xfSearchIDs = array_unique($xfSearchIDs);
-	
+
 					// Добавляем полученные данные в основной массив, формирующий запрос
 					$wheres[] = 'p.id IN (' . implode(',', $xfSearchIDs) . ')';
 
@@ -718,8 +726,8 @@ if (!$output) {
 						// Заменяем запятую и пробел на просто запятую, иначе будет ошибка.
 						$base->cfg['notTags'] = str_replace(', ', ',', $curTagNewsId['notTags']);
 					}
-				}				
-			}			
+				}
+			}
 		}
 
 		if ($base->cfg['tags'] || $base->cfg['notTags']) {
@@ -777,7 +785,6 @@ if (!$output) {
 				$relatedIdParsed = $base->db->parse('id = ?i', $relatedId);
 
 				$relatedBody = $base->db->getRow('SELECT id, ?p FROM ?n p LEFT JOIN ?n e ON (p.id=e.news_id) WHERE ?p', 'p.title, p.short_story, p.full_story, p.xfields, e.related_ids', PREFIX . '_post', PREFIX . '_post_extras', $relatedIdParsed);
-				
 				// Фикс https://github.com/pafnuty/BlockPro/issues/78
 				if ($relatedBody['id']) {
 					/** @var bool $saveRelated */
@@ -789,7 +796,7 @@ if (!$output) {
 					} else {
 						// Если похожие новости не записывались — отберём их.
 						$reltedFirstShow = true;
-						$bodyToRelated = (dle_strlen($relatedBody['full_story']) < dle_strlen($relatedBody['short_story'])) ? $relatedBody['short_story'] : $relatedBody['full_story'];
+						$bodyToRelated = (dle_strlen($relatedBody['full_story'], $base->dle_config['charset']) < dle_strlen($relatedBody['short_story'], $base->dle_config['charset'])) ? $relatedBody['short_story'] : $relatedBody['full_story'];
 
 						// Фикс для https://github.com/pafnuty/BlockPro/issues/79
 						// @see /engine/modules/show.full.php
@@ -802,7 +809,7 @@ if (!$output) {
 						$wheres[] = 'MATCH (' . $relatedRows . ') AGAINST (' . $bodyToRelated . ') AND id !=' . $relatedBody['id'];
 					}
 				} else {
-					$outputLog['errors'][] = 'Новость с ID ' . $relatedIdParsed . ' не найдена в базе данных.';			
+					$outputLog['errors'][] = 'Новость с ID ' . $relatedIdParsed . ' не найдена в базе данных.';
 				}
 			}
 
@@ -821,8 +828,7 @@ if (!$output) {
 			// Формируем вывод новостей только за сегодня
 			$wheres[] = 'p.date >= "' . $today . '" - INTERVAL 1 DAY';
 			$wheres[] = 'p.date < "' . $today . '"';
-			
-		} else {	
+		} else {
 			// Если future задан, то интервал не вычитаем, а прибавляем к текущему началу дня
 			$intervalOperator = ($base->cfg['future']) ? ' + ' : ' - ';
 
@@ -851,8 +857,6 @@ if (!$output) {
 
 		}
 
-		
-
 		// Подчистим массив от пустых значений
 		$wheres = array_filter($wheres);
 
@@ -862,7 +866,7 @@ if (!$output) {
 			// Складываем условия выборки для рандомных новостей
 			$randWhere = (count($wheres)) ? ' WHERE ' . implode(' AND ', $wheres) : '';
 			// Получим массив с id новостей
-			$randDiapazone = $base->db->getCol('SELECT id FROM ?n AS p ?p', PREFIX . '_post', $randWhere);			
+			$randDiapazone = $base->db->getCol('SELECT id FROM ?n AS p ?p', PREFIX . '_post', $randWhere);
 			// Перемешаем
 			shuffle($randDiapazone);
 			// Возьмём только нужное количество элементов
@@ -935,13 +939,10 @@ if (!$output) {
 		$tplArr['dleModule'] = $dle_module;
 
 		// Делаем доступной переменную $lang в шаблоне
-		/** @var array $lang */
 		$tplArr['lang']        = $lang;
 		$tplArr['cacheName']   = $cacheName;
-		/** @var array $category_id */
 		$tplArr['category_id'] = $category_id;
 		$tplArr['cfg']         = $cfg;
-		
 		// Массив для аттачей и похожих новостей.
 		$attachments = $relatedIds = [];
 
@@ -949,7 +950,6 @@ if (!$output) {
 		foreach ($list as $key => &$newsItem) {
 			// Плучаем обработанные допполя.
 			$newsItem['xfields'] = stripSlashesInArray(xfieldsdataload($newsItem['xfields']));
-			
 			// Собираем массив вложений
 			$attachments[] = $relatedIds[] = $newsItem['id'];
 
@@ -964,7 +964,6 @@ if (!$output) {
 			$newsItem['url'] = $base->getPostUrl($urlArr);
 
 			// Добавляем тег edit
-			/** @var array $user_group */
 			if ($is_logged and (($member_id['name'] == $newsItem['autor'] and $user_group[$member_id['user_group']]['allow_edit']) or $user_group[$member_id['user_group']]['allow_all_edit'])) {
 				$_SESSION['referrer'] = $_SERVER['REQUEST_URI'];
 				$newsItem['allow_edit'] = true;
@@ -986,8 +985,8 @@ if (!$output) {
 				if (count(explode('@', $userFoto)) == 2) {
 					$newsItem['avatar'] = '//www.gravatar.com/avatar/' . md5(trim($userFoto)) . '?s=' . intval($user_group[$newsItem['user_group']]['max_foto']);
 				} else {
-					$userFotoWHost = (strpos($userFoto, '//') === 0) ? 'http:' . $userFoto : $userFoto;					
-					$arUserFoto = parse_url($userFotoWHost);					
+					$userFotoWHost = (strpos($userFoto, '//') === 0) ? 'http:' . $userFoto : $userFoto;
+					$arUserFoto = parse_url($userFotoWHost);
 					if ($arUserFoto['host']) {
 						$newsItem['avatar'] = $userFoto;
 					} else {
@@ -1041,7 +1040,6 @@ if (!$output) {
 		$tplArr['totalCount'] = count($list);
 
 		if ($base->cfg['showNav']) {
-			
 			// Получаем общее количество новостей по заданным параметрам отбора
 			$totalCount = $base->db->getOne('SELECT COUNT(*) as count FROM ?n as p LEFT JOIN ?n e ON (p.id=e.news_id) ?p', PREFIX . '_post', PREFIX . '_post_extras', $where);
 			// Вычитаем переменную startFrom для корректного значения кол-ва новостей
@@ -1051,34 +1049,33 @@ if (!$output) {
 			$tplArr['totalCount'] = $totalCount;
 
 			// Формируем имя кеш-файла с конфигом
-			$pageCahceName = $base->cfg;
-			
+			$pageCacheName = $base->cfg;
 			// Удаляем номер страницы для того, что бы не создавался новый кеш для каждого блока постранички
-			unset($pageCahceName['pageNum']);
+			unset($pageCacheName['pageNum']);
 
 			// Сокращаем немного имя файла :)
-			$pageCahceName = 'bpa_' . crc32(implode('_', $pageCahceName));
+			$pageCacheName = 'bpa_' . crc32(implode('_', $pageCacheName));
 
 			// Включаем кеширование DLE принудительно
-			$cashe_tmp = $base->dle_config['allow_cache'];
+			$cache_tmp = $base->dle_config['allow_cache'];
 			$config['allow_cache'] = 'yes'; // 'yes' для совместимости со старыми версиями dle, т.к. там проверяется значение, а не наличие значения переменной.
 
 			// Проверяем есть ли кеш с указанным именем
-			$ajaxCache = dle_cache($pageCahceName);
+			$ajaxCache = dle_cache($pageCacheName);
 			// Если кеша нет
 			if (!$ajaxCache) {
 				// Сериализуем конфиг для последующей записи в кеш
 				$pageCacheText = serialize($base->cfg);
 				// Создаём кеш
-				create_cache($pageCahceName, $pageCacheText);
+				create_cache($pageCacheName, $pageCacheText);
 			}
 
 			// Возвращаем значение кеша DLE обратно
-			$config['allow_cache'] = $cashe_tmp;
+			$config['allow_cache'] = $cache_tmp;
 
 			// Массив с конфигурацией для формирования постранички
 			$pagerConfig = [
-				'block_id' => $pageCahceName,
+				'block_id' => $pageCacheName,
 				'total_items' => $totalCount,
 				'items_per_page' => $base->cfg['limit'],
 				'style' => $base->cfg['navStyle'],

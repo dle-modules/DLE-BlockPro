@@ -28,13 +28,13 @@ $arCheck = array(
 	),
 	array(
 		'name'  => 'Версия php',
-		'req'   => '5.4 и выше',
-		'check' => (phpversion() < 5.4) ? '<span class="red">' . phpversion() . '</span>' : phpversion(),
+		'req'   => '5.6 и выше',
+		'check' => (phpversion() < 5.6) ? '<span class="red">' . phpversion() . '</span>' : phpversion(),
 	),
 	array(
 		'name'  => 'IonCube Loader',
-		'req'   => '5.0 и выше',
-		'check' => (checkIonCube() < 5.0) ? '<span class="red">' . checkIonCube() . '</span>' : checkIonCube(),
+		'req'   => '6.0 и выше',
+		'check' => (checkIonCube() < 6.0) ? '<span class="red">' . checkIonCube() . '</span>' : checkIonCube(),
 	)
 
 );

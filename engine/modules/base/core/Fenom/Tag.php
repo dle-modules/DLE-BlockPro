@@ -219,7 +219,7 @@ class Tag extends \ArrayObject
     }
 
     /**
-     * Return content of block
+     * Returns tag's content
      *
      * @throws \LogicException
      * @return string
@@ -230,20 +230,20 @@ class Tag extends \ArrayObject
     }
 
     /**
-     * Cut scope content
+     * Cut tag's content
      *
      * @return string
      * @throws \LogicException
      */
     public function cutContent()
     {
-        $content     = substr($this->_body, $this->_offset + 1);
+        $content     = substr($this->_body, $this->_offset);
         $this->_body = substr($this->_body, 0, $this->_offset);
         return $content;
     }
 
     /**
-     * Replace scope content
+     * Replace tag's content
      *
      * @param $new_content
      */
