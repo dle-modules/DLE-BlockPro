@@ -154,6 +154,31 @@ $od_activation_key = $bpConfig['activation_key'];
 // Объединяем массивы конфигов
 $cfg = array_merge($cfg, $bpConfig);
 
+$mcache = false;
+
+if ($config['cache_type']) {
+
+	if (class_exists('Memcache')) {
+		$mcache = new Memcache();
+	} elseif (class_exists('Memcached')) {
+		$mcache = new Memcached();
+	}
+	if ($mcache !== false) {
+		$memcache_server = explode(":", $config['memcache_server']);
+		if ($memcache_server[0] == 'unix') {
+			$memcache_server = [$config['memcache_server'], 0];
+		}
+
+		if (!$mcache->addServer($memcache_server[0], $memcache_server[1])) {
+			$mcache = false;
+		}
+
+		if ($mcache->getStats() === false) {
+			$mcache = false;
+		}
+	}
+}
+
 if ($_REQUEST['setPreview']) {
 	// Формируем имя кеш-файла с конфигом
 	$pageCacheName = $cfg;
@@ -213,9 +238,9 @@ function base_dle_cache($prefix, $cache_id = false, $member_prefix = false) {
 
 	}
 
-	if ($mcache) {
+	if ($mcache !== false) {
 
-		return memcache_get($mcache, md5(DBNAME . PREFIX . md5(SECURE_AUTH_KEY) . $key));
+		return $mcache->get(md5(DBNAME . PREFIX . md5(SECURE_AUTH_KEY) . $key));
 
 	} else {
 
@@ -254,8 +279,11 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 	}
 
 	if (!$cache_id) {
+
 		$key = $prefix;
+
 	} else {
+
 		$cache_id = md5($cache_id);
 
 		if ($member_prefix) {
@@ -266,7 +294,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 
 	}
 
-	if ($mcache) {
+	if ($mcache !== false) {
 
 		$config['clear_cache'] = (intval($config['clear_cache']) > 1) ? intval($config['clear_cache']) : 0;
 
@@ -276,7 +304,15 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 			$set_time = 86400;
 		}
 
-		memcache_set($mcache, md5(DBNAME . PREFIX . md5(SECURE_AUTH_KEY) . $key), $cache_text, MEMCACHE_COMPRESSED, $set_time);
+		if (class_exists('Memcache')) {
+
+			$mcache->set(md5(DBNAME . PREFIX . md5(SECURE_AUTH_KEY) . $key), $cache_text, MEMCACHE_COMPRESSED, $set_time);
+
+		} else {
+
+			$mcache->set(md5(DBNAME . PREFIX . md5(SECURE_AUTH_KEY) . $key), $cache_text, $set_time);
+
+		}
 
 	} else {
 
