@@ -299,7 +299,7 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 				Время жизни кеша (мин)
 			</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input class="input input-short mr10" type="number" name="cacheLive" value="<?php echo $cfg['cacheLive']?>"> например 180 — это 3 часа
+				<input class="input input-short mr10" type="text" name="cacheLive" value="<?php echo $cfg['cacheLive']?>"> например 180 — это 3 часа, а 50s — 50 секунд
 				<p>
 					<input class="checkbox" type="checkbox" value="y" name="nocache" id="nocache"  <?php echo $nocache_checked?>> <label for="nocache"><span></span> отключить кеширование блока</label>
 				</p>
