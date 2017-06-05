@@ -216,12 +216,15 @@ if ($cfg['cacheLive']) {
 	$_end_file = (!$cfg['cacheSuffixOff']) ? ($is_logged) ? '_' . $member_id['user_group'] : '_0':false;
 	$filedate  = ENGINE_DIR . '/cache/' . $cfg['cachePrefix'] . '_' . md5($cacheName) . $_end_file . '.tmp';
 
+	// Определяем в чём измеять время жизни кеша, в минутах или секундах
+	$cacheLiveTimer = (strpos($cfg['cacheLive'], 's')) ? (int)$cfg['cacheLive'] : $cfg['cacheLive'] * 60 ;
+
 	if (@file_exists($filedate)) {
 		$cache_time = time()-@filemtime($filedate);
 	} else {
-		$cache_time = $cfg['cacheLive'] * 60;
+		$cache_time = $cacheLiveTimer;
 	}
-	if ($cache_time >= $cfg['cacheLive'] * 60) {
+	if ($cache_time >= $cacheLiveTimer) {
 		$clear_time_cache = true;
 	}
 }
@@ -356,7 +359,7 @@ if (!$output) {
 
 		// Добавляем пользовательскую фильтрацию
 		if ($base->cfg['setFilter'] != '') {
-			
+
 			$arFilter = [];
 
 			if(strpos($base->cfg['setFilter'], '||')) {
@@ -371,7 +374,7 @@ if (!$output) {
 
 					$field = $arFItem[0];
 					$operator = '';
-					
+
 					// Т.к. DLE не позволяет передавать напрямую символы '>' и '<', приходится изобретать собственный велосипед. 
 					switch ($arFItem[1]) {
 						case '-':
@@ -399,17 +402,17 @@ if (!$output) {
 							$operator = ' <= ';
 							break;
 
-						case '+-': 
+						case '+-':
 						case '-+':
 						case 'not':
 							$operator = ' != ';
 							break;
 
-						case 'SEARCH': 
+						case 'SEARCH':
 							$operator = ' LIKE ';
 							break;
 
-						case 'NOT_SEARCH': 
+						case 'NOT_SEARCH':
 							$operator = ' NOT LIKE ';
 							break;
 					}
@@ -432,7 +435,7 @@ if (!$output) {
 
 				}
 			}
-		}	
+		}
 
 		// Определяем в какую сторону направлена сортировка
 		$ordering = ($base->cfg['order'] == 'new') ? 'DESC' : 'ASC';
@@ -515,7 +518,7 @@ if (!$output) {
 				$orderArr[] = 'e.news_read ' . $ordering;
 				break;
 
-			case 'random':	// Случайные	
+			case 'random':	// Случайные
 				$orderArr[] = 'RAND()';
 				// randomLight ниже т.к. у него отдельный алгоритм
 				break;
@@ -570,17 +573,17 @@ if (!$output) {
 		}
 		if ($base->cfg['catId'] || $base->cfg['notCatId']) {
 			$ignore = ($base->cfg['notCatId']) ? 'NOT ' : '';
-			$catArr = ($base->cfg['notCatId']) ? $base->getDiapazone($base->cfg['notCatId'], $base->cfg['notSubcats']) : $base->getDiapazone($base->cfg['catId'], $base->cfg['subcats']);	
+			$catArr = ($base->cfg['notCatId']) ? $base->getDiapazone($base->cfg['notCatId'], $base->cfg['notSubcats']) : $base->getDiapazone($base->cfg['catId'], $base->cfg['subcats']);
 			if ($catArr[0] > 0) {
-				if ($base->dle_config['allow_multi_category'] && !$base->cfg['thisCatOnly']) {				
-					$catsGet = 'category regexp "[[:<:]](' . str_replace(',', '|', $catArr) . ')[[:>:]]"';			
-				} else {				
-					$catsGet = 'category IN (\'' . str_replace(',', "','", $catArr) . '\')';			
+				if ($base->dle_config['allow_multi_category'] && !$base->cfg['thisCatOnly']) {
+					$catsGet = 'category regexp "[[:<:]](' . str_replace(',', '|', $catArr) . ')[[:>:]]"';
+				} else {
+					$catsGet = 'category IN (\'' . str_replace(',', "','", $catArr) . '\')';
 				}
-				
-				$wheres[] = $ignore . $catsGet;		
+
+				$wheres[] = $ignore . $catsGet;
 			}
-			
+
 		}
 
 		// Фильтрация НОВОСТЕЙ по их ID
@@ -657,7 +660,7 @@ if (!$output) {
 			$bXfNotResult = true;
 			if ($base->dle_config['version_id'] >= '11' && $base->cfg['experiment']) {
 				// Если версия DLE 11 и более и включена экспериментальная функция, то для увеличения скорости выборки запросим данные по допполям из отдельной таблицы.
-				
+
 				// Пробегаем по сформированным массивам
 				foreach ($xfSearchArray as $xf) {
 					$_xf = explode('|', $xf);
@@ -738,7 +741,7 @@ if (!$output) {
 			if ($tagsArr !== 'this') {
 				// Если в строке подключения &tags=this и мы просматриваем страницу тегов, то сюда уже попадёт название тега
 				$wherTag = ($_currentTag)
-				? $ignoreTags . 'tag = ' . $base->db->parse('?s', $tagsArr)
+				? $ignoreTags . 'tag = ' . $tagsArr
 				: $ignoreTags . 'tag regexp "[[:<:]](' . str_replace(',', '|', $tagsArr) . ')[[:>:]]"';
 				// Делаем запрос на получение ID новостей, содержащих требуемые теги
 				$tagNews = $base->db->getCol('SELECT news_id FROM ?n  WHERE ?p', PREFIX . '_tags', $wherTag);
@@ -861,7 +864,7 @@ if (!$output) {
 		$wheres = array_filter($wheres);
 
 		// Когда выбран вариант вывода случайных новостей (Лёгкий режим)
-		if ($base->cfg['sort'] == 'randomLight') { 
+		if ($base->cfg['sort'] == 'randomLight') {
 
 			// Складываем условия выборки для рандомных новостей
 			$randWhere = (count($wheres)) ? ' WHERE ' . implode(' AND ', $wheres) : '';
