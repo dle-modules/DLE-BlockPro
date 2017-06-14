@@ -331,6 +331,11 @@ if (!$output) {
 		// Подключаем шаблонизатор
 		$base->getTemplater($base->tplOptions);
 
+
+		// Добавляем глобавльный тег $.blockPro
+		$base->tpl->addAccessorSmart('blockPro', 'block_pro', Fenom::ACCESSOR_PROPERTY);
+		$base->tpl->block_pro = $base;
+
 		// Определяем начало сегодняшнего дня и дату "прямо вот сейчас".
 		if ($base->dle_config['version_id'] > 10.2) {
 			date_default_timezone_set($base->dle_config['date_adjust']);
