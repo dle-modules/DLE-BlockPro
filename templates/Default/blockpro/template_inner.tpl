@@ -11,7 +11,7 @@
     {*Пробегаем по массиву с новостями*}
     {foreach $list as $el}
         <p>
-            <a href="{$el.url}">{$el.title}</a>
+            <a href="{$el.url}">{$el.title} | {$el.category}</a>
         </p>
     {foreachelse}
         {*Если новостей нет - выведем информацию об этом*}

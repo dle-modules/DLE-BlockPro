@@ -467,8 +467,11 @@ if (!$output) {
 				break;
 
 			default:
+				// Если включен режим афиши и установлена сортировка по убыванию даты, фиксированные новости должны отображаться в начале списка.
+				$fixedNewsOrdering = ($base->cfg['future'] && $base->cfg['sort'] != 'new') ? 'DESC'  : $ordering;
+
 				if ($base->cfg['sort'] != 'random' && $base->cfg['sort'] != 'randomLight' && $base->cfg['sort'] != 'none' && $base->cfg['sort'] != 'editdate') {
-					$orderArr[] = 'fixed ' . $ordering;
+					$orderArr[] = 'fixed ' . $fixedNewsOrdering;
 				}
 				break;
 		}
@@ -576,19 +579,32 @@ if (!$output) {
 		if ($base->cfg['notCatId'] == 'this' && $category_id) {
 			$base->cfg['notCatId'] = ($base->cfg['notSubcats']) ? get_sub_cats($category_id) : ($base->cfg['thisCatOnly']) ? (int)$category_id : $category_id;
 		}
-		if ($base->cfg['catId'] || $base->cfg['notCatId']) {
-			$ignore = ($base->cfg['notCatId']) ? 'NOT ' : '';
-			$catArr = ($base->cfg['notCatId']) ? $base->getDiapazone($base->cfg['notCatId'], $base->cfg['notSubcats']) : $base->getDiapazone($base->cfg['catId'], $base->cfg['subcats']);
-			if ($catArr[0] > 0) {
+		// Дублирование кода вызвано необходимостью сочетания параметра notCatId b catId
+		// Например: catId=this&notCatId=3
+		if ($base->cfg['notCatId']) {
+			$notCatArr = $base->getDiapazone($base->cfg['notCatId'], $base->cfg['notSubcats']);
+			if ($notCatArr[0] > 0) {
 				if ($base->dle_config['allow_multi_category'] && !$base->cfg['thisCatOnly']) {
-					$catsGet = 'category regexp "[[:<:]](' . str_replace(',', '|', $catArr) . ')[[:>:]]"';
+					$notCatQPart = 'category regexp "[[:<:]](' . str_replace(',', '|', $notCatArr) . ')[[:>:]]"';
 				} else {
-					$catsGet = 'category IN (\'' . str_replace(',', "','", $catArr) . '\')';
+					$notCatQPart = 'category IN (\'' . str_replace(',', "','", $notCatArr) . '\')';
 				}
 
-				$wheres[] = $ignore . $catsGet;
+				$wheres[] = 'NOT ' . $notCatQPart;
 			}
+		}
 
+		if ($base->cfg['catId']) {
+			$catArr = $base->getDiapazone($base->cfg['catId'], $base->cfg['subcats']);
+			if ($catArr[0] > 0) {
+				if ($base->dle_config['allow_multi_category'] && !$base->cfg['thisCatOnly']) {
+					$catQPart = 'category regexp "[[:<:]](' . str_replace(',', '|', $catArr) . ')[[:>:]]"';
+				} else {
+					$catQPart = 'category IN (\'' . str_replace(',', "','", $catArr) . '\')';
+				}
+
+				$wheres[] = $catQPart;
+			}
 		}
 
 		// Фильтрация НОВОСТЕЙ по их ID
