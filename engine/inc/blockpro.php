@@ -29,7 +29,7 @@ if ($member_id['user_group'] != '1') {
 define('MODULE_DIR', ENGINE_DIR . '/modules/base/admin/blockpro/');
 
 $moduleName    = 'blockpro';
-$moduleVersion = '4.9.1';
+$moduleVersion = '5.0.0';
 
 $moderate              = $_REQUEST['moderate'];
 $moderate_checked      = ($moderate) ? 'checked' : '';
@@ -148,8 +148,6 @@ $cfg = [
  * var array $bpConfig
  */
 include ENGINE_DIR . '/data/blockpro.php';
-// Лиц. ключ для передачи в обращение в техподдержку (для более эффективного оказания ТП).
-$od_activation_key = $bpConfig['activation_key'];
 
 // Объединяем массивы конфигов
 $cfg = array_merge($cfg, $bpConfig);
@@ -374,7 +372,6 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 					<span class="btn btn-small btn-red mfp-open-ajax"
 					      data-mfp-src="engine/ajax/base/check_updates.php?name=<?php echo $moduleName ?>&currentVersion=<?php echo $moduleVersion ?>">Проверить обновления</span>
 				</h1>
-				<div class="ta-center">Статус лицензии: <span id="licenseStatus"></span></div>
 				<hr>
 			</div> <!-- .col col-mb-12 col-12 -->
 		</div> <!-- .content -->
@@ -401,9 +398,6 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 										<?php
 										$moduleUrl = 'include file="engine/modules/base/blockpro.php';
 										$paramsUrl = [];
-
-										// Удаляем значения по умолчанию за ненадобностью.
-										unset($cfg['activation_key'], $cfg['kraken_secret'], $cfg['tinypng_key'], $cfg['kraken_key']);
 
 										if ($cfg['template'] == 'blockpro/blockpro') {
 											unset($cfg['template']);
@@ -803,9 +797,6 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 			<?php endif; ?>
 			user_email: '<?php echo $member_id['email']; ?>',
 			'Версия': '<?php echo $moduleVersion ?>', 
-			<?php if (isset($od_activation_key) && $od_activation_key != ''): ?>
-			'Ключ': '<?php echo $od_activation_key ?>', 
-			<?php endif; ?>
 			'Адрес сайта': '<?php echo $config['http_home_url']; ?>'
 		};
 	});
