@@ -5,7 +5,6 @@
  */
 
 $bpConfig = [
-	'activation_key' => '',
 	'tinypng_key' => '',
 	'kraken_key' => '',
 	'kraken_secret' => '',

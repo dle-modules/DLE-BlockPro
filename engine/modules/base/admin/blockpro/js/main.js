@@ -215,22 +215,6 @@ doc
 			},
 			type: 'inline'
 		});
-	})
-	.on('sheckLicenseStatus', function(event) {
-		var $licenseStatus = $('#licenseStatus');
-		$.ajax({
-			url: dle_root + 'engine/ajax/base/check_status.php'
-		})
-		.done(function(data) {
-			$licenseStatus.html(data);
-		})
-		.fail(function() {
-			console.log("error");
-		})
-		.always(function() {
-			console.log("complete");
-		});
-		
 	});
 
 // pre-submit callback
@@ -273,10 +257,6 @@ function processDone(responseText, statusText, xhr, $form) {
 
 
 jQuery(document).ready(function ($) {
-	// Проверка лицензии (визуальное отображение статуса)
-	$(window).load(function() {
-		$(document).trigger('sheckLicenseStatus');
-	});
 	// Авторазмер для блоков с кодом
 	$('.code').autosize();
 

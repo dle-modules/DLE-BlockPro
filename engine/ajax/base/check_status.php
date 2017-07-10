@@ -49,7 +49,6 @@ if (!$user_group) {
 	$db->free();
 }
 require_once ENGINE_DIR . '/modules/sitelogin.php';
-require_once ENGINE_DIR . '/modules/base/admin/blockpro/checkLicenseStatus.php';
 
 
 /**
@@ -58,7 +57,7 @@ require_once ENGINE_DIR . '/modules/base/admin/blockpro/checkLicenseStatus.php';
 /** @var array $member_id */
 if ($member_id['user_group'] == '1') {
 
-	die ($licenseStatus);
+	die ('Free license');
 
 } else {
 	die ('Access denied');

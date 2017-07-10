@@ -65,22 +65,6 @@ if (isset($_POST['bp_config'])) {
 		<div class="content">
 			<div class="col col-mb-12 col-5 col-dt-4 form-label">&nbsp;</div>
 			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<h3 class="mb0 h2 text-muted">Настройка лицензии</h3>
-			</div>
-		</div>
-		<div class="content">
-			<div class="col col-mb-12 col-5 col-dt-4 form-label">Ключ активации модуля</div>
-			<div class="col col-mb-12 col-7 col-dt-8 form-control">
-				<input type="text" class="input" name="bp_config[activation_key]" value="<?php echo $bpConfig['activation_key'] ?>">
-				<div class="alert alert-info">
-					Ключ активации можно получить <a href="http://store.pafnuty.name/purchase/" target="_blank">в списке покупок</a>
-				</div>
-			</div>
-		</div>
-
-		<div class="content">
-			<div class="col col-mb-12 col-5 col-dt-4 form-label">&nbsp;</div>
-			<div class="col col-mb-12 col-7 col-dt-8 form-control">
 				<h3 class="mb0 h2 text-muted">Настройка tinyPNG <small>(при необходимости)</small></h3>
 			</div>
 		</div>
