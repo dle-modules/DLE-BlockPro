@@ -132,7 +132,7 @@
 			{set $arImages = $el.full_story|image:$noimage:'small':'all':'150':'85':'crop':true:true:'/uploads/myfolder/'}
 			
 			{* И дополнительно соберём оригинальные картинки из новости, для того, что бы подсунуть их в ссылку *}
-			{set $arImagesOriginal = $el.full_story|image:$noimage:'original':'all'}
+			{set $arImagesOriginal = $el.full_story|image:$noimage:'original':'all':'':'':'':false:true:''}
 			
 			{* Пройдёмся в цикле по полученному массиву картинок *}
 			{foreach $arImages as $key=>$image}
@@ -142,11 +142,11 @@
 		</div>
 		<div class="box-header">Аналог {'{image-1}'}</div>
 		<div class="box box-hide">
-			{$el.full_story|image:$noimage:'intext':'1'}
+			{$el.full_story|image:$noimage:'intext':'1':'':'':'':false:true:''}
 		</div>
 		<div class="box-header">Уменьшенная первая картинка</div>
 		<div class="box box-hide">
-			<img src="{$el.full_story|image:$noimage:'small':'1':'':'':'':false:true}" alt="">
+			<img src="{$el.full_story|image:$noimage:'small':'1':'':'':'':false:true:''}" alt="">
 		</div>
 		 
 		<h3>

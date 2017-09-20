@@ -30,11 +30,6 @@ $arCheck = array(
 		'name'  => 'Версия php',
 		'req'   => '5.6 и выше',
 		'check' => (phpversion() < 5.6) ? '<span class="red">' . phpversion() . '</span>' : phpversion(),
-	),
-	array(
-		'name'  => 'IonCube Loader',
-		'req'   => '6.0 и выше',
-		'check' => (checkIonCube() < 6.0) ? '<span class="red">' . checkIonCube() . '</span>' : checkIonCube(),
 	)
 
 );
@@ -256,7 +251,7 @@ function checkShortOpenTag() {
 			</p>
 
 			<p class="alert">
-				Если всё в порядке &mdash; можно смело <a href="http://store.pafnuty.name/15-blockpro.html" target="_blank">устанавливать модуль</a>!
+				Если всё в порядке &mdash; можно смело <a href="http://bp.pafnuty.name/" target="_blank">устанавливать модуль</a>!
 			</p>
 		</div>
 	</div>

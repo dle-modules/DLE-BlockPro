@@ -29,7 +29,7 @@ if ($member_id['user_group'] != '1') {
 define('MODULE_DIR', ENGINE_DIR . '/modules/base/admin/blockpro/');
 
 $moduleName    = 'blockpro';
-$moduleVersion = '5.0.0';
+$moduleVersion = '5.0.2';
 
 $moderate              = $_REQUEST['moderate'];
 $moderate_checked      = ($moderate) ? 'checked' : '';
@@ -369,8 +369,6 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 			<div class="col col-mb-12 col-12">
 				<h1 class="ta-center mb10">BlockPro
 					<small class="text-muted fz20">(<?php echo $moduleVersion ?>)</small>
-					<span class="btn btn-small btn-red mfp-open-ajax"
-					      data-mfp-src="engine/ajax/base/check_updates.php?name=<?php echo $moduleName ?>&currentVersion=<?php echo $moduleVersion ?>">Проверить обновления</span>
 				</h1>
 				<hr>
 			</div> <!-- .col col-mb-12 col-12 -->
@@ -449,8 +447,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 													class="btn btn-green btn-small btn-external-save"
 													data-mfp-src="engine/ajax/base/save_block_pro.php?blockId=<?php echo $pageCacheName ?>">Создать виджет</span>
 										</h2>
-										<textarea rows="1"
-										          class="input input-block-level code">{<?php echo $moduleUrl ?>"}</textarea>
+										<textarea rows="1" class="input input-block-level code">{<?php echo $moduleUrl ?>"}</textarea>
 										<h2>Предпросмотр блока:</h2>
 										<hr>
 										<div class="content">
@@ -722,7 +719,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 								</div>
 								<div class="col col-mb-12 mb10">
 									Документация к модулю всегда доступна на официальном сайте, в разделе <a
-											href="http://blockpro.ru/documentation/" target="_blank">документация</a>.
+											href="http://bp.pafnuty.name/documentation/" target="_blank">документация</a>.
 								</div>
 							</div>
 							<hr>
@@ -731,33 +728,15 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 									&nbsp;
 								</div>
 								<div class="col col-mb-12 col-10 form-control">
-									<h2 class="m0">Условия получения техподдержки по модулю</h2>
+									<h2 class="m0">Техподдержка </h2>
 								</div>
 								<div class="col col-mb-12 mb10">
 									<div class="alert">
 										<p>
-											Начиная с версии 4.6.0 техническая поддержка клиентов осуществляется только
-											через
-											систему обращений. Это удобнее и гораздо эффективнее, чем email-переписка
-											или
-											переписка в различных месседжерах.
-										</p>
-										<p>
-											При создании обращения из админки модуля него автоматически передаётся
-											лицензионный ключ, версия модуля и адрес сайта, это улучшает эффективность
-											оказания техподдержки и нам не придётся тратить время на выяснение
-											технических деталей и активности лицензии.
+											Начиная с версии 5.0.0 техническая поддержка по модулю оказывается ТОЛЬКО в рамках тиккетов на GitHub 
 										</p>
 									</div>
-									<p>
-										Для получения техподдержки или решения иных вопросов, связанных с модулем
-										воспользуйтесь кнопкой создания обращения ниже или в нижнем правом углу
-										страницы.
-									</p>
-									<span class="btn omni-email-widget">Создать обращение</span>
-
-									<p>Если вопрос связан с выводм новостей — не забывайте указать строку подключения и
-										прикреплять файл шаблона модуля, если он отличается от стандартного.</p>
+									<a class="btn omni-email-widget" href="https://github.com/dle-modules/DLE-BlockPro/issues/new" target="_blank">Создать тиккет</a>
 								</div>
 							</div>
 						</div>
@@ -772,7 +751,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 		<div class="col col-mb-12">
 			<hr class="mt0">
 			Контакты для связи и техподдержки:<br>
-			<a href="https://pafnuty.omnidesk.ru/" target="_blank" title="Сайт поддержки">pafnuty.omnidesk.ru</a> —
+			<a href="https://github.com/dle-modules/DLE-BlockPro" target="_blank" title="Сайт поддержки">BlockPro</a> —
 			техподдержка <br>
 			<a href="http://bp.pafnuty.name/" target="_blank" title="Официальный сайт модуля">bp.pafnuty.name</a> —
 			документация <br>
@@ -782,27 +761,6 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 <?php 
 		
 ?>
-<!-- Start of Omnidesk Widget script -->
-<script>
-	!function(e,o){window.omni=o;o.g_config={widget_id:"16-u6z46pw1"}; o.email_widget=o.email_widget||{};var w=o.email_widget;w.readyQueue=[];o.config=function(e){ this.g_config.user=e};w.ready=function(e){this.readyQueue.push(e)};var r=e.getElementsByTagName("script")[0];c=e.createElement("script");c.type="text/javascript",c.async=!0;c.src="https://omnidesk.ru/bundles/acmesite/js/cwidget.js";r.parentNode.insertBefore(c,r)}(document,window.omni||{});
-	
-	omni.config({
-		diplay_button: true
-	});
-
-	omni.email_widget.ready(function () {
-		omni.email_widget.identify = {
-			<?php if(isset($member_id['fullname']) && $member_id['fullname'] !== ''): ?>
-			user_full_name: '<?php echo $member_id['fullname']; ?>',
-			<?php endif; ?>
-			user_email: '<?php echo $member_id['email']; ?>',
-			'Версия': '<?php echo $moduleVersion ?>', 
-			'Адрес сайта': '<?php echo $config['http_home_url']; ?>'
-		};
-	});
-
-</script>
-<!-- End of Omnidesk Widget script -->
 
 </body>
 </html>
