@@ -119,24 +119,16 @@ if (isset($_POST['blockId']) && $_POST['widgetDelete'] == 'Y') {
 						</div>
 						<div class="col col-mb-12">
 							<h4>Код для вставки через javascript:</h4>
-							<textarea readonly class="input input-block-level code"><script type="text/javascript" async
-							                                                                defer
-							                                                                src="<?php echo $config['http_home_url'] ?>blockpro.php?block=<?php echo $vidgetItem['block_id'] ?>"></script>
-<div id="<?php echo $vidgetItem['block_id'] ?>"></div></textarea>
+							<textarea rows="1" readonly class="input input-block-level code"><script async defer src="<?php echo $config['http_home_url'] ?>blockpro.php?block=<?php echo $vidgetItem['block_id'] ?>"></script><div id="<?php echo $vidgetItem['block_id'] ?>"></div></textarea>
 
 							<h4>Код для вывода RSS:</h4>
-							<textarea rows="1" readonly
-							          class="input input-block-level code"><?php echo $config['http_home_url'] ?>
-								blockpro.php?channel=<?php echo $vidgetItem['block_id'] ?></textarea>
+							<textarea rows="1" readonly class="input input-block-level code"><?php echo $config['http_home_url'] ?>blockpro.php?channel=<?php echo $vidgetItem['block_id'] ?></textarea>
 
 							<h4>Код для вывода через iframe:</h4>
-							<textarea rows="1" readonly class="input input-block-level code"><iframe
-										src="<?php echo $config['http_home_url'] ?>blockpro.php?frame=<?php echo $vidgetItem['block_id'] ?>"
-										frameborder="0"></iframe></textarea>
+							<textarea rows="1" readonly class="input input-block-level code"><iframe src="<?php echo $config['http_home_url'] ?>blockpro.php?frame=<?php echo $vidgetItem['block_id'] ?>" frameborder="0"></iframe></textarea>
 
 							<h4>Строка подключения:</h4>
-							<textarea rows="1" class="input input-block-level code">{<?php echo $vidgetModuleUrl ?>
-								"}</textarea>
+							<textarea rows="1" class="input input-block-level code">{<?php echo $vidgetModuleUrl ?>"}</textarea>
 
 						</div>
 					</div>

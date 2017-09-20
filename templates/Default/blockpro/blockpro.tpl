@@ -86,7 +86,7 @@
 			*}
 
 			{*Выводим уменьшенную и большую картинку*}
-			<a href="{$el.short_story|image:$noimageBig:'original'}"><img src="{$el.short_story|image:$noimage:'small':1:'150x200':75:'landscape':true:false:'subfolder'}" alt="{$el.title}"></a> <br>
+			<a href="{$el.short_story|image:$noimageBig:'original':'1':'':'':'':true:false:''}"><img src="{$el.short_story|image:$noimage:'small':1:'150x200':75:'landscape':true:false:'subfolder'}" alt="{$el.title}"></a> <br>
 			{*
 				Пояснения к формированию картинки (объяснение по параметрам той строки, что выше):
 				{

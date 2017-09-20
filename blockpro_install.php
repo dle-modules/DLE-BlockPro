@@ -15,9 +15,9 @@ $cfg = [
 	// Описание модуля, для установщика и админки.
 	'moduleDescr'   => 'Модуль вывода новостей для DLE',
 	// Версия модуля, для установщика
-	'moduleVersion' => '5.0.0',
+	'moduleVersion' => '5.0.2',
 	// Дата выпуска модуля, для установщика
-	'moduleDate'    => '10.07.2017',
+	'moduleDate'    => '20.09.2017',
 	// Версии DLE, поддержваемые модулем, для установщика
 	'dleVersion'    => '10.x',
 	// ID групп, для которых доступно управление модулем в админке.
@@ -60,18 +60,17 @@ $steps = <<<HTML
 		Открыть файл <b>/templates/{$config['skin']}/main.tpl</b> 
 	</li>
 	<li>
-		Добавить перед <b>&lt;/head&gt;</b>:
+		Добавить после <b>{AJAX}</b> или после <b>{jsfiles}</b>:
 		<textarea readonly class="code" rows="1"><link href="{THEME}/blockpro/css/blockpro.css" rel="stylesheet" /></textarea>
 	</li>
 	<li>
-		Добавить перед <b>&lt;/head&gt;</b>:
+		Добавить после <b>{AJAX}</b> или после <b>{jsfiles}</b>:
 		<textarea readonly class="code" rows="1"><script src="{THEME}/blockpro/js/blockpro.js"></script></textarea>
 		или
 		<textarea readonly class="code" rows="1"><script src="{THEME}/blockpro/js/blockpro_new.js"></script></textarea>
 		если хотите использовать возможность навигации по стрелкам браузера при ajax-переключении страниц модуля.
 	</li>
 	<li>Выполнить установку админчасти и таблиц модуля (кнопка ниже).</li>
-	<li>После установки модуля перейти в настройки, на вкладку "Настройки" и ввести <a href="http://store.pafnuty.name/purchase/" target="_blank">полученный ключ</a> в соотвествтующее поле.</li>
 </ol>
 HTML;
 
@@ -146,7 +145,7 @@ HTML;
 			}
 
 			$output .= '<li><b>Установка завершена!</b></li></ul></div>';
-			$output .= '<div class="alert">Не забудьте удалить файлы установщика (blockpro_install.php и blockpro_upgrade.php)!</div>';
+			$output .= '<div class="alert">Не забудьте удалить файлы установщика (blockpro_install.php и bp_check.php)!</div>';
 			/** @var bool $install_admin */
 			if ($cfg['installAdmin'] && $install_admin) {
 				$output .= '<p><a class="btn" href="/' . $config['admin_path'] . '?mod=' . $cfg['moduleName'] . '" target="_blank" title="Перейти к управлению модулем">Настройка модуля</a></p> <hr>';
@@ -1514,7 +1513,7 @@ function chasetConflict($string) {
 				<div class="col col-mb-12">
 					<hr class="mt0">
 					Контакты для связи и техподдержки:<br>
-					<a href="https://github.com/pafnuty/BlockPro/" target="_blank"
+					<a href="https://github.com/dle-modules/DLE-BlockPro" target="_blank"
 					   title="Сайт поддержки">BlockPro</a> — техподдержка <br>
 					<a href="http://bp.pafnuty.name/" target="_blank"
 					   title="Официальный сайт модуля">bp.pafnuty.name</a> — документация <br>

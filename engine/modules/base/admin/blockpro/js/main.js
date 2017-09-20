@@ -39,11 +39,9 @@ doc
 		})
 			.done(function (data) {
 				$block.html($(data).html());
-				console.log(data);
 			})
 			.fail(function () {
 				base_loader(blockId, 'stop');
-				console.log("error");
 			})
 			.always(function () {
 				base_loader(blockId, 'stop');
@@ -92,15 +90,6 @@ doc
 
 		$('#img_code').val(text);
 
-	})
-	.on('change', '[data-img-type]', function(event) {
-		event.preventDefault();
-		var $other = $('[data-setimage]:not([data-defimage]):not([data-img-count])');
-		if ($(this).val() == 'original') {
-			$other.prop('disabled', true);
-		} else {
-			$other.prop('disabled', false);
-		}
 	})
 	.on('keyup input change', '[data-setimage]', function(event) {
 		event.preventDefault();
@@ -165,8 +154,6 @@ doc
 			prefix = '{$el.category|catinfo',
 			suffix = '}',
 			text;
-
-		console.log(catinfo);
 
 		if (catinfo && catinfo != 'icon_noimage') {
 			text = ':\'' + catinfo + '\'';
