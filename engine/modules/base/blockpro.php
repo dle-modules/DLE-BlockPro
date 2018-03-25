@@ -625,11 +625,17 @@ if (!$output) {
 		$base->cfg['notPostId'] = $_REQUEST['newsid'];
 	}
 
-	if (($base->cfg['postId'] || $base->cfg['notPostId']) && $base->cfg['related'] == '') {
-		$ignorePosts = ($base->cfg['notPostId']) ? 'NOT ' : '';
-		$postsArr    = ($base->cfg['notPostId']) ? $base->getDiapazone($base->cfg['notPostId']) : $base->getDiapazone($base->cfg['postId']);
+	if ($base->cfg['notPostId']) {
+		$notPostsArr = $base->getDiapazone($base->cfg['notPostId']);
+		if ($notPostsArr !== '0') {
+			$wheres[] = 'id NOT IN (' . $notPostsArr . ')';
+		}
+	}
+	
+	if ($base->cfg['postId'] && $base->cfg['related'] == '') {
+		$postsArr = $base->getDiapazone($base->cfg['postId']);
 		if ($postsArr !== '0') {
-			$wheres[] = 'id ' . $ignorePosts . ' IN (' . $postsArr . ')';
+			$wheres[] = 'id IN (' . $postsArr . ')';
 		}
 	}
 
