@@ -67,6 +67,7 @@ if (!$cat_info) {
 
 $pageNum = (isset($_REQUEST['pageNum'])) ? (int)$_REQUEST['pageNum'] : 1;
 $blockId = (isset($_REQUEST['blockId'])) ? $_REQUEST['blockId'] : false;
+$thisUrl = (isset($_REQUEST['thisUrl'])) ? (string)$_REQUEST['thisUrl'] : false;
 
 $cashe_tmp             = $config['allow_cache'];
 $config['allow_cache'] = 'yes'; // 'yes' для совместимости со старыми версиями dle, т.к. там проверяется значение, а не наличие значения переменной.

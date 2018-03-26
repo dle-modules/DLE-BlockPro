@@ -1,3 +1,5 @@
+var thisUrl = window.location.pathname;
+
 $(document)
 	.on('click touchstart', '[data-page-num]', function () {
 		var $this   = $(this),
@@ -12,7 +14,8 @@ $(document)
 			dataType: 'html',
 			data: {
 				pageNum: pageNum,
-				blockId: blockId
+				blockId: blockId,
+				thisUrl: thisUrl
 			}
 		})
 			.done(function (data) {

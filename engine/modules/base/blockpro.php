@@ -172,6 +172,18 @@ include ENGINE_DIR . '/data/blockpro.php';
 // Объединяем массивы конфигов
 $cfg = array_merge($cfg, $bpConfig);
 
+// Получаем id текущей категории при AJAX навигации
+if ($isAjaxConfig && ($cfg['catId'] == 'this' || $cfg['notCatId'] == 'this')) {
+	if (substr($thisUrl, -1, 1) == '/') {
+		$thisUrl = substr($thisUrl, 0, -1);
+	}
+	$thisUrl = explode('/', $thisUrl);
+	$thisUrl = end($thisUrl);
+	if (trim($thisUrl) != '') {
+		$category_id = get_ID($cat_info, $thisUrl);
+	}
+}
+
 $cfg['cacheNameAddon'] = [];
 // Если имеются переменные со значениями this, изменяем значение переменной cacheNameAddon
 if ($cfg['catId'] == 'this') {
@@ -570,9 +582,11 @@ if (!$output) {
 
 	// Фильтрация КАТЕГОРИЙ по их ID
 	if ($base->cfg['catId'] == 'this' && $category_id) {
+		$base->cfg['catIdT'] = 'this';
 		$base->cfg['catId'] = ($base->cfg['subcats']) ? get_sub_cats($category_id) : ($base->cfg['thisCatOnly']) ? (int)$category_id : $category_id;
 	}
 	if ($base->cfg['notCatId'] == 'this' && $category_id) {
+		$base->cfg['notCatIdT'] = 'this';
 		$base->cfg['notCatId'] = ($base->cfg['notSubcats']) ? get_sub_cats($category_id) : ($base->cfg['thisCatOnly']) ? (int)$category_id : $category_id;
 	}
 	// Дублирование кода вызвано необходимостью сочетания параметра notCatId b catId
@@ -611,11 +625,17 @@ if (!$output) {
 		$base->cfg['notPostId'] = $_REQUEST['newsid'];
 	}
 
-	if (($base->cfg['postId'] || $base->cfg['notPostId']) && $base->cfg['related'] == '') {
-		$ignorePosts = ($base->cfg['notPostId']) ? 'NOT ' : '';
-		$postsArr    = ($base->cfg['notPostId']) ? $base->getDiapazone($base->cfg['notPostId']) : $base->getDiapazone($base->cfg['postId']);
+	if ($base->cfg['notPostId']) {
+		$notPostsArr = $base->getDiapazone($base->cfg['notPostId']);
+		if ($notPostsArr !== '0') {
+			$wheres[] = 'id NOT IN (' . $notPostsArr . ')';
+		}
+	}
+	
+	if ($base->cfg['postId'] && $base->cfg['related'] == '') {
+		$postsArr = $base->getDiapazone($base->cfg['postId']);
 		if ($postsArr !== '0') {
-			$wheres[] = 'id ' . $ignorePosts . ' IN (' . $postsArr . ')';
+			$wheres[] = 'id IN (' . $postsArr . ')';
 		}
 	}
 
@@ -1059,6 +1079,14 @@ if (!$output) {
 		// Общее кол-во новостей с постраничкой.
 		$tplArr['totalCount'] = $totalCount;
 
+		// Меняем для кеша id категории на this если параметр catId или notCatId равен this
+		if ($base->cfg['catIdT'] == 'this') {
+			$base->cfg['catId'] = $base->cfg['catIdT'];
+		}
+		if ($base->cfg['notCatIdT'] == 'this') {
+			$base->cfg['notCatId'] = $base->cfg['notCatIdT'];
+		}
+		
 		// Формируем имя кеш-файла с конфигом
 		$pageCacheName = $base->cfg;
 		// Удаляем номер страницы для того, что бы не создавался новый кеш для каждого блока постранички
