@@ -155,3 +155,43 @@ function base_rate(rate, id) {
 
 	}, 'json');
 }
+
+/**
+ * Выставление рейтинга для DLE 13
+ * @see base_rate
+ * @param rate
+ * @param id
+ */
+function base_rate13(rate, id) {
+	ShowLoading('');
+	$.get(dle_root + 'engine/ajax/controller.php?mod=rating', {
+		go_rate: rate,
+		news_id: id,
+		skin: dle_skin,
+		user_hash: dle_login_hash || ''
+	}, function(data){
+
+		HideLoading('');
+
+		if (data.success) {
+			var rating = data.rating;
+
+			rating = rating.replace(/&lt;/g, '<');
+			rating = rating.replace(/&gt;/g, '>');
+			rating = rating.replace(/&amp;/g, '&');
+
+			$('[data-rating-layer="' + id + '"]').html(rating);
+			$('[data-vote-num-id="' + id + '"]').html(data.votenum);
+
+			$('#ratig-layer-' + id).html(rating);
+			$('#vote-num-id-' + id).html(data.votenum);
+
+			$('#likes-id-' + id).html(data.likes);
+			$('#dislikes-id-' + id).html(data.dislikes);
+
+		} else if (data.error) {
+			DLEalert(data.errorinfo, dle_info);
+		}
+
+	}, "json");
+}
