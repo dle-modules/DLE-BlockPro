@@ -1032,12 +1032,13 @@ if (!$output) {
 		$newsItem['showRatingCount'] = '';
 		if ($newsItem['allow_rate']) {
 			$newsItem['showRatingCount'] = '<span class="ignore-select" data-vote-num-id="' . $newsItem['id'] . '">' . $newsItem['vote_num'] . '</span>';
+			$jsRAteFunctionName = ($base->dle_config['version_id'] >= 13) ? 'base_rate13' : 'base_rate';
 
 			if ($base->dle_config['short_rating'] and $user_group[$member_id['user_group']]['allow_rating']) {
 				$newsItem['showRating'] = baseShowRating($newsItem['id'], $newsItem['rating'], $newsItem['vote_num'], 1);
 
-				$newsItem['ratingOnclickPlus']  = 'onclick="base_rate(\'plus\', \'' . $newsItem['id'] . '\'); return false;"';
-				$newsItem['ratingOnclickMinus'] = 'onclick="base_rate(\'minus\', \'' . $newsItem['id'] . '\'); return false;"';
+				$newsItem['ratingOnclickPlus']  = 'onclick="' . $jsRAteFunctionName .'(\'plus\', \'' . $newsItem['id'] . '\'); return false;"';
+				$newsItem['ratingOnclickMinus'] = 'onclick="' . $jsRAteFunctionName .'(\'minus\', \'' . $newsItem['id'] . '\'); return false;"';
 
 			} else {
 				$newsItem['showRating'] = baseShowRating($newsItem['id'], $newsItem['rating'], $newsItem['vote_num'], 0);

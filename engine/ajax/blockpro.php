@@ -21,7 +21,8 @@ define('DATALIFEENGINE', true);
 define('ROOT_DIR', substr(dirname(__FILE__), 0, -12));
 define('ENGINE_DIR', ROOT_DIR . '/engine');
 
-include ENGINE_DIR . '/data/config.php';
+include_once ENGINE_DIR . '/plugins/loader/loader.php';
+include (DLEPlugins::Check(ENGINE_DIR . '/data/config.php'));
 
 /** @var array $config */
 if ($config['version_id'] > 10.2) {
@@ -37,10 +38,10 @@ if ($config['http_home_url'] == "") {
 	$config['http_home_url'] = "http://" . $_SERVER['HTTP_HOST'] . $config['http_home_url'];
 }
 
-require_once ENGINE_DIR . '/classes/mysql.php';
-require_once ENGINE_DIR . '/data/dbconfig.php';
-require_once ENGINE_DIR . '/modules/functions.php';
-require_once ENGINE_DIR . '/classes/templates.class.php';
+require_once (DLEPlugins::Check(ENGINE_DIR . '/classes/mysql.php'));
+require_once (DLEPlugins::Check(ENGINE_DIR . '/data/dbconfig.php'));
+require_once (DLEPlugins::Check(ENGINE_DIR . '/modules/functions.php'));
+require_once (DLEPlugins::Check(ENGINE_DIR . '/classes/templates.class.php'));
 
 if (function_exists('dle_session')) {
 	dle_session();
@@ -52,7 +53,7 @@ $is_logged = false;
 $member_id = [];
 
 if ($config['allow_registration']) {
-	require_once ENGINE_DIR . '/modules/sitelogin.php';
+	require_once (DLEPlugins::Check(ENGINE_DIR . '/modules/sitelogin.php'));
 }
 if (!$is_logged) {
 	$member_id['user_group'] = 5;
@@ -121,15 +122,13 @@ if ($_cr) {
 		header("Last-Modified: " . gmdate("D, d M Y H:i:s", $lastModified) . " GMT");
 
 		header("Etag: $etag");
-		if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $lastModified ||
-			@trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag
-		) {
+		if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $lastModified || @trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) {
 			header("HTTP/1.1 304 Not Modified");
 			exit;
 		}
 	}
 
-	include ENGINE_DIR . '/modules/base/blockpro.php';
+	include (DLEPlugins::Check(ENGINE_DIR . '/modules/base/blockpro.php'));
 
 } else {
 	die('cache not found');
