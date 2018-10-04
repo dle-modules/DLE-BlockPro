@@ -21,21 +21,21 @@ define('DATALIFEENGINE', true);
 define('ROOT_DIR', substr(dirname(__FILE__), 0, -17));
 
 define('ENGINE_DIR', ROOT_DIR . '/engine');
+include_once ENGINE_DIR . '/plugins/loader/loader.php';
 
-include ENGINE_DIR . '/data/config.php';
+include (DLEPlugins::Check(ENGINE_DIR . '/data/config.php'));
 /** @var array $config */
 if ($config['http_home_url'] == "") {
 	$config['http_home_url'] = explode("engine/ajax/base/save_block_pro.php", $_SERVER['PHP_SELF']);
 	$config['http_home_url'] = reset($config['http_home_url']);
 	$config['http_home_url'] = "http://" . $_SERVER['HTTP_HOST'] . $config['http_home_url'];
 }
-require_once ENGINE_DIR . '/classes/mysql.php';
-require_once ENGINE_DIR . '/data/dbconfig.php';
-require_once ENGINE_DIR . '/modules/functions.php';
+require_once (DLEPlugins::Check(ENGINE_DIR . '/classes/mysql.php'));
+require_once (DLEPlugins::Check(ENGINE_DIR . '/data/dbconfig.php'));
+require_once (DLEPlugins::Check(ENGINE_DIR . '/modules/functions.php'));
 if ($config['version_id'] > 9.6) {
 	dle_session();
-}
-else {
+} else {
 	@session_start();
 }
 
@@ -50,7 +50,7 @@ if (!$user_group) {
 	set_vars("usergroup", $user_group);
 	$db->free();
 }
-require_once ENGINE_DIR . '/modules/sitelogin.php';
+require_once (DLEPlugins::Check(ENGINE_DIR . '/modules/sitelogin.php'));
 
 /**
  * Основной код файла
@@ -61,22 +61,22 @@ if ($member_id['user_group'] == '1') {
 		if ($_REQUEST['saveBlock'] == 'Y') {
 			$blockId = (isset($_REQUEST['blockId'])) ? $_REQUEST['blockId'] : false;
 
-			$cashe_tmp = $config['allow_cache'];
+			$cashe_tmp             = $config['allow_cache'];
 			$config['allow_cache'] = 'yes'; // 'yes' для совместимости со старыми версиями dle, т.к. там проверяется значение, а не наличие значения переменной.
-			$_cr = dle_cache($blockId);
+			$_cr                   = dle_cache($blockId);
 			$config['allow_cache'] = $cashe_tmp;
 
 			if ($_cr) {
-				$params = $_cr;
-				$name = $db->safesql($_REQUEST['name']);
+				$params   = $_cr;
+				$name     = $db->safesql($_REQUEST['name']);
 				$block_id = 'bp' . crc32($params . time());
-				
-				$block = $db->query( "INSERT INTO " . PREFIX . "_blockpro_blocks (name, block_id, params) VALUES('$name', '$block_id', '$params')" );
+
+				$block = $db->query("INSERT INTO " . PREFIX . "_blockpro_blocks (name, block_id, params) VALUES('$name', '$block_id', '$params')");
 				if ($block) {
-					$insertCode = '<script type="text/javascript" async defer src="' . $config['http_home_url'] . 'blockpro.php?block=' . $block_id . '"></script><div id="' . $block_id . '"></div>';
-					$insertRssCode = $config['http_home_url'] . 'blockpro.php?channel=' . $block_id;
+					$insertCode       = '<script type="text/javascript" async defer src="' . $config['http_home_url'] . 'blockpro.php?block=' . $block_id . '"></script><div id="' . $block_id . '"></div>';
+					$insertRssCode    = $config['http_home_url'] . 'blockpro.php?channel=' . $block_id;
 					$insertIframeCode = '<iframe src="' . $config['http_home_url'] . 'blockpro.php?frame=' . $block_id . '" frameborder="0"></iframe>';
-					$modal = '<div class="content">
+					$modal            = '<div class="content">
 						<div class="modal-white">
 							<span class="modal-close popup-modal-dismiss">&times;</span>
 							<div class="modal-header">
@@ -94,8 +94,8 @@ if ($member_id['user_group'] == '1') {
 								<div class="clearfix">
 									<div class="fz18 text-blue">Код для вывода через iframe:</div>
 									<textarea readonly class="input input-block-level code">' . $insertIframeCode . '</textarea>
-								</div>	
-								<div class="alert alert-info">Созданный виджет так же будет доступен на вкладке "Виджеты".</div>								
+								</div>
+								<div class="alert alert-info">Созданный виджет так же будет доступен на вкладке "Виджеты".</div>
 								<div class="ta-center mb10 mt20">
 									<span class="btn modal-close">Закрыть окно</span>
 								</div>
@@ -117,7 +117,7 @@ if ($member_id['user_group'] == '1') {
 								<div class="alert mb30">
 									Невозможно получить конфиг текущего вызова модуля. <br>Попробуйте ещё раз.
 								</div>
-							</div>									
+							</div>
 							<div class="ta-center mb10">
 								<span class="btn modal-close">Закрыть окно</span>
 							</div>
@@ -142,7 +142,7 @@ if ($member_id['user_group'] == '1') {
 										Код блока (не проверяется на уникальность)
 										<input class="input input-block" type="text" name="blockId" value="' . $_REQUEST['blockId'] . '">
 									</div>
-								</div>									
+								</div>
 								<div class="content">
 									<div class="col col-mb-12">
 										Название блока (для показа в списке)
@@ -159,12 +159,11 @@ if ($member_id['user_group'] == '1') {
 				</form>
 			</div>';
 		}
-		
+
 		echo $modal;
-		
+
 	}
 
-}
-else {
+} else {
 	die ('Access denied');
 }

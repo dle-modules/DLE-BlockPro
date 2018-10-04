@@ -42,8 +42,7 @@ if (!$user_group) {
 	$db->query("SELECT * FROM " . USERPREFIX . "_usergroups ORDER BY id ASC");
 	while ($row = $db->get_row()) {
 		$user_group[$row['id']] = [];
-		foreach ($row as $key => $value)
-			$user_group[$row['id']][$key] = stripslashes($value);
+		foreach ($row as $key => $value) $user_group[$row['id']][$key] = stripslashes($value);
 	}
 	set_vars("usergroup", $user_group);
 	$db->free();

@@ -476,17 +476,19 @@ HTML;
 
 			return $rated;
 		}
+		$jsRAteFunctionName = ($config['version_id'] >= 13) ? 'base_rate13' : 'base_rate';
+
 
 		$rated = <<<HTML
 <div data-rating-layer="{$id}">
 	<div class="rating">
 		<ul class="unit-rating">
 			<li class="current-rating" style="width:{$rating}%;">{$rating}</li>
-			<li><a href="#" title="{$lang['useless']}" class="r1-unit" onclick="base_rate('1', '{$id}'); return false;">1</a></li>
-			<li><a href="#" title="{$lang['poor']}" class="r2-unit" onclick="base_rate('2', '{$id}'); return false;">2</a></li>
-			<li><a href="#" title="{$lang['fair']}" class="r3-unit" onclick="base_rate('3', '{$id}'); return false;">3</a></li>
-			<li><a href="#" title="{$lang['good']}" class="r4-unit" onclick="base_rate('4', '{$id}'); return false;">4</a></li>
-			<li><a href="#" title="{$lang['excellent']}" class="r5-unit" onclick="base_rate('5', '{$id}'); return false;">5</a></li>
+			<li><a href="#" title="{$lang['useless']}" class="r1-unit" onclick="{$jsRAteFunctionName}('1', '{$id}'); return false;">1</a></li>
+			<li><a href="#" title="{$lang['poor']}" class="r2-unit" onclick="{$jsRAteFunctionName}('2', '{$id}'); return false;">2</a></li>
+			<li><a href="#" title="{$lang['fair']}" class="r3-unit" onclick="{$jsRAteFunctionName}('3', '{$id}'); return false;">3</a></li>
+			<li><a href="#" title="{$lang['good']}" class="r4-unit" onclick="{$jsRAteFunctionName}('4', '{$id}'); return false;">4</a></li>
+			<li><a href="#" title="{$lang['excellent']}" class="r5-unit" onclick="{$jsRAteFunctionName}('5', '{$id}'); return false;">5</a></li>
 		</ul>
 	</div>
 </div>
