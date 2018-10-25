@@ -1,6 +1,8 @@
 # 5.1.0
 - Совместимость с DLE 13.x
-- Исправлена ошибка Fatal error: Cannot redeclare class microTimer
+- Исправлено: Fatal error: Cannot redeclare class microTimer
+- Исправлено: Не корректно работает постраничная навигация при использовании catId=this
+- Исправлено: Не работает notPostId для похожих новостей
 - Мелкие и незначительные исправления
 
 # 5.0.2
