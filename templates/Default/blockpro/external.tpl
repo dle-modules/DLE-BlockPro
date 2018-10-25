@@ -1,3 +1,7 @@
+{filter|strip|replace:["\n","\t","\r"]:""|replace:"> <":"><"|strip}
+{* Убираем на выходе лишние переносы и пробелы, они помешают при выводу через js *}
+{* https://github.com/fenom-template/fenom/blob/8ce6779119c098562d2bafba9167fbb4e2a222be/docs/ru/tags/filter.md *}
+
 {*
 	$block_id - это уникальный идентификатор блока (у блоков с разными настройками он разный).
 	В данном шаблоне этот идентификатор используется для того, что бы задать уникальные стили для блока, ведь он может быть выведен на стороннем сайти, где возможен конфликт CSS после отображение блока.
@@ -8,8 +12,6 @@
 	{$dleConfig.http_home_url}{$theme}/blockpro/noimage.png
 {/var}
 
-{* Убираем на выходе лишние переносы и пробелы, они помешают при выводу через js *}
-{filter|strip|replace:["\n","\t"]:""|replace:"> <":"><"|strip} {* https://github.com/fenom-template/fenom/blob/8ce6779119c098562d2bafba9167fbb4e2a222be/docs/ru/tags/filter.md *}
 	{* Набрасываем стили для блока, он всётаки на стороннем сайте и поэтому у классов есть префикс в виде ID блока *}
 	<style>
 		.{$block_id}-block {
@@ -92,4 +94,3 @@
 		{/foreach}
 	</div>
 {/filter}
-

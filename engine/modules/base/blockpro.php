@@ -258,7 +258,7 @@ if ($cfg['cacheLive']) {
 }
 
 // Определяемся с шаблоном сайта
-// Проверим куку пользователя и налочие параметра skin в реквесте.
+// Проверим куку пользователя и наличие параметра skin в реквесте.
 $currentSiteSkin = (isset($_COOKIE['dle_skin'])) ? trim(totranslit($_COOKIE['dle_skin'], false, false)) : (isset($_REQUEST['skin'])) ? trim(totranslit($_REQUEST['skin'], false, false)) : $config['skin'];
 
 // Если  итоге пусто — назначим опять шаблон из конфига. 
