@@ -12,7 +12,9 @@ email:   pafnuty10@gmail.com
  */
 
 if (!defined('DATALIFEENGINE')) {
-	die('Go fuck yourself!');
+	header( "HTTP/1.1 403 Forbidden" );
+	header ( 'Location: ../../' );
+	die( "Hacking attempt!" );
 }
 
 /**
