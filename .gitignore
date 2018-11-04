@@ -224,6 +224,15 @@
 /language/English/help.lng
 /language/English/website.lng
 
+# DLE 13 sources
+
+/engine/ajax/controller.php
+/engine/ajax/plugins.php
+/engine/classes/plugins.class.php
+/engine/classes/zipextract.class.php
+/engine/inc/plugins.php
+/engine/inc/upgrade.php
+/engine/inc/upgrade
 
 # BlockPro
 !/engine/modules/base/
