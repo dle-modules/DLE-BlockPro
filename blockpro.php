@@ -22,7 +22,8 @@ define('DATALIFEENGINE', true);
 define('ROOT_DIR', dirname(__FILE__));
 define('ENGINE_DIR', ROOT_DIR . '/engine');
 
-include ENGINE_DIR . '/data/config.php';
+include_once ENGINE_DIR . '/plugins/loader/loader.php';
+include(DLEPlugins::Check(ENGINE_DIR . '/data/config.php'));
 
 /** @var array $config */
 if ($config['version_id'] > 10.2) {
@@ -38,9 +39,9 @@ if ($config['http_home_url'] == '') {
 	$config['http_home_url'] = 'http://' . $_SERVER['HTTP_HOST'] . $config['http_home_url'];
 }
 
-require_once ENGINE_DIR . '/classes/mysql.php';
-require_once ENGINE_DIR . '/data/dbconfig.php';
-require_once ENGINE_DIR . '/modules/functions.php';
+require_once(DLEPlugins::Check(ENGINE_DIR . '/classes/mysql.php'));
+require_once(DLEPlugins::Check(ENGINE_DIR . '/data/dbconfig.php'));
+require_once(DLEPlugins::Check(ENGINE_DIR . '/modules/functions.php'));
 
 check_xss();
 
@@ -76,8 +77,8 @@ if (isset($_REQUEST['channel'])) {
 	$isRSS   = true;
 }
 if (isset($_REQUEST['frame'])) {
-	$blockId = $_REQUEST['frame'];
-	$isIframe   = true;
+	$blockId  = $_REQUEST['frame'];
+	$isIframe = true;
 }
 $blockId = $db->safesql($blockId);
 

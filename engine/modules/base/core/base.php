@@ -12,7 +12,9 @@ email:   pafnuty10@gmail.com
 */
 
 if (!defined('DATALIFEENGINE')) {
-	die("Go fuck yourself!");
+	header( "HTTP/1.1 403 Forbidden" );
+	header ( 'Location: ../../' );
+	die( "Hacking attempt!" );
 }
 
 define('BASE_DIR', ENGINE_DIR . '/modules/base');
@@ -20,7 +22,9 @@ define('BASE_DIR', ENGINE_DIR . '/modules/base');
 require_once(BASE_DIR . '/core/Fenom.php');
 \Fenom::registerAutoload(BASE_DIR . '/core/');
 
-require_once(ENGINE_DIR . '/modules/functions.php');
+include_once ENGINE_DIR . '/plugins/loader/loader.php';
+
+require_once(DLEPlugins::Check(ENGINE_DIR . '/modules/functions.php'));
 
 /**
  * BaseClass
