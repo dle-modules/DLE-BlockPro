@@ -336,6 +336,106 @@ class base {
 		return $arNumbers;
 	}
 
+	/**
+	 * Получаем готовую строку для вставки в запрос из условий фильтрации
+	 *
+	 * Пример использования в строке подключения
+	 * setFilter=p.full_story|SEARCH|text1|OR|p.full_story|SEARCH|text2
+	 *
+	 * @param  string   $setFilterStr  строка с условиями фильтрации
+	 *
+	 * @return string  Строка для использования в качестве части заброса в БД
+	 */
+	public function prepareFilterQuery($setFilterStr='') {
+		if(!$setFilterStr || $setFilterStr === '') {
+			return false;
+		}
+
+		// Разбиваем строку на условия "OR", если есть.
+		$filterItems = explode('|OR|', $setFilterStr);
+
+
+		$hasOrCondition = count($filterItems) > 1;
+
+		$queryParts = [];
+
+		foreach ($filterItems as $strItem) {
+
+			// Разбиваем на части запроса
+			$arFItem = explode('|', $strItem, 3);
+
+			$field    = $arFItem[0];
+			$operator = '';
+
+			// Т.к. DLE не позволяет передавать напрямую символы '>' и '<', приходится изобретать собственный велосипед.
+			switch ($arFItem[1]) {
+				case '-':
+				case 'lt':
+					$operator = ' < ';
+					break;
+
+				case '+':
+				case 'gt':
+					$operator = ' > ';
+					break;
+
+				case '=':
+				case 'eq':
+					$operator = ' = ';
+					break;
+
+				case '+=':
+				case 'gte':
+					$operator = ' >= ';
+					break;
+
+				case '-=':
+				case 'lte':
+					$operator = ' <= ';
+					break;
+
+				case '+-':
+				case '-+':
+				case 'not':
+					$operator = ' != ';
+					break;
+
+				case 'SEARCH':
+					$operator = ' LIKE ';
+					break;
+
+				case 'NOT_SEARCH':
+					$operator = ' NOT LIKE ';
+					break;
+			}
+
+
+			if ($arFItem[2] == 'NOW()') {
+				// Если нужно отобрать "сейчас"
+				$itemVal = 'NOW()';
+			} elseif ($arFItem[1] == 'SEARCH' || $arFItem[1] == 'NOT_SEARCH') {
+				// Реализация поиска
+				$itemVal = $this->db->parse('?s', '%' . $arFItem[2] . '%');
+			} else {
+				// В противном случае фильтруем.
+				$_op     = (is_numeric($arFItem[2])) ? '?i' : '?s';
+				$itemVal = $this->db->parse($_op, $arFItem[2]);
+			}
+
+			if ($operator !== '') {
+				$queryParts[] = $field . $operator . $itemVal;
+			}
+		}
+
+		$strAueryPart = implode(' OR ', $queryParts);
+
+		if ($hasOrCondition) {
+			$strAueryPart = '(' . $strAueryPart . ')';
+		}
+
+		return $strAueryPart;
+	}
+
 
 } // base Class
 
@@ -352,7 +452,7 @@ function formateDate($date, $_f = false) {
 	global $lang, $config, $langdate;
 
 	if (!$lang['charset']) {
-		@include_once ROOT_DIR . '/language/' . $config['langs'] . '/website.lng';
+		include_once(DLEPlugins::Check(ROOT_DIR . '/language/' . $config['langs'] . '/website.lng'));
 	}
 
 	$date = strtotime($date);
