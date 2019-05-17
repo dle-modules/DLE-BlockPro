@@ -155,6 +155,7 @@ if ($_cr) {
 
 
 	// Выводим результаты работы модуля в виде js-строки
+	/** @var string $printOutput */
 	echo $printOutput;
 
 } else {

@@ -159,6 +159,8 @@ if ($isAjaxConfig) {
 		// Символьные коды для исключающей фильтрации по символьному каталогу. Перечисляем через запятую или пишем this для текущего символьного кода
 		'fields'     => !empty($fields) ? $fields : false,
 		// Дополнение к выборке полей из БД (p.field,e.field)
+		// setFilter=p.full_story|SEARCH|dle_media_begin|OR|p.full_story|SEARCH|dle_video_begin
+		// setFilter=e.news_read|+|100||p.comm_num|-|20
 		'setFilter'  => !empty($setFilter) ? $setFilter : '',
 		// Собственная фильтрация полей БД
 		'experiment' => !empty($experiment) ? $experiment : false,
@@ -186,7 +188,12 @@ if ($isAjaxConfig && ($cfg['catId'] == 'this' || $cfg['notCatId'] == 'this')) {
 	}
 }
 
+// Сохраняем текущее значение переменной, если она задана (fix #142)
+$startCacheNameAddon = $cfg['cacheNameAddon'];
+
 $cfg['cacheNameAddon'] = [];
+$cfg['cacheNameAddon'][] = $startCacheNameAddon;
+
 // Если имеются переменные со значениями this, изменяем значение переменной cacheNameAddon
 if ($cfg['catId'] == 'this') {
 	$cfg['cacheNameAddon'][] = $category_id . 'cId_';
@@ -383,69 +390,13 @@ if (!$output) {
 			$arFilter[] = $base->cfg['setFilter'];
 		}
 
+
 		if (!empty($arFilter)) {
 			foreach ($arFilter as $strItem) {
-				$arFItem = explode('|', $strItem, 3);
+				$queryItem = $base->prepareFilterQuery($strItem);
 
-				$field    = $arFItem[0];
-				$operator = '';
-
-				// Т.к. DLE не позволяет передавать напрямую символы '>' и '<', приходится изобретать собственный велосипед.
-				switch ($arFItem[1]) {
-					case '-':
-					case 'lt':
-						$operator = ' < ';
-						break;
-
-					case '+':
-					case 'gt':
-						$operator = ' > ';
-						break;
-
-					case '=':
-					case 'eq':
-						$operator = ' = ';
-						break;
-
-					case '+=':
-					case 'gte':
-						$operator = ' >= ';
-						break;
-
-					case '-=':
-					case 'lte':
-						$operator = ' <= ';
-						break;
-
-					case '+-':
-					case '-+':
-					case 'not':
-						$operator = ' != ';
-						break;
-
-					case 'SEARCH':
-						$operator = ' LIKE ';
-						break;
-
-					case 'NOT_SEARCH':
-						$operator = ' NOT LIKE ';
-						break;
-				}
-
-				if ($arFItem[2] == 'NOW()') {
-					// Если нужно отобрать "сейчас"
-					$itemVal = 'NOW()';
-				} elseif ($arFItem[1] == 'SEARCH' || $arFItem[1] == 'NOT_SEARCH') {
-					// Реализация поиска
-					$itemVal = $base->db->parse('?s', '%' . $arFItem[2] . '%');
-				} else {
-					// В противном случае фильтруем.
-					$_op     = (is_numeric($arFItem[2])) ? '?i' : '?s';
-					$itemVal = $base->db->parse($_op, $arFItem[2]);
-				}
-
-				if ($operator !== '') {
-					$wheres[] = $field . $operator . $itemVal;
+				if($queryItem) {
+					$wheres[] = $queryItem;
 				}
 
 			}
@@ -840,6 +791,11 @@ if (!$output) {
 
 					$bodyToRelated = $base->db->parse('?s', strip_tags($relatedBody['title'] . ' ' . $bodyToRelated));
 
+					// Добавляем улучшенный алгоритм поиска похожих новостей из DLE 13
+					$ext_query_fields .= ', MATCH (p.title, p.short_story, p.full_story, p.xfields) AGAINST (' . $bodyToRelated . ') as score';
+					$orderArr = ['score'];
+
+					// Формируем условие выборки
 					$wheres[] = 'MATCH (' . $relatedRows . ') AGAINST (' . $bodyToRelated . ') AND id !=' . $relatedBody['id'];
 				}
 			} else {
@@ -1193,6 +1149,7 @@ if (!$output) {
 }
 
 // Обрабатываем вложения
+/** @var $base */
 if ($base->dle_config['files_allow']) {
 	if (strpos($output, '[attachment=') !== false) {
 		$output = show_attach($output, $attachments);
@@ -1208,6 +1165,7 @@ if ($user_group[$member_id['user_group']]['allow_hide']) {
 }
 
 // Результат работы модуля
+/** @var boolean $external */
 if (!$external) {
 	// Если блок не является внешним - выводим на печать
 	if (count($outputLog['errors']) > 0) {
@@ -1236,5 +1194,6 @@ if ($cfg['showstat'] && $user_group[$member_id['user_group']]['allow_all_edit'])
 	$mem_usg = (function_exists('memory_get_peak_usage')) ? '<br>Расход памяти: <b>' . round(memory_get_peak_usage() / (1024 * 1024), 2) . 'Мб </b>' : '';
 	// Вывод статистики
 	/** @var integer $start */
+	/** @var string $dbStat */
 	echo '<div class="bp-statistics" style="border: solid 1px red; padding: 5px; margin: 5px 0;">' . $dbStat . 'Время выполнения скрипта: <b>' . round((microtime(true) - $start), 6) . '</b> c.' . $mem_usg . '</div>';
 }
