@@ -168,23 +168,25 @@ if ($isAjaxConfig) {
 	];
 }
 
-/**
- * var array $bpConfig
- */
 include ENGINE_DIR . '/data/blockpro.php';
 
 // Объединяем массивы конфигов
+/** @var array $bpConfig */
 $cfg = array_merge($cfg, $bpConfig);
 
 // Получаем id текущей категории при AJAX навигации
 if ($isAjaxConfig && ($cfg['catId'] == 'this' || $cfg['notCatId'] == 'this')) {
+	/**
+	 * @var string $thisUrl
+	 * @see engine/ajax/blockpro.php
+	 */
 	if (substr($thisUrl, -1, 1) == '/') {
 		$thisUrl = substr($thisUrl, 0, -1);
 	}
-	$thisUrl = explode('/', $thisUrl);
-	$thisUrl = end($thisUrl);
-	if (trim($thisUrl) != '') {
-		$category_id = get_ID($cat_info, $thisUrl);
+	$arThisUrl = explode('/', $thisUrl);
+	$thisCatName = end($arThisUrl);
+	if (trim($thisCatName) != '') {
+		$category_id = get_ID($cat_info, $thisCatName);
 	}
 }
 
@@ -259,6 +261,8 @@ if ($cfg['cacheVars']) {
 }
 
 $cfg['cacheNameAddon'] = array_filter($cfg['cacheNameAddon']);
+// Удаляем дублирующиеся значения кеша. Может возникать при AJAX вызове с &catId=this
+$cfg['cacheNameAddon'] = array_unique($cfg['cacheNameAddon']);
 $cfg['cacheNameAddon'] = implode('_', $cfg['cacheNameAddon']);
 
 if ($cfg['cacheLive']) {
@@ -270,7 +274,7 @@ if ($cfg['cacheLive']) {
 // Проверим куку пользователя и наличие параметра skin в реквесте.
 $currentSiteSkin = (isset($_COOKIE['dle_skin'])) ? trim(totranslit($_COOKIE['dle_skin'], false, false)) : ((isset($_REQUEST['skin'])) ? trim(totranslit($_REQUEST['skin'], false, false)) : $config['skin']);
 
-// Если  итоге пусто — назначим опять шаблон из конфига. 
+// Если  итоге пусто — назначим опять шаблон из конфига.
 if ($currentSiteSkin == '') {
 	$currentSiteSkin = $config['skin'];
 }
@@ -533,16 +537,27 @@ if (!$output) {
 
 	}
 
+	// Необходимо учитывать категорию для вывода похожих новостей, если категорию не задал пользователь.
+	// https://github.com/dle-modules/DLE-BlockPro/issues/155
+	if (!$base->cfg['catId'] && $base->cfg['related'] && $base->dle_config['related_only_cats']) {
+		$base->cfg['catId'] = 'this';
+	}
+
+	// Эти переменные потребуются ниже, что бы корректно сформировать имя кеша, когда переданы
+	// &catId=this или notCatId=this
+	$isCatIdThis = false;
+	$isNotCatIdThis = false;
+
 	// Фильтрация КАТЕГОРИЙ по их ID
 	if ($base->cfg['catId'] == 'this' && $category_id) {
-		$base->cfg['catIdT'] = 'this';
+		$isCatIdThis = true;
 		$base->cfg['catId'] = ($base->cfg['subcats']) ? get_sub_cats($category_id) : ($base->cfg['thisCatOnly']) ? (int)$category_id : $category_id;
 	}
 	if ($base->cfg['notCatId'] == 'this' && $category_id) {
-		$base->cfg['notCatIdT'] = 'this';
+		$isNotCatIdThis = true;
 		$base->cfg['notCatId'] = ($base->cfg['notSubcats']) ? get_sub_cats($category_id) : ($base->cfg['thisCatOnly']) ? (int)$category_id : $category_id;
 	}
-	// Дублирование кода вызвано необходимостью сочетания параметра notCatId b catId
+	// Дублирование кода вызвано необходимостью сочетания параметра notCatId и catId
 	// Например: catId=this&notCatId=3
 	if ($base->cfg['notCatId']) {
 		$notCatArr = $base->getDiapazone($base->cfg['notCatId'], $base->cfg['notSubcats']);
@@ -584,7 +599,7 @@ if (!$output) {
 			$wheres[] = 'id NOT IN (' . $notPostsArr . ')';
 		}
 	}
-	
+
 	if ($base->cfg['postId'] && $base->cfg['related'] == '') {
 		$postsArr = $base->getDiapazone($base->cfg['postId']);
 		if ($postsArr !== '0') {
@@ -766,11 +781,11 @@ if (!$output) {
 		} else {
 
 			$relatedId       = ($base->cfg['related'] == 'this') ? $_REQUEST['newsid'] : $base->cfg['related'];
-			$relatedRows     = 'title, short_story, full_story, xfields';
+			$relatedRows     = 'p.title, p.short_story, p.full_story, p.xfields';
 			$relatedIdParsed = $base->db->parse('id = ?i', $relatedId);
 
 			$relatedBody = $base->db->getRow('SELECT id, ?p FROM ?n p LEFT JOIN ?n e ON (p.id=e.news_id) WHERE ?p', 'p.title, p.short_story, p.full_story, p.xfields, e.related_ids', PREFIX . '_post', PREFIX . '_post_extras', $relatedIdParsed);
-			// Фикс https://github.com/pafnuty/BlockPro/issues/78
+			// Фикс https://github.com/dle-modules/DLE-BlockPro/issues/78
 			if ($relatedBody['id']) {
 				/** @var bool $saveRelated */
 				if ($relatedBody['related_ids'] && $saveRelated) {
@@ -783,17 +798,19 @@ if (!$output) {
 					$reltedFirstShow = true;
 					$bodyToRelated   = (dle_strlen($relatedBody['full_story'], $base->dle_config['charset']) < dle_strlen($relatedBody['short_story'], $base->dle_config['charset'])) ? $relatedBody['short_story'] : $relatedBody['full_story'];
 
+					$bodyToRelated = strip_tags(stripslashes($relatedBody['title'] . ' ' . $bodyToRelated));
+
 					// Фикс для https://github.com/pafnuty/BlockPro/issues/79
 					// @see /engine/modules/show.full.php
 					if (dle_strlen($bodyToRelated, $base->dle_config['charset']) > 1000) {
 						$bodyToRelated = dle_substr($bodyToRelated, 0, 1000, $base->dle_config['charset']);
 					}
 
-					$bodyToRelated = $base->db->parse('?s', strip_tags($relatedBody['title'] . ' ' . $bodyToRelated));
+					$bodyToRelated = $base->db->parse('?s', $bodyToRelated);
 
 					// Добавляем улучшенный алгоритм поиска похожих новостей из DLE 13
 					$ext_query_fields .= ', MATCH (p.title, p.short_story, p.full_story, p.xfields) AGAINST (' . $bodyToRelated . ') as score';
-					$orderArr = ['score'];
+					$orderArr = ['score DESC'];
 
 					// Формируем условие выборки
 					$wheres[] = 'MATCH (' . $relatedRows . ') AGAINST (' . $bodyToRelated . ') AND id !=' . $relatedBody['id'];
@@ -1039,13 +1056,13 @@ if (!$output) {
 		$tplArr['totalCount'] = $totalCount;
 
 		// Меняем для кеша id категории на this если параметр catId или notCatId равен this
-		if ($base->cfg['catIdT'] == 'this') {
-			$base->cfg['catId'] = $base->cfg['catIdT'];
+		if ($isCatIdThis) {
+			$base->cfg['catId'] = 'this';
 		}
-		if ($base->cfg['notCatIdT'] == 'this') {
-			$base->cfg['notCatId'] = $base->cfg['notCatIdT'];
+		if ($isNotCatIdThis) {
+			$base->cfg['notCatId'] = 'this';
 		}
-		
+
 		// Формируем имя кеш-файла с конфигом
 		$pageCacheName = $base->cfg;
 		// Удаляем номер страницы для того, что бы не создавался новый кеш для каждого блока постранички
@@ -1140,6 +1157,7 @@ if (!$output) {
 
 		unset($stat);
 	}
+
 	// Создаём кеш, если требуется
 	if (!$base->cfg['nocache']) {
 		create_cache($base->cfg['cachePrefix'], $output, $cacheName, $cacheSuffix);
@@ -1152,6 +1170,7 @@ if (!$output) {
 /** @var $base */
 if ($base->dle_config['files_allow']) {
 	if (strpos($output, '[attachment=') !== false) {
+		/** @var array $attachments */
 		$output = show_attach($output, $attachments);
 	}
 } else {

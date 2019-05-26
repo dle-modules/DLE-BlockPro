@@ -1,5 +1,5 @@
 # DLE-BlockPro — тот самый модуль для вывода новостей!
-![version](https://img.shields.io/badge/version-5.1.3-red.svg?style=flat-square "Version")
+![version](https://img.shields.io/badge/version-5.1.4-red.svg?style=flat-square "Version")
 ![DLE](https://img.shields.io/badge/DLE-10.x-green.svg?style=flat-square "DLE Version")
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/dle-modules/DLE-BlockPro/blob/master/LICENSE)
 
