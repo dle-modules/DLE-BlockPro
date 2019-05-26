@@ -168,23 +168,25 @@ if ($isAjaxConfig) {
 	];
 }
 
-/**
- * var array $bpConfig
- */
 include ENGINE_DIR . '/data/blockpro.php';
 
 // Объединяем массивы конфигов
+/** @var array $bpConfig */
 $cfg = array_merge($cfg, $bpConfig);
 
 // Получаем id текущей категории при AJAX навигации
 if ($isAjaxConfig && ($cfg['catId'] == 'this' || $cfg['notCatId'] == 'this')) {
+	/**
+	 * @var string $thisUrl
+	 * @see engine/ajax/blockpro.php
+	 */
 	if (substr($thisUrl, -1, 1) == '/') {
 		$thisUrl = substr($thisUrl, 0, -1);
 	}
-	$thisUrl = explode('/', $thisUrl);
-	$thisUrl = end($thisUrl);
-	if (trim($thisUrl) != '') {
-		$category_id = get_ID($cat_info, $thisUrl);
+	$arThisUrl = explode('/', $thisUrl);
+	$thisCatName = end($arThisUrl);
+	if (trim($thisCatName) != '') {
+		$category_id = get_ID($cat_info, $thisCatName);
 	}
 }
 
@@ -259,6 +261,8 @@ if ($cfg['cacheVars']) {
 }
 
 $cfg['cacheNameAddon'] = array_filter($cfg['cacheNameAddon']);
+// Удаляем дублирующиеся значения кеша. Может возникать при AJAX вызове с &catId=this
+$cfg['cacheNameAddon'] = array_unique($cfg['cacheNameAddon']);
 $cfg['cacheNameAddon'] = implode('_', $cfg['cacheNameAddon']);
 
 if ($cfg['cacheLive']) {
@@ -270,7 +274,7 @@ if ($cfg['cacheLive']) {
 // Проверим куку пользователя и наличие параметра skin в реквесте.
 $currentSiteSkin = (isset($_COOKIE['dle_skin'])) ? trim(totranslit($_COOKIE['dle_skin'], false, false)) : ((isset($_REQUEST['skin'])) ? trim(totranslit($_REQUEST['skin'], false, false)) : $config['skin']);
 
-// Если  итоге пусто — назначим опять шаблон из конфига. 
+// Если  итоге пусто — назначим опять шаблон из конфига.
 if ($currentSiteSkin == '') {
 	$currentSiteSkin = $config['skin'];
 }
@@ -539,13 +543,18 @@ if (!$output) {
 		$base->cfg['catId'] = 'this';
 	}
 
+	// Эти переменные потребуются ниже, что бы корректно сформировать имя кеша, когда переданы
+	// &catId=this или notCatId=this
+	$isCatIdThis = false;
+	$isNotCatIdThis = false;
+
 	// Фильтрация КАТЕГОРИЙ по их ID
 	if ($base->cfg['catId'] == 'this' && $category_id) {
-		$base->cfg['catIdT'] = 'this';
+		$isCatIdThis = true;
 		$base->cfg['catId'] = ($base->cfg['subcats']) ? get_sub_cats($category_id) : ($base->cfg['thisCatOnly']) ? (int)$category_id : $category_id;
 	}
 	if ($base->cfg['notCatId'] == 'this' && $category_id) {
-		$base->cfg['notCatIdT'] = 'this';
+		$isNotCatIdThis = true;
 		$base->cfg['notCatId'] = ($base->cfg['notSubcats']) ? get_sub_cats($category_id) : ($base->cfg['thisCatOnly']) ? (int)$category_id : $category_id;
 	}
 	// Дублирование кода вызвано необходимостью сочетания параметра notCatId и catId
@@ -1047,11 +1056,11 @@ if (!$output) {
 		$tplArr['totalCount'] = $totalCount;
 
 		// Меняем для кеша id категории на this если параметр catId или notCatId равен this
-		if ($base->cfg['catIdT'] == 'this') {
-			$base->cfg['catId'] = $base->cfg['catIdT'];
+		if ($isCatIdThis) {
+			$base->cfg['catId'] = 'this';
 		}
-		if ($base->cfg['notCatIdT'] == 'this') {
-			$base->cfg['notCatId'] = $base->cfg['notCatIdT'];
+		if ($isNotCatIdThis) {
+			$base->cfg['notCatId'] = 'this';
 		}
 
 		// Формируем имя кеш-файла с конфигом
@@ -1148,6 +1157,7 @@ if (!$output) {
 
 		unset($stat);
 	}
+
 	// Создаём кеш, если требуется
 	if (!$base->cfg['nocache']) {
 		create_cache($base->cfg['cachePrefix'], $output, $cacheName, $cacheSuffix);
@@ -1160,6 +1170,7 @@ if (!$output) {
 /** @var $base */
 if ($base->dle_config['files_allow']) {
 	if (strpos($output, '[attachment=') !== false) {
+		/** @var array $attachments */
 		$output = show_attach($output, $attachments);
 	}
 } else {
