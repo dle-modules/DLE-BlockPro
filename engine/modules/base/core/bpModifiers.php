@@ -512,6 +512,17 @@ class bpModifiers extends base {
 		return $output . ' назад';
 	}
 
+	/**
+	 * Функция для конфертации строки в json на случай, если не работает модификатор json_decode
+	 * @param string $var "{"one":"val"}"
+	 *
+	 * @return array json-массив
+	 */
+	public static function jsonDecode($var) {
+		$decoded = html_entity_decode($var, ENT_COMPAT);
+		return json_decode($decoded, true);
+	}
+
 
 } // bpModifiers
 

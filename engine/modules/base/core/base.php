@@ -189,6 +189,12 @@ class base {
 			return bpModifiers::timeAgo($data, $precision);
 		}
 		);
+
+		// Добавляем свой модификатор в шаблонизатор для конвертации текста в json.
+		$this->tpl->addModifier(
+			'jsonDecode', function ($data) {
+			return bpModifiers::jsonDecode($data);
+		});
 	}
 
 	/**

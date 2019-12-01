@@ -1,3 +1,7 @@
+# 5.1.5
+- Исправлена ошибка `Error: Syntax error, unrecognized expression: Deprecated: Array and string offset access syntax with curly braces is deprecated` (#159)
+- Добавлен модификатор jsonDecode для более удобного перобразования кода в JSON (Используйте его, если не работает json_decode)
+
 # 5.1.4
 - Исправлена работа постраничной навигации при `catId=this` (#144)
 - Исправлена логика отбора похожих новостей после релиза 5.1.2 (#155)

@@ -551,11 +551,27 @@ if (!$output) {
 	// Фильтрация КАТЕГОРИЙ по их ID
 	if ($base->cfg['catId'] == 'this' && $category_id) {
 		$isCatIdThis = true;
-		$base->cfg['catId'] = ($base->cfg['subcats']) ? get_sub_cats($category_id) : ($base->cfg['thisCatOnly']) ? (int)$category_id : $category_id;
+		/**
+		 * @see https://github.com/dle-modules/DLE-BlockPro/issues/159
+		 */
+		$base->cfg['catId'] = $category_id;
+		if($base->cfg['subcats']) {
+			$base->cfg['catId'] = get_sub_cats($category_id);
+		} elseif ($base->cfg['thisCatOnly']) {
+			$base->cfg['catId'] = (int)$category_id;
+		}
 	}
 	if ($base->cfg['notCatId'] == 'this' && $category_id) {
 		$isNotCatIdThis = true;
-		$base->cfg['notCatId'] = ($base->cfg['notSubcats']) ? get_sub_cats($category_id) : ($base->cfg['thisCatOnly']) ? (int)$category_id : $category_id;
+		/**
+		 * @see https://github.com/dle-modules/DLE-BlockPro/issues/159
+		 */
+		$base->cfg['notCatId'] = $category_id;
+		if ($base->cfg['notSubcats']) {
+			$base->cfg['notCatId'] = get_sub_cats($category_id);
+		} elseif($base->cfg['thisCatOnly']) {
+			$base->cfg['notCatId'] = (int)$category_id;
+		}
 	}
 	// Дублирование кода вызвано необходимостью сочетания параметра notCatId и catId
 	// Например: catId=this&notCatId=3
