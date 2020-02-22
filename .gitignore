@@ -225,7 +225,6 @@
 /language/English/website.lng
 
 # DLE 13 sources
-
 /engine/ajax/controller.php
 /engine/ajax/plugins.php
 /engine/classes/plugins.class.php
@@ -233,6 +232,9 @@
 /engine/inc/plugins.php
 /engine/inc/upgrade.php
 /engine/inc/upgrade
+
+# DLE 14 sources
+/engine/classes/tinify/
 
 # BlockPro
 !/engine/modules/base/

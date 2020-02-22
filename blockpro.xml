@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dleplugin>
 	<name>BlockPro</name>
-	<description>Модуль BlockPro предназначен для пользовательского вывода новостей на сайте под управлением CMS DataLife Engine и позиционируется как альтернатива {custom}, {top}, {related-news}.</description>
+	<description>Модуль предназначен для удобного вывода новостей на сайте</description>
 	<icon>engine/skins/images/blockpro.png</icon>
 	<version>6.0.0</version>
-	<dleversion>10.2</dleversion>
+	<dleversion>13</dleversion>
 	<versioncompare>greater</versioncompare>
-	<upgradeurl>http://blockpro.loc/check_updates.php</upgradeurl>
-	<filedelete>1</filedelete>
+	<upgradeurl>https://updates.pafnuty.name/check-bp.php</upgradeurl>
+	<filedelete>0</filedelete>
+	<needplugin></needplugin>
+	<mnotice>1</mnotice>
 	<mysqlinstall><![CDATA[CREATE TABLE IF NOT EXISTS `{prefix}_blockpro_blocks` (
   `id` tinyint(6) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -18,7 +20,14 @@
   KEY `block_id` (`block_id`)
 ) ENGINE=MyISAM;]]></mysqlinstall>
 	<mysqlupgrade><![CDATA[]]></mysqlupgrade>
-	<mysqlenable><![CDATA[]]></mysqlenable>
-	<mysqldisable><![CDATA[]]></mysqldisable>
-	<mysqldelete><![CDATA[]]></mysqldelete>
+	<mysqlenable><![CDATA[INSERT INTO `{prefix}_admin_sections` (`name`, `title`, `descr`, `icon`, `allow_groups`) VALUES ('blockpro', 'BlockPro', 'Модуль вывода новостей для DLE', 'blockpro.png', '1');]]></mysqlenable>
+	<mysqldisable><![CDATA[DELETE FROM `{prefix}_admin_sections` WHERE  `name`='blockpro';]]></mysqldisable>
+	<mysqldelete><![CDATA[DROP TABLE IF EXISTS `{prefix}_blockpro_blocks`;
+DELETE FROM `{prefix}_admin_sections` WHERE  `name`='blockpro';]]></mysqldelete>
+	<phpinstall><![CDATA[]]></phpinstall>
+	<phpupgrade><![CDATA[]]></phpupgrade>
+	<phpenable><![CDATA[]]></phpenable>
+	<phpdisable><![CDATA[]]></phpdisable>
+	<phpdelete><![CDATA[]]></phpdelete>
+	<notice><![CDATA[<a href="https://github.com/dle-modules/DLE-BlockPro/releases/latest" terget="_blank">Release notes</a>]]></notice>
 </dleplugin>
