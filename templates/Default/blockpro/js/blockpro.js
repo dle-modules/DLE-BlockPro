@@ -37,29 +37,16 @@ $(document)
 		    action = $this.data('action');
 
 		ShowLoading('');
-		$.get(dle_root + 'engine/ajax/favorites.php', {
+		$.get(dle_root + 'engine/ajax/controller.php', {
 			fav_id: fav_id,
 			action: action,
-			skin: dle_skin
+			skin: dle_skin,
+			mod: 'favorites',
+			alert: 1,
+			user_hash: dle_login_hash || ''
 		}, function (data) {
 			HideLoading('');
-			var $img      = $(data),
-			    src       = $img.prop('src'),
-			    title     = $img.prop('title'),
-			    imgAction = (action === 'plus') ? 'minus' : 'plus',
-			    l         = src.split(imgAction).length;
-			if (l === 2) {
-				$('[data-favorite-id=' + fav_id + ']')
-					.prop({
-						alt: title,
-						title: title,
-						src: src
-					})
-					.data({
-						action: imgAction,
-						favoriteId: fav_id
-					});
-			}
+			DLEalert(data, dle_info);
 		});
 
 	});
@@ -85,45 +72,6 @@ function base_loader(id, method, className) {
 	if (method === 'stop') {
 		$block.removeClass(cname);
 	}
-}
-
-/**
- * Функция выставления рейтинга в модуле blockpro
- *
- * @author ПафНутиЙ <pafnuty10@gmail.com>
- *
- *
- * @return string       Результат обработки рейтинга
- * @param rate
- * @param id
- */
-function base_rate(rate, id) {
-	ShowLoading('');
-
-	$.get(dle_root + 'engine/ajax/rating.php', {
-		go_rate: rate,
-		news_id: id,
-		skin: dle_skin,
-		user_hash: dle_login_hash || ''
-	}, function (data) {
-		HideLoading('');
-		if (data.success) {
-			var rating = data.rating;
-
-			rating = rating.replace(/&lt;/g, '<');
-			rating = rating.replace(/&gt;/g, '>');
-			rating = rating.replace(/&amp;/g, '&');
-
-			$('[data-rating-layer="' + id + '"]').html(rating);
-			$('[data-vote-num-id="' + id + '"]').html(data.votenum);
-
-			$('#ratig-layer-' + id).html(rating);
-			$('#vote-num-id-' + id).html(data.votenum);
-		} else if (data.error) {
-			DLEalert(data.errorinfo, dle_info);
-		}
-
-	}, 'json');
 }
 
 /**

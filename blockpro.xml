@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dleplugin>
+	<name>BlockPro</name>
+	<description>Модуль BlockPro предназначен для пользовательского вывода новостей на сайте под управлением CMS DataLife Engine и позиционируется как альтернатива {custom}, {top}, {related-news}.</description>
+	<icon>engine/skins/images/blockpro.png</icon>
+	<version>6.0.0</version>
+	<dleversion>10.2</dleversion>
+	<versioncompare>greater</versioncompare>
+	<upgradeurl>http://blockpro.loc/check_updates.php</upgradeurl>
+	<filedelete>1</filedelete>
+	<mysqlinstall><![CDATA[CREATE TABLE IF NOT EXISTS `{prefix}_blockpro_blocks` (
+  `id` tinyint(6) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `block_id` varchar(100) NOT NULL,
+  `params` mediumtext NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `block_id` (`block_id`)
+) ENGINE=MyISAM;]]></mysqlinstall>
+	<mysqlupgrade><![CDATA[]]></mysqlupgrade>
+	<mysqlenable><![CDATA[]]></mysqlenable>
+	<mysqldisable><![CDATA[]]></mysqldisable>
+	<mysqldelete><![CDATA[]]></mysqldelete>
+</dleplugin>

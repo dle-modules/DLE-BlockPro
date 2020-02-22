@@ -893,16 +893,19 @@ if (!$output) {
 		shuffle($randDiapazone);
 		// Возьмём только нужное количество элементов
 		$randIds = array_slice($randDiapazone, 0, $base->cfg['limit']);
-		$randIds = implode(',', $randIds);
-		// Удалим из памяти ненужное
-		unset($randDiapazone);
-		unset($randWhere);
-		// Сбрасываем ненужные условия выборки
-		$wheres = [];
-		// Задаём условие выборки по предварительно полученным ID
-		$wheres[] = 'id IN (' . $randIds . ')';
-		// И выводим в том порядке, в ктором сформировались ID
-		$orderArr = ['FIELD (p.id, ' . $randIds . ')'];
+        // Удалим из памяти ненужное
+        unset($randDiapazone);
+        unset($randWhere);
+		// Если вдруг не получится набрать элементы в принципе
+		if (count($randIds)) {
+			$randIds = implode(',', $randIds);
+			// Сбрасываем ненужные условия выборки
+			$wheres = [];
+			// Задаём условие выборки по предварительно полученным ID
+			$wheres[] = 'id IN (' . $randIds . ')';
+			// И выводим в том порядке, в ктором сформировались ID
+			$orderArr = ['FIELD (p.id, ' . $randIds . ')'];
+		}
 
 	}
 	// Складываем условия
