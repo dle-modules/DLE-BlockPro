@@ -20,17 +20,15 @@ define('DATALIFEENGINE', true);
 define('ROOT_DIR', substr(dirname(__FILE__), 0, -17));
 
 define('ENGINE_DIR', ROOT_DIR . '/engine');
-include_once ENGINE_DIR . '/plugins/loader/loader.php';
+include_once ENGINE_DIR.'/classes/plugins.class.php';
 
-include (DLEPlugins::Check(ENGINE_DIR . '/data/config.php'));
 /** @var array $config */
 if ($config['http_home_url'] == "") {
 	$config['http_home_url'] = explode("engine/ajax/base/save_block_pro.php", $_SERVER['PHP_SELF']);
 	$config['http_home_url'] = reset($config['http_home_url']);
 	$config['http_home_url'] = "http://" . $_SERVER['HTTP_HOST'] . $config['http_home_url'];
 }
-require_once (DLEPlugins::Check(ENGINE_DIR . '/classes/mysql.php'));
-require_once (DLEPlugins::Check(ENGINE_DIR . '/data/dbconfig.php'));
+
 require_once (DLEPlugins::Check(ENGINE_DIR . '/modules/functions.php'));
 if ($config['version_id'] > 9.6) {
 	dle_session();
