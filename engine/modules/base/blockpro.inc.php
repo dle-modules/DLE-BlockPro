@@ -152,7 +152,7 @@ if ($cfg['multiLang'] && isset($_REQUEST['lang'])) {
     // Если язык доступен, работаем
     if (in_array($requestLang, $langList)) {
         // Импортируем конфиг модуля MultiLanguage
-        include_once(DLEPlugins::Check(ENGINE_DIR.'/data/multilanguage_config.php'));
+        include(DLEPlugins::Check(ENGINE_DIR.'/data/multilanguage_config.php'));
 
         // Если модуль включен, работаем
         if ($lang_config['mod_on']) {
@@ -996,7 +996,7 @@ if (!$output) {
         if ($newsItem['allow_rate']) {
             $newsItem['showRatingCount'] = '<span class="ignore-select" data-vote-num-id="'.$newsItem['id'].'">'
                 .$newsItem['vote_num'].'</span>';
-            $jsRAteFunctionName          =  'base_rate';
+            $jsRAteFunctionName          = 'base_rate';
 
             if ($base->dle_config['short_rating'] and $user_group[$member_id['user_group']]['allow_rating']) {
                 $newsItem['showRating'] = baseShowRating($newsItem['id'], $newsItem['rating'], $newsItem['vote_num'],
