@@ -28,7 +28,7 @@ if ($member_id['user_group'] != '1') {
 define('MODULE_DIR', ENGINE_DIR . '/modules/base/admin/blockpro/');
 
 $moduleName    = 'blockpro';
-$moduleVersion = '6.0.0';
+$moduleVersion = '6.0.1';
 
 $moderate              = $_REQUEST['moderate'];
 $moderate_checked      = ($moderate) ? 'checked' : '';
@@ -412,9 +412,10 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 													    $block  = $('#preview_tab');
 													$block.addClass('base-loader loading');
 													$.ajax({
-														url: dle_root + 'engine/ajax/blockpro.php',
+														url: dle_root + 'engine/ajax/controller.php',
 														dataType: 'html',
 														data: {
+														    mod: 'blockpro',
 															pageNum: pageNum,
 															blockId: blockId
 														},
@@ -687,7 +688,7 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 								<div class="col col-mb-12 mb10">
 									<div class="alert">
 										<p>
-											Начиная с версии 5.0.0 техническая поддержка по модулю оказывается ТОЛЬКО в рамках тиккетов на GitHub 
+											Начиная с версии 5.0.0 техническая поддержка по модулю оказывается ТОЛЬКО в рамках тиккетов на GitHub
 										</p>
 									</div>
 									<a class="btn omni-email-widget" href="https://github.com/dle-modules/DLE-BlockPro/issues/new" target="_blank">Создать тиккет</a>
@@ -712,9 +713,5 @@ function base_create_cache($prefix, $cache_text, $cache_id = false, $member_pref
 		</div>
 	</div>
 </div>
-<?php 
-		
-?>
-
 </body>
 </html>

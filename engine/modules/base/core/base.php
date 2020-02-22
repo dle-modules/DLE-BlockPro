@@ -21,8 +21,7 @@ define('BASE_DIR', ENGINE_DIR.'/modules/base');
 require_once(BASE_DIR.'/core/Fenom.php');
 Fenom::registerAutoload(BASE_DIR.'/core/');
 
-include_once ENGINE_DIR.'/plugins/loader/loader.php';
-
+include_once ENGINE_DIR.'/classes/plugins.class.php';
 require_once(DLEPlugins::Check(ENGINE_DIR.'/modules/functions.php'));
 
 /**
@@ -218,8 +217,8 @@ class base {
      */
     public function getPostUrl($data, $langVariant = '') {
 
-        $data['date'] = strtotime($data['date']);
-        $langUrlPrefix = $langVariant ? $langVariant . '/' : '';
+        $data['date']  = strtotime($data['date']);
+        $langUrlPrefix = $langVariant ? $langVariant.'/' : '';
 
         if ($this->dle_config['allow_alt_url']) {
             if ($this->dle_config['seo_type'] == 1 OR $this->dle_config['seo_type'] == 2) {

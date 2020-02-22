@@ -3,7 +3,7 @@
 	<name>BlockPro</name>
 	<description>Модуль предназначен для удобного вывода новостей на сайте</description>
 	<icon>engine/skins/images/blockpro.png</icon>
-	<version>6.0.0</version>
+	<version>6.0.1</version>
 	<dleversion>13</dleversion>
 	<versioncompare>greater</versioncompare>
 	<upgradeurl>https://updates.pafnuty.name/check-bp.php</upgradeurl>
