@@ -6,7 +6,6 @@ BLockPro
 Автор:   ПафНутиЙ
 URL:     http://pafnuty.name/
 twitter: https://twitter.com/pafnuty_name
-google+: http://gplus.to/pafnuty
 email:   pafnuty10@gmail.com
 =============================================================================
 */
@@ -278,6 +277,42 @@ $optTemplates = getTemplatesList(ROOT_DIR . '/templates/'. $config['skin'] . '/b
 						<ul>
 							<li>Начиная с DLE 11.0 фильтрация по значению допполей должна происходить быстрее за счёт получения ID новостей из отдельной таблицы с допполями.</li>
 						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="content">
+			<div class="col col-mb-12 col-5 col-dt-4 form-label">
+				Поддержка модуля MultiLanguage от japing.pw
+			</div>
+			<div class="col col-mb-12 col-7 col-dt-8 form-control">
+				<input class="checkbox" type="checkbox" value="y" name="multiLang" id="multiLang"  <?php echo $multiLang_checked?>> <label for="multiLang"><span></span> включить</label>
+				<div class="alert alert-info">
+					<div>
+						При включении параметра и если модуль MultiLanguage включен, то:
+						<ul>
+							<li>
+								Будут учитываться настройки фильтрации новостей в соответсвии с настройками модуля MultiLanguage
+							</li>
+							<li>
+								Будет корректно формироваться ссылка на полную новость с учётом языка сайта
+							</li>
+							<li>
+								Заголовок, полная и краткая новость будет браться в соответствии с настройками модуля MultiLanguage
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="col col-mb-12 col-5 col-dt-4 form-label">
+				Языки, добавленные в модуле MultiLanguage от japing.pw
+			</div>
+			<div class="col col-mb-12 col-7 col-dt-8 form-control">
+				<input class="input mr10" type="text" name="langList" value="<?php echo $cfg['langList']?>">
+				<div class="alert alert-info">
+					<div>
+						Коды языков, добавленный в модуле MultiLanguage. <br> Язык по умолчанию указывать не нужно, нужны только те языки, которые были добавлены дополнительно (указывать через запятую, если я зыков несколько).
 					</div>
 				</div>
 			</div>

@@ -6,7 +6,6 @@ BlockPro - Вывод виджета.
 Автор:   ПафНутиЙ
 URL:     http://pafnuty.name/
 twitter: https://twitter.com/pafnuty_name
-google+: http://gplus.to/pafnuty
 email:   pafnuty10@gmail.com
 =============================================================================
  */
@@ -45,11 +44,8 @@ require_once(DLEPlugins::Check(ENGINE_DIR . '/modules/functions.php'));
 
 check_xss();
 
-if (function_exists('dle_session')) {
-	dle_session();
-} else {
-	@session_start();
-}
+dle_session();
+
 
 $is_logged = false;
 $member_id = [];
