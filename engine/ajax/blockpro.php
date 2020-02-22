@@ -6,7 +6,6 @@ BlockPro - ajax часть модуля
 Автор:   ПафНутиЙ
 URL:     http://pafnuty.name/
 twitter: https://twitter.com/pafnuty_name
-google+: http://gplus.to/pafnuty
 email:   pafnuty10@gmail.com
 =============================================================================
 */
@@ -42,11 +41,8 @@ require_once(DLEPlugins::Check(ENGINE_DIR . '/classes/mysql.php'));
 require_once(DLEPlugins::Check(ENGINE_DIR . '/data/dbconfig.php'));
 require_once(DLEPlugins::Check(ENGINE_DIR . '/modules/functions.php'));
 
-if (function_exists('dle_session')) {
-	dle_session();
-} else {
-	@session_start();
-}
+dle_session();
+
 
 $is_logged = false;
 $member_id = [];
@@ -70,7 +66,7 @@ $blockId = (isset($_REQUEST['blockId'])) ? $_REQUEST['blockId'] : false;
 $thisUrl = (isset($_REQUEST['thisUrl'])) ? (string)$_REQUEST['thisUrl'] : false;
 
 $cashe_tmp             = $config['allow_cache'];
-$config['allow_cache'] = 'yes'; // 'yes' для совместимости со старыми версиями dle, т.к. там проверяется значение, а не наличие значения переменной.
+$config['allow_cache'] = 1;
 $_cr                   = dle_cache($blockId);
 $config['allow_cache'] = $cashe_tmp;
 

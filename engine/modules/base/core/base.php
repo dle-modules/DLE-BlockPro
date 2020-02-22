@@ -6,7 +6,6 @@ BASE - базовый класс для модулей
 Автор:   ПафНутиЙ
 URL:     http://pafnuty.name/
 twitter: https://twitter.com/pafnuty_name
-google+: http://gplus.to/pafnuty
 email:   pafnuty10@gmail.com
 =============================================================================
 */
@@ -212,31 +211,30 @@ class base {
 
     /**
      * @param $data  - массив с информацией о статье
+     * @param $langVariant string  - информация о я зыке сайта
      *
      * @return string URL для категории
+     *
      */
-
-    public function getPostUrl($data) {
+    public function getPostUrl($data, $langVariant = '') {
 
         $data['date'] = strtotime($data['date']);
+        $langUrlPrefix = $langVariant ? $langVariant . '/' : '';
 
-        if ($this->dle_config['allow_alt_url'] && $this->dle_config['allow_alt_url'] != 'no') {
-            if (($this->dle_config['version_id'] < 9.6 && $this->dle_config['seo_type'])
-                || ($this->dle_config['version_id'] >= 9.6
-                    && ($this->dle_config['seo_type'] == 1
-                        || $this->dle_config['seo_type'] == 2))
-            ) {
+        if ($this->dle_config['allow_alt_url']) {
+            if ($this->dle_config['seo_type'] == 1 OR $this->dle_config['seo_type'] == 2) {
                 if (intval($data['category']) && $this->dle_config['seo_type'] == 2) {
-                    $url = $this->dle_config['http_home_url'].get_url(intval($data['category'])).'/'.$data['id'].'-'
-                        .$data['alt_name'].'.html';
+                    $url = $this->dle_config['http_home_url'].$langUrlPrefix.get_url(intval($data['category'])).'/'
+                        .$data['id'].'-'.$data['alt_name'].'.html';
                 } else {
-                    $url = $this->dle_config['http_home_url'].$data['id'].'-'.$data['alt_name'].'.html';
+                    $url = $this->dle_config['http_home_url'].$langUrlPrefix.$data['id'].'-'.$data['alt_name'].'.html';
                 }
             } else {
-                $url = $this->dle_config['http_home_url'].date('Y/m/d/', $data['date']).$data['alt_name'].'.html';
+                $url = $this->dle_config['http_home_url'].$langUrlPrefix.date('Y/m/d/', $data['date']).$data['alt_name']
+                    .'.html';
             }
         } else {
-            $url = $this->dle_config['http_home_url'].'index.php?newsid='.$data['id'];
+            $url = $this->dle_config['http_home_url'].$langUrlPrefix.'index.php?newsid='.$data['id'];
         }
 
         return $url;

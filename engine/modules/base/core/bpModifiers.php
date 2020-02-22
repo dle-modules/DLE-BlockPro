@@ -7,7 +7,6 @@ bpModifiers - класс с модификаторами для шаблониз
 Автор:   ПафНутиЙ
 URL:     http://pafnuty.name/
 twitter: https://twitter.com/pafnuty_name
-google+: http://gplus.to/pafnuty
 email:   pafnuty10@gmail.com
 =============================================================================
 */

@@ -241,8 +241,5 @@
 !/engine/ajax/blockpro.php
 !/engine/inc/blockpro.php
 !/engine/skins/images/blockpro.png
-!/templates/Default/blockpro/
 !/blockpro.php
-!/blockpro_install.php
-!/bp_check.php
 !/CHANGELOG.md
