@@ -32,7 +32,7 @@
 	{/foreach}
 {else}
  <div class="alert">
- 	Этот шаблон следует вызывать подключать внутри цикла, используя такую конструкцию:
+ 	Этот шаблон следует подключать внутри цикла, используя такую конструкцию:
 	<pre>{ignore}{include '/blockpro/bp_comments.tpl' postId=$el.id limit=5}{/ignore}</pre>
  </div>		
 {/if}

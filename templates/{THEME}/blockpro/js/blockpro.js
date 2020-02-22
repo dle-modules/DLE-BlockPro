@@ -75,12 +75,12 @@ function base_loader(id, method, className) {
 }
 
 /**
- * Выставление рейтинга для DLE 13
+ * Выставление рейтинга
  * @see base_rate
  * @param rate
  * @param id
  */
-function base_rate13(rate, id) {
+function base_rate(rate, id) {
 	ShowLoading('');
 	$.get(dle_root + 'engine/ajax/controller.php?mod=rating', {
 		go_rate: rate,
