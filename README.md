@@ -1,7 +1,7 @@
 # DLE-BlockPro — тот самый модуль для вывода новостей!
-![version](https://img.shields.io/badge/version-6.0.2-red.svg?style=flat-square "Version")
+![Release version](https://img.shields.io/github/v/release/dle-modules/DLE-BlockPro?style=flat-square)
 ![DLE](https://img.shields.io/badge/DLE-13.x-green.svg?style=flat-square "DLE Version")
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/dle-modules/DLE-BlockPro/blob/master/LICENSE)
+![License](https://img.shields.io/github/license/dle-modules/DLE-BlockPro?style=flat-square)
 
 - Краткая информация о шаблонных тега прописана в шаблоне **{THEME}/blockpro/blockpro.tpl**, расширенный пример **{THEME}/blockpro/fullexample.tpl**
 - Более детальная информация по используемому шаблонизатору модуля находится в [документации по шаблонизатору](https://github.com/bzick/fenom/blob/master/docs/ru/readme.md)
