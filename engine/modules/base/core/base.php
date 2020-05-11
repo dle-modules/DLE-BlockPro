@@ -83,8 +83,7 @@ class base {
     }
 
     public function getTemplater($tplOptions) {
-        $this->tpl = Fenom::factory(ROOT_DIR.'/templates/'.$this->dle_config['skin'].'/', ENGINE_DIR.'/cache/',
-            $tplOptions);
+        $this->tpl = Fenom::factory(ROOT_DIR.'/templates/', ENGINE_DIR.'/cache/', $tplOptions);
         // Добавляем модификаторы
         $this->addModifiers();
     }
