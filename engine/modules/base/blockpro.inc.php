@@ -189,19 +189,26 @@ if ($cfg['cacheLive']) {
     $cfg['cachePrefix'] = 'base';
 }
 
-// Определяемся с шаблоном сайта
-// Проверим куку пользователя и наличие параметра skin в реквесте.
-$currentSiteSkin = (isset($_COOKIE['dle_skin'])) ? trim(totranslit($_COOKIE['dle_skin'], false, false))
-    : ((isset($_REQUEST['skin'])) ? trim(totranslit($_REQUEST['skin'], false, false)) : $config['skin']);
+// Определяемся с правильным шаблоном сайта
+$currentSiteSkin = $config['skin'];
 
-// Если  итоге пусто — назначим опять шаблон из конфига.
-if ($currentSiteSkin == '') {
-    $currentSiteSkin = $config['skin'];
+
+if ($_REQUEST['skin']) {
+    $_REQUEST['skin'] = $_REQUEST['dle_skin'] = trim(totranslit($_REQUEST['skin'], false, false));
 }
-// Если парки с шаблоном нет — дальше не работаем.
-if (!@is_dir(ROOT_DIR.'/templates/'.$currentSiteSkin)) {
-    die('no_skin');
+
+if ($_REQUEST['dle_skin']) {
+    $_REQUEST['dle_skin'] = trim(totranslit($_REQUEST['dle_skin'], false, false));
+    if ($_REQUEST['dle_skin'] AND @is_dir(ROOT_DIR.'/templates/'.$_REQUEST['dle_skin'])) {
+        $currentSiteSkin = $_REQUEST['dle_skin'];
+    }
+} elseif ($_COOKIE['dle_skin']) {
+    $_COOKIE['dle_skin'] = trim(totranslit((string)$_COOKIE['dle_skin'], false, false));
+    if ($_COOKIE['dle_skin'] AND is_dir(ROOT_DIR.'/templates/'.$_COOKIE['dle_skin'])) {
+        $currentSiteSkin = $_COOKIE['dle_skin'];
+    }
 }
+
 
 // Формируем имя кеша
 $cacheName = implode('_', $cfg).$currentSiteSkin;
@@ -1127,7 +1134,7 @@ if (!$output) {
 
     // Результат обработки шаблона
     try {
-        $output = $base->tpl->fetch($base->cfg['template'].'.tpl', $tplArr);
+        $output = $base->tpl->fetch($base->dle_config['skin'].'/' . $base->cfg['template'].'.tpl', $tplArr);
     } catch (Exception $e) {
         $outputLog['errors'][] = $e->getMessage();
         $base->cfg['nocache']  = true;
